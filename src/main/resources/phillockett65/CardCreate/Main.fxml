@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="userGUI" stylesheets="@application.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.CardCreate.MainController">
+   <children>
+      <HBox fx:id="topBar" alignment="CENTER" onMouseDragged="#topBarOnMouseDragged" onMousePressed="#topBarOnMousePressed" prefHeight="32.0" styleClass="top-bar">
+         <children>
+            <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icon32.png" />
+               </image>
+            </ImageView>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#fileOpenOnAction" text="Open Base Directory...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="fileLoadMenuItem" mnemonicParsing="false" onAction="#fileLoadOnAction" text="Load Settings">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#fileSaveOnAction" text="Save Settings">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#fileCloseOnAction" text="Close">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#helpAboutOnAction" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#helpHelpOnAction" text="Help" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <TabPane>
+         <tabs>
+            <Tab closable="false" text="Primary">
+               <content>
+                  <fx:include fx:id="primaryTab" source="PrimaryTab.fxml" />
+               </content>
+            </Tab>
+            <Tab closable="false" text="Additional">
+              <content>
+                 <fx:include fx:id="additionalTab" source="AdditionalTab.fxml" />
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <StackPane>
+         <children>
+            <HBox>
+               <children>
+                  <ProgressBar fx:id="progressBar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="23.0" prefWidth="744.0" progress="0.0" />
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label fx:id="statusLabel" text="Ready">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+   </children>
+   <padding>
+      <Insets right="1.0" />
+   </padding>
+</VBox>

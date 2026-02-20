@@ -1,0 +1,157 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root{
+    -main-back-col: #383838;
+    -main-fore-col: #e8e8e8;
+    -fx-background-color: -main-back-col;
+    -fx-border-color: silver;
+}
+
+.top-bar, .menu-bar{
+    -fx-background-color: linear-gradient(to bottom, #404040, #202020);
+}
+
+.top-bar-icon{
+    -fx-stroke: white;
+}
+
+.top-bar-icon:hover{
+    -fx-background-color: red;
+}
+
+.label, .label:selected, .check-box:selected, .radio-button:selected{
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+.check-box, .radio-button{
+    -fx-text-fill: #bbbbbb;
+    -fx-font-weight: bold;
+}
+
+.titled-pane{
+    -fx-text-fill: -main-fore-col;
+}
+.title{
+    -fx-background-color: -main-back-col;
+    -fx-font-weight: bold;
+}
+
+.tooltip{
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-font-weight: normal;
+    -fx-text-fill: black;
+    -fx-background-color: #e8e8e8;
+}
+.text-field:readonly{
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+    -fx-background-color: #808080;
+}
+.combo-box{
+    -fx-font-weight: bold;
+    -fx-background-color: #e8e8e8;
+}
+.text-field{
+    -fx-text-fill: #808080;
+    -fx-font-weight: bold;
+    -fx-background-color: #e8e8e8;
+}
+.text-area{
+    -fx-text-fill: #e8e8e8;
+}
+.content{
+    -fx-background-color: #080808;
+	-fx-border-color: yellow;
+	-fx-border-insets: 1;
+}
+.spinner{
+    -fx-background-color: #282828;
+}
+
+.choice-box, .color-picker, .button, .toggle-button:selected{
+    -fx-background-color: linear-gradient(to bottom, #BB6662, #7B2622);
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 8em;
+}
+.tab-header-background {
+    -fx-background-color: #202020;
+}
+.tab {
+    -fx-font-weight: bold;
+    -fx-background-color: #505050;
+    -fx-background-radius: 12 12 0 0;
+}
+.tab:selected {
+    -fx-background-color: -main-back-col;
+    -fx-background-radius: 12 12 0 0;
+	-fx-border-color: -main-back-col;
+    -fx-border-radius: 12 12 0 0;
+}
+.tab-content-area {
+    -fx-background-color: -main-back-col;
+}
+.tab *.tab-label {
+    -fx-text-fill: #e8e8e8;
+}
+
+.toggle-button{
+    -fx-background-color: linear-gradient(to bottom, #A0A0A0, #606060);
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+}
+.context-menu, .menu-item:focused{
+    -fx-background-color: #9B4642;
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+.menu-bar{
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+.menu-button:hover, .menu-button:showing, .menu-item:hover{
+    -fx-background-color: #7B2622;
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+
+.increment-arrow-button{
+    -fx-background-radius: 0 12 0 0;
+    -fx-background-color: linear-gradient(to bottom, #BB6662, #9B4642);
+}
+.decrement-arrow-button{
+    -fx-background-radius: 0 0 12 0;
+    -fx-background-color: linear-gradient(to bottom, #9B4642, #7B2622);
+}
+.increment-arrow, .decrement-arrow, .arrow{
+    -fx-background-color: #e8e8e8;
+}
+
+.imageButton{
+    -fx-background-color: null;
+    -fx-text-fill: null;
+}
+
+.progress-bar .track{
+    -fx-background-color: -main-back-col;
+	-fx-border-color: silver;
+}
+
+.progress-bar .bar{
+    -fx-background-color: linear-gradient(to bottom, lime, green);
+}
+
+.list-view{
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-accent: #9B4642;
+}
+.list-cell{
+    -fx-font-weight: bold;
+}
