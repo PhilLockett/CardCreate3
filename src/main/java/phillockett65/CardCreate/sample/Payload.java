@@ -179,7 +179,7 @@ public class Payload {
     // "sprite" refers to the image on screen (AKA icon).
     protected Model model;
 
-    private final Item item;
+    protected final Item item;
     protected String path;
     private Image image = null;
 
@@ -190,7 +190,7 @@ public class Payload {
 
 
     public Payload(Item it) {
-        Debug.trace(DD, "Payload()");
+        Debug.trace(DD, "Payload(" + it + ")");
 
         model = Model.getInstance();
 

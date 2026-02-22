@@ -114,6 +114,7 @@ public class Generate extends Task<Long> {
     private void generateCard() {
         final int suit = model.currentSuit();
         final int card = model.currentCard();
+        final int pattern = model.currentPattern();
         final Image[] images = model.currentImages();
 
         // Create blank card.
@@ -135,13 +136,13 @@ public class Generate extends Task<Long> {
                     Image image = Utils.loadImage(model.getIndexImagePath(suit, card));
                     Image rotatedImage = Utils.rotateImage(image);
         
-                    model.drawCardIndex(gc, image, rotatedImage);
+                    model.drawCardIndex(gc, image, rotatedImage, pattern);
                 }
             break;
         
             case Model.CORNER_PIP_ID:
                 if (model.shouldCornerPipBeDisplayed())
-                    model.drawCardCornerPip(gc, images[2], images[3]);
+                    model.drawCardCornerPip(gc, images[2], images[3], pattern);
             break;
 
             case Model.STANDARD_PIP_ID:
@@ -151,7 +152,7 @@ public class Generate extends Task<Long> {
 
             case Model.FACE_PIP_ID:
                 if (model.shouldFacePipBeDisplayed(card))
-                    model.drawCardFacePip(gc, images[4], images[5]);
+                    model.drawCardFacePip(gc, images[4], images[5], 0);
             break;
 
             case Model.FACE_ID:
@@ -211,7 +212,7 @@ public class Generate extends Task<Long> {
         }
         
         // Generate the card.
-        if (model.currentIsJoker()) {
+        if (model.isCurrentJoker()) {
             generateJoker();
         } else {
             generateCard();

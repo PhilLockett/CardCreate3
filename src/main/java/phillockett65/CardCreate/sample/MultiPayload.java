@@ -40,8 +40,10 @@ public class MultiPayload extends Payload {
      * Support code for ImageView array management.
      */
 
+    // Entry 0 priveds top-left and bottom-right for standard indices, corner 
+    // pips and face pips and entry 4 is used for quad indices and corner pips.
     private final static int[][] flags = {
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -68,6 +70,16 @@ public class MultiPayload extends Payload {
     private ImageView[] views;
 
     /**
+     * Determine if the Icon/Sprite is to be displayed for the given pattern.
+     * @param pattern to check.
+     * @param imageIndex of the specific Icon/Sprite.
+     * @return true if the Icon should be displayed.
+     */
+    private boolean isIconVisible(int pattern, int imageIndex) {
+        return flags[pattern][imageIndex] == 1;
+    }
+
+    /**
      * Get the corresponding Loc for the indexed ImageView.
      * 
      * @param imageIndex for the ImageView in views[].
@@ -83,7 +95,7 @@ public class MultiPayload extends Payload {
      * @param group node to add the ImageViews to.
      */
     private void createImageViewArray() {
-        int icons = 17;
+        int icons = locationList.length;
         views = new ImageView[icons];
 
         for (int i = 0; i < views.length; ++i) {
@@ -135,8 +147,10 @@ public class MultiPayload extends Payload {
      * @return the indicated ImageView.
      */
     private void setImages(Image image) {
-        for (int i = 0; i < views.length; ++i)
+        for (int i = 0; i < views.length; ++i) {
             getImageView(i).setImage(image);
+
+        }
     }
 
     /**
@@ -159,10 +173,6 @@ public class MultiPayload extends Payload {
         return isIconVisible(pattern, imageIndex);
     }
 
-    private boolean isIconVisible(int pattern, int imageIndex) {
-        return flags[pattern][imageIndex] == 1;
-    }
-
 
 
     /************************************************************************
@@ -171,8 +181,8 @@ public class MultiPayload extends Payload {
 
     private int pattern = 0;
 
-    public MultiPayload() {
-        super(Item.STANDARD_PIP);
+    public MultiPayload(Item it) {
+        super(it);
 
         // Set up the image views.
         createImageViews();
@@ -185,7 +195,7 @@ public class MultiPayload extends Payload {
      * Initialize the Image Views based on item.
      */
     private void initMultiImageViews() {
-        setPath(Item.STANDARD_PIP);
+        setPath(item);
         Debug.trace(DD, "initMultiImageViews(" + path + ") :: number");
 
         if (path.equals(""))
@@ -193,7 +203,7 @@ public class MultiPayload extends Payload {
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            pattern = model.getCardIndex();
+            pattern = model.getCurrentPattern(item);
 
             final Data data = new Data(getImageWidth(), getImageHeight());
 
@@ -218,12 +228,13 @@ public class MultiPayload extends Payload {
     /**
      * Paint the icons associated with this payload.
      */
-    private void setMultiPatterns() {
+    public void setMultiPatterns() {
         Debug.trace(DD, "setMultiPatterns()");
 
         if (!hasImage())
             return;
 
+        pattern = model.getCurrentPattern(item);
         final Data data = new Data(getImageWidth(), getImageHeight());
 
         final double pX = data.originX;
@@ -252,7 +263,7 @@ public class MultiPayload extends Payload {
      * @return true if the new file was loaded, false otherwise.
      */
     public boolean syncImageFile() {
-        setPath(Item.STANDARD_PIP);
+        setPath(item);
         Debug.trace(DD, "syncImageFile() :: number");
 
         if (path.equals(""))
@@ -260,7 +271,7 @@ public class MultiPayload extends Payload {
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            pattern = model.getCardIndex();
+            pattern = model.getCurrentPattern(item);
             setMultiPatterns();
 
             return true;

@@ -47,13 +47,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import phillockett65.CardCreate.sample.CardSample;
 import phillockett65.CardCreate.sample.Default;
-import phillockett65.CardCreate.sample.DoublePayload;
 import phillockett65.CardCreate.sample.Handle;
 import phillockett65.CardCreate.sample.ImagePayload;
 import phillockett65.CardCreate.sample.Item;
 import phillockett65.CardCreate.sample.MultiPayload;
 import phillockett65.CardCreate.sample.Payload;
-import phillockett65.CardCreate.sample.QuadPayload;
 import phillockett65.Debug.Debug;
 
 
@@ -135,32 +133,6 @@ public class Model {
         Debug.trace(DD, "getSvgPathData() - invalid symbol: " + symbol);
         return null;
     }
-
-    /**
-     * Get the current Standard Symbol for a specified Item.
-     * 
-     * @param item for which the current standard symbol is required.
-     * @return the current standard symbol for the given Item.
-     */
-    public String getStandardSymbol(Item item) {
-        if (item == Item.FACE)
-            return getCard();
-
-        if (item == Item.INDEX)
-            return getOrder();
-
-        if (item == Item.STANDARD_PIP)
-            return getSuit();
-
-        if (item == Item.FACE_PIP)
-            return getSuit();
-
-        if (item == Item.CORNER_PIP)
-            return getSuit() + "S";
-
-        return "";
-    }
-
 
     /************************************************************************
      ************************************************************************
@@ -843,12 +815,12 @@ public class Model {
 
     public final Color border = Color.GREY;
 
-    public void drawCardIndex(GraphicsContext gc, Image image, Image rotatedImage) {
-        index.drawCard(gc, image, rotatedImage);
+    public void drawCardIndex(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
+        index.drawCard(gc, image, rotatedImage, pattern);
     }
 
-    public void drawCardCornerPip(GraphicsContext gc, Image image, Image rotatedImage) {
-        cornerPip.drawCard(gc, image, rotatedImage);
+    public void drawCardCornerPip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
+        cornerPip.drawCard(gc, image, rotatedImage, pattern);
     }
 
     public void drawCardFace(GraphicsContext gc, Image image, Image rotatedImage) {
@@ -859,8 +831,8 @@ public class Model {
         standardPip.drawCard(gc, image, rotatedImage, pattern);
     }
 
-    public void drawCardFacePip(GraphicsContext gc, Image image, Image rotatedImage) {
-        facePip.drawCard(gc, image, rotatedImage);
+    public void drawCardFacePip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
+        facePip.drawCard(gc, image, rotatedImage, pattern);
     }
 
     public void drawJokerIndex(GraphicsContext gc, Image image, Image rotatedImage) {
@@ -903,7 +875,7 @@ public class Model {
         }
 
         // Load the pip images ready for the standard cards.
-        if (currentIsAce()) {
+        if (isCurrentAce()) {
             final int suit = currentSuit();
             loadPipImages(suit);
         }
@@ -921,8 +893,9 @@ public class Model {
     public Image[] currentImages() { return images; }
     public int currentSuit() { return currentId() / Default.CARD_COUNT.getInt(); }
     public int currentCard() { return currentId() % Default.CARD_COUNT.getInt(); }
-    public boolean currentIsJoker() { return currentCard() == 0; }
-    private boolean currentIsAce() { return currentCard() == 1; }
+    public int currentPattern() { return isLeftHanded() ? 4 : 0; }
+    public boolean isCurrentJoker() { return currentCard() == 0; }
+    private boolean isCurrentAce() { return currentCard() == 1; }
 
     public String currentOutputImagePath() { 
         return getOutputImagePath(currentSuit(), currentCard());
@@ -1029,6 +1002,54 @@ public class Model {
     public String getOrder() { return cards[card]; }
     public String getCard(int s, int c) { return suits[s] + cards[c]; }
     public String getCard() { return getCard(suit, card); }
+
+    /**
+     * Get the current Standard Symbol for a specified Item.
+     * 
+     * @param item for which the current standard symbol is required.
+     * @return the current standard symbol for the given Item.
+     */
+    public String getStandardSymbol(Item item) {
+        if (item == Item.FACE)
+            return getCard();
+
+        if (item == Item.INDEX)
+            return getOrder();
+
+        if (item == Item.STANDARD_PIP)
+            return getSuit();
+
+        if (item == Item.FACE_PIP)
+            return getSuit();
+
+        if (item == Item.CORNER_PIP)
+            return getSuit() + "S";
+
+        return "";
+    }
+
+    /**
+     * Get the current Standard Symbol for a specified Item.
+     * 
+     * @param item for which the current standard symbol is required.
+     * @return the current standard symbol for the given Item.
+     */
+    public int getCurrentPattern(Item item) {
+        if (item == Item.FACE)
+            return 1;
+
+        if (item == Item.STANDARD_PIP)
+            return getCardIndex();
+
+        if (item == Item.FACE_PIP)
+            return 0;
+
+        if ((item == Item.INDEX) || (item == Item.CORNER_PIP))
+            return isLeftHanded() ? 4 : 0;
+
+        return 0;
+    }
+
 
     /**
      * Synchronize the display status of the card items, the watermark and the 
@@ -1494,11 +1515,11 @@ public class Model {
      * Support code for "Modify Selected Card Item" panel.
      */
 
-    private QuadPayload index = null;
-    private QuadPayload cornerPip = null;
+    private MultiPayload index = null;
+    private MultiPayload cornerPip = null;
     private MultiPayload standardPip = null;
     private ImagePayload face = null;
-    private DoublePayload facePip = null;
+    private MultiPayload facePip = null;
     private Payload current = null;
     private Payload[] payloadSlider;
     
@@ -1697,6 +1718,7 @@ public class Model {
      * @return the file path for the image of the given Item.
      */
     public String getImagePath(Item item) {
+        Debug.trace(DD, "getImagePath(" + item + ")");
         if (item == Item.FACE)
             return getFaceImagePath();
 
@@ -1794,12 +1816,12 @@ public class Model {
         Debug.trace(DD, "initializeCardItemPayloads()");
 
         face        = new ImagePayload();
-        facePip     = new DoublePayload(Item.FACE_PIP);
+        facePip     = new MultiPayload(Item.FACE_PIP);
 
-        standardPip = new MultiPayload();
+        standardPip = new MultiPayload(Item.STANDARD_PIP);
         
-        cornerPip   = new QuadPayload(Item.CORNER_PIP);
-        index       = new QuadPayload(Item.INDEX);
+        cornerPip   = new MultiPayload(Item.CORNER_PIP);
+        index       = new MultiPayload(Item.INDEX);
 
         // Set up payload slider used to determine next item.
         final int ITEMS = Default.CARD_ITEM_COUNT.getInt();
@@ -2242,8 +2264,8 @@ public class Model {
 
     public void setLeftHanded(boolean state) {
         leftHanded = state;
-        index.syncQuadState();
-        cornerPip.syncQuadState();
+        index.setMultiPatterns();
+        cornerPip.setMultiPatterns();
     }
 
     public void setShowGuideBox(boolean state) {
