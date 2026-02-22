@@ -192,38 +192,58 @@
             </VBox>
          </children>
       </HBox>
-      <TitledPane animated="false" collapsible="false" text="Select Standard Index/Pip Colour">
+      <TitledPane animated="false" collapsible="false" text="Select Standard Index, Pip and Court Colours">
          <content>
             <GridPane>
               <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ColorPicker fx:id="spadeIndexColourPicker" GridPane.columnIndex="1" />
-                  <ColorPicker fx:id="diamondIndexColourPicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ColorPicker fx:id="clubIndexColourPicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ColorPicker fx:id="heartIndexColourPicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ColorPicker fx:id="spadePipColourPicker" GridPane.columnIndex="3" />
-                  <ColorPicker fx:id="diamondPipColourPicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <ColorPicker fx:id="clubPipColourPicker" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <ColorPicker fx:id="heartPipColourPicker" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <Label fx:id="spadeIndexLabel" text="Spade Indices: " />
-                  <Label fx:id="diamondIndexLabel" text="Diamond Indices: " GridPane.rowIndex="1" />
-                  <Label fx:id="clubIndexLabel" text="Club Indices: " GridPane.rowIndex="2" />
-                  <Label fx:id="heartIndexLabel" text="Heart Indices: " GridPane.rowIndex="3" />
-                  <Label fx:id="spadePipLabel" text="Spade Pips: " GridPane.columnIndex="2" />
-                  <Label fx:id="diamondPipLabel" text="Diamond Pips: " GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label fx:id="clubPipLabel" text="Club Pips: " GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Label fx:id="heartPipLabel" text="Heart Pips: " GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Label text="Indices" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Label text="Pips" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                  <Label text="Courts" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                  <Label text="Courts" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
+                  <Label fx:id="spadeIndexLabel" text="Spades: " GridPane.rowIndex="1" />
+                  <Label fx:id="diamondIndexLabel" text="Diamonds: " GridPane.rowIndex="2" />
+                  <Label fx:id="clubIndexLabel" text="Clubs: " GridPane.rowIndex="3" />
+                  <Label fx:id="heartIndexLabel" text="Hearts: " GridPane.rowIndex="4" />
+                  <ColorPicker fx:id="spadeIndexColourPicker" onAction="#spadeIndexColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ColorPicker fx:id="diamondIndexColourPicker" onAction="#diamondIndexColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ColorPicker fx:id="clubIndexColourPicker" onAction="#clubIndexColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ColorPicker fx:id="heartIndexColourPicker" onAction="#heartIndexColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <ColorPicker fx:id="spadePipColourPicker" onAction="#spadePipColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ColorPicker fx:id="diamondPipColourPicker" onAction="#diamondPipColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <ColorPicker fx:id="clubPipColourPicker" onAction="#clubPipColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <ColorPicker fx:id="heartPipColourPicker" onAction="#heartPipColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <Label text="White: " GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                  <Label text="Steel: " GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                  <Label text="Hair: " GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                  <Label text="Flesh: " GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <ColorPicker fx:id="whiteColourPicker" onAction="#whiteColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <ColorPicker fx:id="steelColourPicker" onAction="#steelColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <ColorPicker fx:id="hairColourPicker" onAction="#hairColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <ColorPicker fx:id="fleshColourPicker" onAction="#fleshColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                  <Label text="Yellow: " GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                  <Label text="Red: " GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                  <Label text="Blue: " GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                  <Label text="Black: " GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <ColorPicker fx:id="yellowColourPicker" onAction="#yellowColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <ColorPicker fx:id="redColourPicker" onAction="#redColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                  <ColorPicker fx:id="blueColourPicker" onAction="#blueColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                  <ColorPicker fx:id="blackColourPicker" onAction="#blackColourPickerActionPerformed" prefWidth="110.0" GridPane.columnIndex="6" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </content>

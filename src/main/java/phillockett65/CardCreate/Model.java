@@ -136,6 +136,31 @@ public class Model {
         return null;
     }
 
+    /**
+     * Get the current Standard Symbol for a specified Item.
+     * 
+     * @param item for which the current standard symbol is required.
+     * @return the current standard symbol for the given Item.
+     */
+    public String getStandardSymbol(Item item) {
+        if (item == Item.FACE)
+            return getCard();
+
+        if (item == Item.INDEX)
+            return getOrder();
+
+        if (item == Item.STANDARD_PIP)
+            return getSuit();
+
+        if (item == Item.FACE_PIP)
+            return getSuit();
+
+        if (item == Item.CORNER_PIP)
+            return getSuit() + "S";
+
+        return "";
+    }
+
 
     /************************************************************************
      ************************************************************************
@@ -555,8 +580,9 @@ public class Model {
     private String indexStyle;
     private String pipStyle;
 
-    private Boolean useStandardPips = false;
-    private Boolean useStandardIndices = false;
+    private Boolean useStandardFaces = true;
+    private Boolean useStandardPips = true;
+    private Boolean useStandardIndices = true;
 
     ObservableList<String> baseList = FXCollections.observableArrayList();
     ObservableList<String> faceList = FXCollections.observableArrayList();
@@ -592,9 +618,13 @@ public class Model {
     public String getIndexStyle() { return indexStyle; }
     public String getPipStyle()   { return pipStyle; }
 
+    public Boolean isStandardFaces() { return useStandardFaces; }
     public Boolean isStandardIndices() { return useStandardIndices; }
     public Boolean isStandardPips() { return useStandardPips; }
 
+    public void setUseStandardFaces(boolean state) {
+        useStandardFaces = state;
+    }
     public void setUseStandardIndices(boolean state) {
         useStandardIndices = state;
     }
@@ -947,7 +977,7 @@ public class Model {
     }
 
     public String getOutputImagePath(int s, int c) {
-        return getOutputDirectory() + "\\" + suits[s] + cards[c] + ".png";
+        return getOutputDirectory() + "\\" + getCard(s, c) + ".png";
     }
 
     public boolean makeOutputDirectory() {
@@ -989,11 +1019,16 @@ public class Model {
     public int lastSuit() { return suits.length; }
     public int lastCard() { return cards.length; }
 
-    public int getSuit() { return suit; }
-    public int getCard() { return card; }
+    public int getSuitIndex() { return suit; }
+    public int getCardIndex() { return card; }
 
-    public void setSuit(int value) { suit = value; }
-    public void setCard(int value) { card = value; }
+    public void setSuitIndex(int value) { suit = value; }
+    public void setCardIndex(int value) { card = value; }
+
+    public String getSuit() { return suits[suit]; }
+    public String getOrder() { return cards[card]; }
+    public String getCard(int s, int c) { return suits[s] + cards[c]; }
+    public String getCard() { return getCard(suit, card); }
 
     /**
      * Synchronize the display status of the card items, the watermark and the 
@@ -1547,7 +1582,7 @@ public class Model {
      * current style.
      */
     public String getFaceImagePath(int s, int c) {
-        return getFaceDirectory() + "\\" + suits[s] + cards[c] + ".png";
+        return getFaceDirectory() + "\\" + getCard(s, c) + ".png";
     }
 
     /**
@@ -1559,7 +1594,7 @@ public class Model {
      * current style.
      */
     public String getIndexImagePath(int s, int c) {
-        String pathToImage = getIndexDirectory() + "\\" + suits[s] + cards[c] + ".png";
+        String pathToImage = getIndexDirectory() + "\\" + getCard(s, c) + ".png";
         File file = new File(pathToImage);
         if (!file.exists())
             pathToImage = getIndexDirectory() + "\\" + alts[s] + cards[c] + ".png";
@@ -1568,7 +1603,7 @@ public class Model {
     }
 
     public String getJokerIndexImagePath(int s) {
-        return getIndexDirectory() + "\\" + suits[s] + cards[0] + ".png";
+        return getIndexDirectory() + "\\" + getCard(s, 0) + ".png";
     }
 
     /**
@@ -2317,6 +2352,15 @@ public class Model {
     private Color heartPipColour = Color.RED;
     private Color spadePipColour = Color.BLACK;
 
+    private Color courtsWhiteColour = Color.WHITE;
+    private Color courtsSteelColour = Color.SILVER;
+    private Color courtshairColour = Color.OLIVE;
+    private Color courtsFleshColour = Color.PINK;
+    private Color courtsYellowColour = Color.YELLOW;
+    private Color courtsRedColour = Color.RED;
+    private Color courtsBlueColour = Color.BLUE;
+    private Color courtsBlackColour = Color.BLACK;
+
     public Color getClubIndexColour() { return clubIndexColour; }
     public Color getDiamondIndexColour() { return diamondIndexColour; }
     public Color getHeartIndexColour() { return heartIndexColour; }
@@ -2326,6 +2370,15 @@ public class Model {
     public Color getHeartPipColour() { return heartPipColour; }
     public Color getSpadePipColour() { return spadePipColour; }
 
+    public Color getCourtsWhiteColour() { return courtsWhiteColour; }
+    public Color getCourtsSteelColour() { return courtsSteelColour; }
+    public Color getCourtsHairColour() { return courtshairColour; }
+    public Color getCourtsFleshColour() { return courtsFleshColour; }
+    public Color getCourtsYellowColour() { return courtsYellowColour; }
+    public Color getCourtsRedColour() { return courtsRedColour; }
+    public Color getCourtsBlueColour() { return courtsBlueColour; }
+    public Color getCourtsBlackColour() { return courtsBlackColour; }
+
     public void setClubIndexColour(Color colour) { clubIndexColour = colour; }
     public void setDiamondIndexColour(Color colour) { diamondIndexColour = colour; }
     public void setHeartIndexColour(Color colour) { heartIndexColour = colour; }
@@ -2334,6 +2387,15 @@ public class Model {
     public void setDiamondPipColour(Color colour) { diamondPipColour = colour; }
     public void setHeartPipColour(Color colour) { heartPipColour = colour; }
     public void setSpadePipColour(Color colour) { spadePipColour = colour; }
+
+    public void setCourtsWhiteColour(Color colour) { courtsWhiteColour = colour; }
+    public void setCourtsSteelColour(Color colour) { courtsSteelColour = colour; }
+    public void setCourtsHairColour(Color colour) { courtshairColour = colour; }
+    public void setCourtsFleshColour(Color colour) { courtsFleshColour = colour; }
+    public void setCourtsYellowColour(Color colour) { courtsYellowColour = colour; }
+    public void setCourtsRedColour(Color colour) { courtsRedColour = colour; }
+    public void setCourtsBlueColour(Color colour) { courtsBlueColour = colour; }
+    public void setCourtsBlackColour(Color colour) { courtsBlackColour = colour; }
 
     public Color getIndexColour() {
         switch (suit) {

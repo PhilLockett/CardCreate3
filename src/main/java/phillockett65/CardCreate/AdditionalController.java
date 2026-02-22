@@ -97,6 +97,26 @@ public class AdditionalController {
 
         borderlessCheckBox.setSelected(model.isBorderlessJokers());
 
+        clubIndexColourPicker.setValue(model.getClubIndexColour());
+        diamondIndexColourPicker.setValue(model.getDiamondIndexColour());
+        heartIndexColourPicker.setValue(model.getHeartIndexColour());
+        spadeIndexColourPicker.setValue(model.getSpadeIndexColour());
+
+        clubPipColourPicker.setValue(model.getClubPipColour());
+        diamondPipColourPicker.setValue(model.getDiamondPipColour());
+        heartPipColourPicker.setValue(model.getHeartPipColour());
+        spadePipColourPicker.setValue(model.getSpadePipColour());
+
+        whiteColourPicker.setValue(model.getCourtsWhiteColour());
+        steelColourPicker.setValue(model.getCourtsSteelColour());
+        hairColourPicker.setValue(model.getCourtsHairColour());
+        fleshColourPicker.setValue(model.getCourtsFleshColour());
+
+        yellowColourPicker.setValue(model.getCourtsYellowColour());
+        redColourPicker.setValue(model.getCourtsRedColour());
+        blueColourPicker.setValue(model.getCourtsBlueColour());
+        blackColourPicker.setValue(model.getCourtsBlackColour());
+
         clubIndexColourPicker.setDisable(!model.isStandardIndices());
         diamondIndexColourPicker.setDisable(!model.isStandardIndices());
         heartIndexColourPicker.setDisable(!model.isStandardIndices());
@@ -107,15 +127,15 @@ public class AdditionalController {
         heartPipColourPicker.setDisable(!model.isStandardPips());
         spadePipColourPicker.setDisable(!model.isStandardPips());
 
-        clubIndexLabel.setDisable(!model.isStandardIndices());
-        diamondIndexLabel.setDisable(!model.isStandardIndices());
-        heartIndexLabel.setDisable(!model.isStandardIndices());
-        spadeIndexLabel.setDisable(!model.isStandardIndices());
+        whiteColourPicker.setDisable(!model.isStandardFaces());
+        steelColourPicker.setDisable(!model.isStandardFaces());
+        hairColourPicker.setDisable(!model.isStandardFaces());
+        fleshColourPicker.setDisable(!model.isStandardFaces());
 
-        clubPipLabel.setDisable(!model.isStandardPips());
-        diamondPipLabel.setDisable(!model.isStandardPips());
-        heartPipLabel.setDisable(!model.isStandardPips());
-        spadePipLabel.setDisable(!model.isStandardPips());
+        yellowColourPicker.setDisable(!model.isStandardFaces());
+        redColourPicker.setDisable(!model.isStandardFaces());
+        blueColourPicker.setDisable(!model.isStandardFaces());
+        blackColourPicker.setDisable(!model.isStandardFaces());
     }
 
 
@@ -425,17 +445,17 @@ public class AdditionalController {
     @FXML
     private Label spadeIndexLabel;
 
-    @FXML
-    private Label clubPipLabel;
+    // @FXML
+    // private Label clubPipLabel;
 
-    @FXML
-    private Label diamondPipLabel;
+    // @FXML
+    // private Label diamondPipLabel;
 
-    @FXML
-    private Label heartPipLabel;
+    // @FXML
+    // private Label heartPipLabel;
 
-    @FXML
-    private Label spadePipLabel;
+    // @FXML
+    // private Label spadePipLabel;
 
     @FXML
     private ColorPicker clubIndexColourPicker;
@@ -460,6 +480,31 @@ public class AdditionalController {
 
     @FXML
     private ColorPicker spadePipColourPicker;
+
+    @FXML
+    private ColorPicker whiteColourPicker;
+
+    @FXML
+    private ColorPicker steelColourPicker;
+
+    @FXML
+    private ColorPicker hairColourPicker;
+
+    @FXML
+    private ColorPicker fleshColourPicker;
+
+    @FXML
+    private ColorPicker yellowColourPicker;
+
+    @FXML
+    private ColorPicker redColourPicker;
+
+    @FXML
+    private ColorPicker blueColourPicker;
+
+    @FXML
+    private ColorPicker blackColourPicker;
+
 
     @FXML
     void clubIndexColourPickerActionPerformed(ActionEvent event) {
@@ -509,20 +554,58 @@ public class AdditionalController {
         model.getSample().syncPipColour();
     }
 
+    @FXML
+    void whiteColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsWhiteColour(whiteColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void steelColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsSteelColour(steelColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void hairColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsHairColour(hairColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void fleshColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsFleshColour(fleshColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void yellowColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsYellowColour(yellowColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void redColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsRedColour(redColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void blueColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsBlueColour(blueColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
+    @FXML
+    void blackColourPickerActionPerformed(ActionEvent event) {
+        model.setCourtsBlackColour(blackColourPicker.getValue());
+        model.getSample().syncCourtColourS();
+    }
+
     /**
      * Initialize "Select Standard Index/Pip Colour" panel.
      */
     private void initializeStandardColours() {
-        clubIndexColourPicker.setValue(model.getClubIndexColour());
-        diamondIndexColourPicker.setValue(model.getDiamondIndexColour());
-        heartIndexColourPicker.setValue(model.getHeartIndexColour());
-        spadeIndexColourPicker.setValue(model.getSpadeIndexColour());
-
-        clubPipColourPicker.setValue(model.getClubPipColour());
-        diamondPipColourPicker.setValue(model.getDiamondPipColour());
-        heartPipColourPicker.setValue(model.getHeartPipColour());
-        spadePipColourPicker.setValue(model.getSpadePipColour());
-
         clubIndexColourPicker.setTooltip(new Tooltip("Select Standard Club Index colour"));
         diamondIndexColourPicker.setTooltip(new Tooltip("Select Standard Diamond Index colour"));
         heartIndexColourPicker.setTooltip(new Tooltip("Select Standard Heart Index colour"));
@@ -532,6 +615,16 @@ public class AdditionalController {
         diamondPipColourPicker.setTooltip(new Tooltip("Select Standard Diamond Pip colour"));
         heartPipColourPicker.setTooltip(new Tooltip("Select Standard Heart Pip colour"));
         spadePipColourPicker.setTooltip(new Tooltip("Select Standard Spade Pip colour"));
+
+        whiteColourPicker.setTooltip(new Tooltip("Select White Court colour"));
+        steelColourPicker.setTooltip(new Tooltip("Select Steel Court colour"));
+        hairColourPicker.setTooltip(new Tooltip("Select Hair Court colour"));
+        fleshColourPicker.setTooltip(new Tooltip("Select Flesh Court colour"));
+
+        yellowColourPicker.setTooltip(new Tooltip("Select Yellow Court colour"));
+        redColourPicker.setTooltip(new Tooltip("Select Red Court colour"));
+        blueColourPicker.setTooltip(new Tooltip("Select Blue Court colour"));
+        blackColourPicker.setTooltip(new Tooltip("Select Black Court colour"));
     }
 
 

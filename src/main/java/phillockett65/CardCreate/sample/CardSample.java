@@ -451,6 +451,10 @@ public class CardSample extends Stage {
         card.setFill(model.getPipColour());
     }
 
+    public void syncCourtColourS() {
+        // card.setFill(model.getPipColour());
+    }
+
     /**
      * Synchronise to the current card size.
      */

@@ -100,8 +100,8 @@ public class DataStore implements Serializable {
         manual = model.isManual();
         outputName = model.getManualOutputName();
 
-        suit = model.getSuit();
-        card = model.getCard();
+        suit = model.getSuitIndex();
+        card = model.getCardIndex();
 
         cardSize = getCardSize(model);
         cardHeightPX = model.getHeight();
@@ -149,8 +149,8 @@ public class DataStore implements Serializable {
         model.setOutputNameManually(manual);
         model.setOutputName(outputName);
 
-        model.setSuit(suit);
-        model.setCard(card);
+        model.setSuitIndex(suit);
+        model.setCardIndex(card);
 
         setCardSize(model);
         model.setHeight(cardHeightPX);

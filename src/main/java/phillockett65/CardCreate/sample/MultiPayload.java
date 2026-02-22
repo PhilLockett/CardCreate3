@@ -193,7 +193,7 @@ public class MultiPayload extends Payload {
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            pattern = model.getCard();
+            pattern = model.getCardIndex();
 
             final Data data = new Data(getImageWidth(), getImageHeight());
 
@@ -260,7 +260,7 @@ public class MultiPayload extends Payload {
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            pattern = model.getCard();
+            pattern = model.getCardIndex();
             setMultiPatterns();
 
             return true;

@@ -135,9 +135,13 @@ public class PrimaryController {
         loadButton.setDisable(!model.isSettingsFileExist());
 
         faceChoiceBox.setValue(model.getFaceStyle());
+        faceChoiceBox.setDisable(model.isStandardFaces());
+        faceLabel.setDisable(model.isStandardFaces());
+
         indexChoiceBox.setValue(model.getIndexStyle());
         indexChoiceBox.setDisable(model.isStandardIndices());
         indexLabel.setDisable(model.isStandardIndices());
+
         pipChoiceBox.setValue(model.getPipStyle());
         pipChoiceBox.setDisable(model.isStandardPips());
         pipLabel.setDisable(model.isStandardPips());
@@ -147,8 +151,8 @@ public class PrimaryController {
 
         setCardSizeRadioState();
 
-        colourTextField.setText(model.getBackgroundColourString());
-        colourPicker.setValue(model.getBackgroundColour());
+        cardColourTextField.setText(model.getBackgroundColourString());
+        cardColourPicker.setValue(model.getBackgroundColour());
 
         indicesCheckBox.setSelected(model.isDisplayIndex());
         cornerPipCheckBox.setSelected(model.isDisplayCornerPip());
@@ -196,13 +200,16 @@ public class PrimaryController {
     private Button saveButton;
 
     @FXML
+    private CheckBox useStandardFacesCheckBox;
+
+    @FXML
     private Label faceLabel;
 
     @FXML
     private ChoiceBox<String> faceChoiceBox;
 
     @FXML
-    private CheckBox UseStandardIndicesCheckBox;
+    private CheckBox useStandardIndicesCheckBox;
 
     @FXML
     private Label indexLabel;
@@ -211,7 +218,7 @@ public class PrimaryController {
     private ChoiceBox<String> indexChoiceBox;
 
     @FXML
-    private CheckBox UseStandardPipsCheckBox;
+    private CheckBox useStandardPipsCheckBox;
     
     @FXML
     private Label pipLabel;
@@ -299,14 +306,20 @@ public class PrimaryController {
     }
 
     @FXML
-    void UseStandardIndicesCheckBoxActionPerformed(ActionEvent event) {
-        model.setUseStandardIndices(UseStandardIndicesCheckBox.isSelected());
+    void useStandardFacesCheckBoxActionPerformed(ActionEvent event) {
+        model.setUseStandardFaces(useStandardFacesCheckBox.isSelected());
         model.syncAllUIs();
     }
 
     @FXML
-    void UseStandardPipsCheckBoxActionPerformed(ActionEvent event) {
-        model.setUseStandardPips(UseStandardPipsCheckBox.isSelected());
+    void useStandardIndicesCheckBoxActionPerformed(ActionEvent event) {
+        model.setUseStandardIndices(useStandardIndicesCheckBox.isSelected());
+        model.syncAllUIs();
+    }
+
+    @FXML
+    void useStandardPipsCheckBoxActionPerformed(ActionEvent event) {
+        model.setUseStandardPips(useStandardPipsCheckBox.isSelected());
         model.syncAllUIs();
     }
 
@@ -314,6 +327,18 @@ public class PrimaryController {
      * Initialize "Input Directories" panel.
      */
     private void initializeInputDirectories() {
+
+        useStandardFacesCheckBox.setSelected(model.isStandardFaces());
+        useStandardIndicesCheckBox.setSelected(model.isStandardIndices());
+        useStandardPipsCheckBox.setSelected(model.isStandardPips());
+
+        faceChoiceBox.setDisable(model.isStandardFaces());
+        indexChoiceBox.setDisable(model.isStandardIndices());
+        pipChoiceBox.setDisable(model.isStandardPips());
+
+        useStandardFacesCheckBox.setTooltip(new Tooltip("Use standard face images"));
+        useStandardIndicesCheckBox.setTooltip(new Tooltip("Use standard indices images"));
+        useStandardPipsCheckBox.setTooltip(new Tooltip("Use standard pip images"));
 
         baseDirectoryLabel.setTooltip(new Tooltip("Working directory that contains faces, indices and pips directories"));
         baseDirectoryComboBox.setTooltip(new Tooltip("Select the Base Directory"));
@@ -604,26 +629,26 @@ public class PrimaryController {
      */
 
     @FXML
-    private TextField colourTextField;
+    private TextField cardColourTextField;
 
     @FXML
-    private ColorPicker colourPicker;
+    private ColorPicker cardColourPicker;
 
     @FXML
-    void colourPickerActionPerformed(ActionEvent event) {
-        model.setBackgroundColour(colourPicker.getValue());
+    void cardColourPickerActionPerformed(ActionEvent event) {
+        model.setBackgroundColour(cardColourPicker.getValue());
         model.getSample().syncBackgroundColour();
-        colourTextField.setText(model.getBackgroundColourString());
+        cardColourTextField.setText(model.getBackgroundColourString());
     }
 
     /**
      * Initialize "Background Colour" panel.
      */
     private void initializeBackgroundColour() {
-        colourTextField.setTooltip(new Tooltip("Copy and paste where needed"));
-        colourPicker.setTooltip(new Tooltip("Select the background colour for the card"));
+        cardColourTextField.setTooltip(new Tooltip("Copy and paste where needed"));
+        cardColourPicker.setTooltip(new Tooltip("Select the background colour for the card"));
 
-        colourTextField.setText(model.getBackgroundColourString());
+        cardColourTextField.setText(model.getBackgroundColourString());
     }
 
 
