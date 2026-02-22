@@ -824,7 +824,7 @@ public class Model {
     }
 
     public void drawCardFace(GraphicsContext gc, Image image, Image rotatedImage) {
-        face.drawCard(gc, image, rotatedImage);
+        face.drawCard(gc, image, rotatedImage, 1);
     }
 
     public void drawCardStandardPip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
@@ -840,7 +840,7 @@ public class Model {
     }
 
     public void drawJokerFace(GraphicsContext gc, Image image) {
-        face.drawJoker(gc, image);
+        face.drawJoker(gc, image, null);
     }
 
 
@@ -1515,11 +1515,11 @@ public class Model {
      * Support code for "Modify Selected Card Item" panel.
      */
 
-    private MultiPayload index = null;
-    private MultiPayload cornerPip = null;
-    private MultiPayload standardPip = null;
-    private ImagePayload face = null;
-    private MultiPayload facePip = null;
+    private Payload index = null;
+    private Payload cornerPip = null;
+    private Payload standardPip = null;
+    private Payload face = null;
+    private Payload facePip = null;
     private Payload current = null;
     private Payload[] payloadSlider;
     
@@ -2264,8 +2264,8 @@ public class Model {
 
     public void setLeftHanded(boolean state) {
         leftHanded = state;
-        index.setMultiPatterns();
-        cornerPip.setMultiPatterns();
+        index.setPatterns();
+        cornerPip.setPatterns();
     }
 
     public void setShowGuideBox(boolean state) {

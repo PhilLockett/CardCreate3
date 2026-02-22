@@ -340,9 +340,10 @@ public class ImagePayload extends Payload {
      * @param gc graphics context to draw on.
      * @param iconImage used for the icons.
      * @param rotatedImage rotated version of the image used for the icons.
+     * @param pattern ignored.
      * @return true if the icons are drawn, false otherwise.
      */
-    public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage) {
+    public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
         if (iconImage == null)
             return false;
 
@@ -412,9 +413,10 @@ public class ImagePayload extends Payload {
      * 
      * @param gc graphics context to draw on.
      * @param image used for the icons.
+     * @param rotatedImage ignored.
      * @return true if the icons are drawn, false otherwise.
      */
-    public boolean drawJoker(GraphicsContext gc, Image image) {
+    public boolean drawJoker(GraphicsContext gc, Image image, Image rotatedImage) {
         if (image == null)
             return false;
 

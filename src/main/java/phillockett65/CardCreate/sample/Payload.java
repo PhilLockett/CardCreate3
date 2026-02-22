@@ -300,7 +300,7 @@ public class Payload {
     /**
      * Paint the icons associated with this payload if visible.
      */
-    protected void setPatterns() {
+    public void setPatterns() {
         Debug.trace(DD, "setPatterns() :: " + item);
 
         final boolean visible = isVisible();
@@ -689,6 +689,9 @@ public class Payload {
         return false;
     }
 
+    public void setKeepAspectRatio(boolean keepAspectRatio) {
+    }
+
     /**
      * Hide/display all locations of icons for this item.
      * @param state if true, display the icons, hide them otherwise.
@@ -764,9 +767,10 @@ public class Payload {
      * @param gc graphics context to draw on.
      * @param iconImage used for the icons.
      * @param rotatedImage rotated version of the image used for the icons.
+     * @param pattern ignored.
      * @return true if the icons are drawn, false otherwise.
      */
-    public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage) {
+    public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
         if (iconImage == null)
             return false;
 

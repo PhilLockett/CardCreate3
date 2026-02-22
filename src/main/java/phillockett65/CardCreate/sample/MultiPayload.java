@@ -228,7 +228,7 @@ public class MultiPayload extends Payload {
     /**
      * Paint the icons associated with this payload.
      */
-    public void setMultiPatterns() {
+    public void setPatterns() {
         Debug.trace(DD, "setMultiPatterns()");
 
         if (!hasImage())
@@ -272,7 +272,7 @@ public class MultiPayload extends Payload {
         if (loadNewImageFile()) {
             setImages(getImage());
             pattern = model.getCurrentPattern(item);
-            setMultiPatterns();
+            setPatterns();
 
             return true;
         }
@@ -286,7 +286,7 @@ public class MultiPayload extends Payload {
     public void syncCardSize() {
         Debug.trace(DD, "syncCardSize() :: number");
 
-        setMultiPatterns();
+        setPatterns();
     }
 
     
@@ -296,7 +296,7 @@ public class MultiPayload extends Payload {
      */
     public void setX(double value) {
         if (setSpriteCentreX(value))
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -305,7 +305,7 @@ public class MultiPayload extends Payload {
      */
     public void setY(double value) {
         if (setSpriteCentreY(value))
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -324,7 +324,7 @@ public class MultiPayload extends Payload {
             valid = false;
 
         if (valid)
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -333,7 +333,7 @@ public class MultiPayload extends Payload {
      */
     public void setSize(double size) {
         if (setSpriteSize(size))
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -356,7 +356,7 @@ public class MultiPayload extends Payload {
             valid = false;
 
         if (valid)
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -364,7 +364,7 @@ public class MultiPayload extends Payload {
      */
     public void incSize() {
         if (incSpriteSize(Default.STEP_COUNT.getInt()))
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -372,7 +372,7 @@ public class MultiPayload extends Payload {
      */
     public void decSize() {
         if (decSpriteSize(Default.STEP_COUNT.getInt()))
-            setMultiPatterns();
+            setPatterns();
     }
 
     /**
@@ -382,10 +382,10 @@ public class MultiPayload extends Payload {
     public void resize(int steps) {
         if (steps > 0) {
             if (incSpriteSize(steps))
-                setMultiPatterns();
+                setPatterns();
         } else {
             if (decSpriteSize(-steps))
-                setMultiPatterns();
+                setPatterns();
         }
     }
 
@@ -394,7 +394,7 @@ public class MultiPayload extends Payload {
      */
     public void moveUp(int steps) {
         if (moveSpriteUp(steps))
-            setMultiPatterns();
+            setPatterns();
     }
     public void moveUp() { moveUp(Default.STEP_COUNT.getInt()); }
 
@@ -403,7 +403,7 @@ public class MultiPayload extends Payload {
      */
     public void moveDown(int steps) {
         if (moveSpriteDown(steps))
-            setMultiPatterns();
+            setPatterns();
     }
     public void moveDown() { moveDown(Default.STEP_COUNT.getInt()); }
 
@@ -412,7 +412,7 @@ public class MultiPayload extends Payload {
      */
     public void moveLeft(int steps) {
         if (moveSpriteLeft(steps))
-            setMultiPatterns();
+            setPatterns();
     }
     public void moveLeft() { moveLeft(Default.STEP_COUNT.getInt()); }
 
@@ -421,7 +421,7 @@ public class MultiPayload extends Payload {
      */
     public void moveRight(int steps) {
         if (moveSpriteRight(steps))
-            setMultiPatterns();
+            setPatterns();
     }
     public void moveRight() { moveRight(Default.STEP_COUNT.getInt()); }
 
@@ -439,7 +439,7 @@ public class MultiPayload extends Payload {
             getImageView(i).setVisible(visible);
 
             if (visible)
-                setMultiPatterns();
+                setPatterns();
         }
     }
 
