@@ -23,6 +23,7 @@
  */
 package phillockett65.CardCreate.sample;
 
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +34,73 @@ public class ImagePayload extends Payload {
 
     // Debug delta used to adjust the local logging level.
     private static final int DD = 0;
+
+
+    /************************************************************************
+     * Support code for ImageView array management.
+     */
+
+    private ImageView[] views;
+
+    /**
+     * Create the ImageView array to hold the image for this Payload.
+     * 
+     * @param group node to add the ImageViews to.
+     */
+    private void createImageViewArray() {
+
+        views = new ImageView[2];
+
+        views[0] = new ImageView();
+        views[0].setPreserveRatio(true);
+
+        views[1] = new ImageView();
+        views[1].setPreserveRatio(true);
+        views[1].setRotate(180);
+    }
+
+    public void removeFromGroup() {
+        final Group group = model.getGroup();
+
+        group.getChildren().remove(views[0]);
+        group.getChildren().remove(views[1]);
+    }
+
+    public void addToGroup() {
+        final Group group = model.getGroup();
+
+        group.getChildren().add(views[0]);
+        group.getChildren().add(views[1]);
+    }
+
+    /**
+     * Create the ImageView array to hold the image for this Payload and add 
+     * the ImageViews to the Group.
+     */
+    protected void createImageViews() {
+        createImageViewArray();
+        addToGroup();
+    }
+
+    /**
+     * Get the indexed ImageView.
+     * 
+     * @param imageIndex for the ImageView in views[].
+     * @return the indicated ImageView.
+     */
+    protected ImageView getImageView(int imageIndex) {
+        return views[imageIndex];
+    }
+
+    /**
+     * Set the image in all ImageViews.
+     * 
+     * @param image to be set in each ImageView in views[].
+     */
+    private void setImages(Image image) {
+        views[0].setImage(image);
+        views[1].setImage(image);
+    }
 
 
     /************************************************************************
@@ -62,11 +130,14 @@ public class ImagePayload extends Payload {
             return;
 
         if (loadNewImageFile()) {
-            setImages();
+            setImages(getImage());
             paintImage();
         }
     }
 
+    /**
+     * Paint image(s) associated with this payload.
+     */
     private void paintImage() {
         Debug.trace(DD, "paintImage() :: ImagePayload");
 
@@ -133,6 +204,21 @@ public class ImagePayload extends Payload {
     }
 
     /**
+     * Paint the icons associated with this payload if visible.
+     */
+    public void setPatterns() {
+        Debug.trace(DD, "setPatterns() :: " + item);
+
+        final boolean visible = isVisible();
+
+        getImageView(0).setVisible(visible);
+        getImageView(1).setVisible(visible);
+
+        if (visible)
+            paintImage();
+    }
+
+    /**
      * Set up the new image file based on the current file path.
      * 
      * @return true if the new file was loaded, false otherwise.
@@ -145,7 +231,7 @@ public class ImagePayload extends Payload {
             return false;
 
         if (loadNewImageFile()) {
-            setImages();
+            setImages(getImage());
             paintImage();
 
             return true;

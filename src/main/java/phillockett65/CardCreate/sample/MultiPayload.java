@@ -70,6 +70,14 @@ public class MultiPayload extends Payload {
     private ImageView[] views;
 
     /**
+     * @return the active ImageView count.
+     */
+    private int getImageCount() {
+        return views.length;
+    }
+
+
+    /**
      * Determine if the Icon/Sprite is to be displayed for the given pattern.
      * @param pattern to check.
      * @param imageIndex of the specific Icon/Sprite.
@@ -147,17 +155,10 @@ public class MultiPayload extends Payload {
      * @return the indicated ImageView.
      */
     private void setImages(Image image) {
-        for (int i = 0; i < views.length; ++i) {
+        for (int i = 0; i < getImageCount(); ++i) {
             getImageView(i).setImage(image);
 
         }
-    }
-
-    /**
-     * @return the active ImageView count.
-     */
-    private int getImageCount() {
-        return views.length;
     }
 
     /**
@@ -188,13 +189,13 @@ public class MultiPayload extends Payload {
         createImageViews();
 
         // Set up image dependent values.
-        initMultiImageViews();
+        initImageViews();
     }
 
     /**
      * Initialize the Image Views based on item.
      */
-    private void initMultiImageViews() {
+    protected void initImageViews() {
         setPath(item);
         Debug.trace(DD, "initMultiImageViews(" + path + ") :: number");
 
@@ -229,7 +230,7 @@ public class MultiPayload extends Payload {
      * Paint the icons associated with this payload.
      */
     public void setPatterns() {
-        Debug.trace(DD, "setMultiPatterns()");
+        Debug.trace(DD, "setPatterns()");
 
         if (!hasImage())
             return;

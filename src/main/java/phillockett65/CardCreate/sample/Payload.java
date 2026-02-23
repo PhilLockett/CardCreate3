@@ -45,46 +45,10 @@ public class Payload {
      * Support code for ImageView array management.
      */
 
-    private ImageView[] views;
-
-    /**
-     * Create the ImageView array to hold the image for this Payload.
-     * 
-     * @param group node to add the ImageViews to.
-     */
-    private void createImageViewArray() {
-
-        views = new ImageView[2];
-
-        views[0] = new ImageView();
-        views[0].setPreserveRatio(true);
-
-        views[1] = new ImageView();
-        views[1].setPreserveRatio(true);
-        views[1].setRotate(180);
-    }
-
     public void removeFromGroup() {
-        final Group group = model.getGroup();
-
-        group.getChildren().remove(views[0]);
-        group.getChildren().remove(views[1]);
     }
 
     public void addToGroup() {
-        final Group group = model.getGroup();
-
-        group.getChildren().add(views[0]);
-        group.getChildren().add(views[1]);
-    }
-
-    /**
-     * Create the ImageView array to hold the image for this Payload and add 
-     * the ImageViews to the Group.
-     */
-    protected void createImageViews() {
-        createImageViewArray();
-        addToGroup();
     }
 
     /**
@@ -94,24 +58,7 @@ public class Payload {
      * @return the indicated ImageView.
      */
     protected ImageView getImageView(int imageIndex) {
-        return views[imageIndex];
-    }
-
-    /**
-     * Set the image in all ImageViews.
-     * 
-     * @param image to be set in each ImageView in views[].
-     */
-    private void setImages(Image image) {
-        views[0].setImage(image);
-        views[1].setImage(image);
-    }
-
-    /**
-     * Set the image in all ImageViews.
-     */
-    protected void setImages() {
-        setImages(image);
+        return null;
     }
 
     protected class Real {
@@ -209,24 +156,7 @@ public class Payload {
     /**
      * Initialize the Image Views based on item.
      */
-    protected void initImageViews() {
-        setPath(item);
-        Debug.trace(DD, "initImageViews(" + path + ") :: " + item);
-
-        if (path.equals(""))
-            return;
-
-        if (loadNewImageFile()) {
-            setImages();
-
-            final boolean visible = isVisible();
-
-            getImageView(0).setVisible(visible);
-            getImageView(1).setVisible(visible);
-
-            paintIcons();
-        }
-    }
+    protected void initImageViews() { }
 
 
     /**
@@ -253,19 +183,6 @@ public class Payload {
      * @return true if the new file was loaded, false otherwise.
      */
     public boolean syncImageFile() {
-        setPath(item);
-        Debug.trace(DD, "syncImageFile(" + path + ") :: " + item);
-
-        if (path.equals(""))
-            return false;
-
-        if (loadNewImageFile()) {
-            setImages();
-            setPatterns();
-
-            return true;
-        }
-
         return false;
     }
 
@@ -300,26 +217,12 @@ public class Payload {
     /**
      * Paint the icons associated with this payload if visible.
      */
-    public void setPatterns() {
-        Debug.trace(DD, "setPatterns() :: " + item);
-
-        final boolean visible = isVisible();
-
-        getImageView(0).setVisible(visible);
-        getImageView(1).setVisible(visible);
-
-        if (visible)
-            paintIcons();
-    }
+    public void setPatterns() { }
 
     /**
      * Synchronise to the current card size.
      */
-    public void syncCardSize() {
-        Debug.trace(DD, "syncCardSize() :: " + item);
-
-        setPatterns();
-    }
+    public void syncCardSize() { }
 
     private boolean isValidPercentage(double value) {
         if ((value < 0D) || (value > 100D))
@@ -346,11 +249,7 @@ public class Payload {
      * Set the X co-ordinate of the centre of the sprite.
      * @param value as a percentage of the card width.
      */
-    public void setX(double value) {
-        Debug.trace(DD, "setX(" + value + ") :: " + item);
-        if (setSpriteCentreX(value))
-            setPatterns();
-    }
+    public void setX(double value) { }
 
     /**
      * Set the Y co-ordinate of the centre of the sprite.
@@ -370,30 +269,14 @@ public class Payload {
      * Set the Y co-ordinate of the centre of the sprite.
      * @param value as a percentage of the card height.
      */
-    public void setY(double value) {
-        Debug.trace(DD, "setY(" + value + ") :: " + item);
-        if (setSpriteCentreY(value))
-            setPatterns();
-    }
+    public void setY(double value) { }
 
     /**
      * Set the position of the centre of the sprite and the size.
      * @param x co-ordinate as a percentage of the card width.
      * @param y co-ordinate as a percentage of the card height.
      */
-    public void setPos(double x, double y) {
-        Debug.trace(DD, "setPos(" + x + ", " + y + ") :: " + item);
-        boolean valid = true;
-
-        if (!setSpriteCentreX(x))
-            valid = false;
-
-        if (!setSpriteCentreY(y))
-            valid = false;
-
-        if (valid)
-            setPatterns();
-    }
+    public void setPos(double x, double y) { }
 
     /**
      * Set the size of the sprite.
@@ -415,11 +298,7 @@ public class Payload {
      * Set the size of the sprite.
      * @param size as a percentage of the card height.
      */
-    public void setSize(double size) {
-        Debug.trace(DD, "setSize(" + size + ") :: " + item);
-        if (setSpriteSize(size))
-            setPatterns();
-    }
+    public void setSize(double size) { }
 
     /**
      * Set the position of the centre of the sprite and the size.
@@ -427,22 +306,7 @@ public class Payload {
      * @param y co-ordinate as a percentage of the card height.
      * @param size as a percentage of the card height.
      */
-    public void update(double x, double y, double size) {
-        Debug.trace(DD, "update(" + x + ", " + y + ", " + size + ") :: " + item);
-        boolean valid = true;
-
-        if (!setSpriteCentreX(x))
-            valid = false;
-
-        if (!setSpriteCentreY(y))
-            valid = false;
-
-        if (!setSpriteSize(size))
-            valid = false;
-
-        if (valid)
-            setPatterns();
-    }
+    public void update(double x, double y, double size) { }
 
 
     /**
@@ -468,10 +332,7 @@ public class Payload {
     /**
      * Increase the size of the sprite.
      */
-    public void incSize() {
-        if (incSpriteSize(Default.STEP_COUNT.getInt()))
-            setPatterns();
-    }
+    public void incSize() { }
 
     /**
      * Decrease the size of the sprite.
@@ -496,24 +357,13 @@ public class Payload {
     /**
      * Decrease the size of the sprite.
      */
-    public void decSize() {
-        if (decSpriteSize(Default.STEP_COUNT.getInt()))
-            setPatterns();
-    }
+    public void decSize() { }
 
     /**
      * Resize of the sprite.
      * @param steps number of Default.STEP_SIZE steps to resize by.
      */
-    public void resize(int steps) {
-        if (steps > 0) {
-            if (incSpriteSize(steps))
-                setPatterns();
-        } else {
-            if (decSpriteSize(-steps))
-                setPatterns();
-        }
-    }
+    public void resize(int steps) { }
 
     protected boolean moveSpriteUp(int steps) {
         double value = centreY.getPercent();
@@ -533,11 +383,8 @@ public class Payload {
     /**
      * Move the sprite up.
      */
-    public void moveUp(int steps) {
-        if (moveSpriteUp(steps))
-            setPatterns();
-    }
-    public void moveUp() { moveUp(Default.STEP_COUNT.getInt()); }
+    public void moveUp(int steps) { }
+    public void moveUp() { }
 
     protected boolean moveSpriteDown(int steps) {
         double value = centreY.getPercent();
@@ -557,11 +404,8 @@ public class Payload {
     /**
      * Move the sprite down.
      */
-    public void moveDown(int steps) {
-        if (moveSpriteDown(steps))
-            setPatterns();
-    }
-    public void moveDown() { moveDown(Default.STEP_COUNT.getInt()); }
+    public void moveDown(int steps) { }
+    public void moveDown() { }
 
     protected boolean moveSpriteLeft(int steps) {
         double value = centreX.getPercent();
@@ -581,11 +425,8 @@ public class Payload {
     /**
      * Move the sprite left.
      */
-    public void moveLeft(int steps) {
-        if (moveSpriteLeft(steps))
-            setPatterns();
-    }
-    public void moveLeft() { moveLeft(Default.STEP_COUNT.getInt()); }
+    public void moveLeft(int steps) { }
+    public void moveLeft() { }
 
     protected boolean moveSpriteRight(int steps) {
         double value = centreX.getPercent();
@@ -605,11 +446,8 @@ public class Payload {
     /**
      * Move the sprite right.
      */
-    public void moveRight(int steps) {
-        if (moveSpriteRight(steps))
-            setPatterns();
-    }
-    public void moveRight() { moveRight(Default.STEP_COUNT.getInt()); }
+    public void moveRight(int steps) { }
+    public void moveRight() { }
 
 
     public double getCentreX() {
@@ -696,16 +534,7 @@ public class Payload {
      * Hide/display all locations of icons for this item.
      * @param state if true, display the icons, hide them otherwise.
      */
-    public void setVisible(boolean state) {
-        Debug.trace(DD, "setVisible(" + state + ") :: " + item);
-        display = state;
-
-        getImageView(0).setVisible(display);
-        getImageView(1).setVisible(display);
-
-        if (display)
-            paintIcons();
-    }
+    public void setVisible(boolean state) { }
 
     /**
      * Indicates whether the Payload image should be drawn.
@@ -771,19 +600,6 @@ public class Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
-        if (iconImage == null)
-            return false;
-
-        final Data data = new Data(iconImage.getWidth(), iconImage.getHeight());
-
-        double posX = data.originX;
-        double posY = data.originY;
-        gc.drawImage(iconImage, posX, posY, data.width, data.height);
-
-        posX += data.winX;
-        posY += data.winY;
-        gc.drawImage(rotatedImage, posX, posY, data.width, data.height);
-
         return true;
     }
 
@@ -797,42 +613,6 @@ public class Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawJoker(GraphicsContext gc, Image iconImage, Image rotatedImage) {
-        if (image == null)
-            return false;
-
-        final double cardWidthPX = model.getWidth();
-        final double cardHeightPX = model.getHeight();
-        final double xOffset = model.getMpcBorderWidth();
-        final double yOffset = model.getMpcBorderHeight();
-
-        final double iconWidthPX = iconImage.getWidth();
-        final double iconHeightPX = iconImage.getHeight();
-        final boolean landscape = iconHeightPX < iconWidthPX;
-
-        double width;
-        double height;
-        double posX;
-        double posY;
-
-        if (landscape) {
-            height = cardHeightPX * 0.05;
-            width = height * iconWidthPX / iconHeightPX;
-
-            posX = cardHeightPX * 0.02;
-            posY = model.getArcWidthPX()/4;
-        } else {
-            width = cardWidthPX * 0.07;
-            height = width * iconHeightPX / iconWidthPX;
-
-            posX = cardWidthPX * 0.02;
-            posY = model.getArcHeightPX()/4;
-        }
-        gc.drawImage(iconImage, posX + xOffset, posY + yOffset, width, height);
-
-        posX = cardWidthPX - posX - width;
-        posY = cardHeightPX - posY - height;
-        gc.drawImage(rotatedImage, posX + xOffset, posY + yOffset, width, height);
-
         return true;
     }
 
