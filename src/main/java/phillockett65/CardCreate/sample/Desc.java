@@ -24,8 +24,6 @@
 
 package phillockett65.CardCreate.sample;
 
-import javafx.scene.shape.SVGPath;
-
 public class Desc {
 
     final ColourKey key;
@@ -52,13 +50,5 @@ public class Desc {
         // width = 1046.93;
         width = 1051.5;
         height = 1673.16;
-        // SVGPath pathSize = new SVGPath();
-        // pathSize.setContent(path);
-        // final double w = pathSize.getBoundsInLocal().getWidth();
-        // final double h = pathSize.getBoundsInLocal().getHeight();
-        // width = height * w / h;
-
-        // System.out.println("width  = " + width + "  d = " + (width-w));
-        // System.out.println("height = " + height + "  d = " + (height-h));
     }
 };

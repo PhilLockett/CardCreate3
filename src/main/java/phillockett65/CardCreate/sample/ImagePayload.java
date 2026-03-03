@@ -143,18 +143,7 @@ public class ImagePayload extends Payload {
 
         return false;
     }
-    /**
-     * Indicates whether the indexed SVGPath should be visible.
-     * 
-     * @param pathIndex for the SVGPath in paths[] (0 or 1).
-     * @return true if the image should be visible, false otherwise.
-     */
-    private boolean isSVGPathVisible(int pathIndex) {
-        final String symbol = model.getStandardSymbol(item);
-        final int count = SVGFaces.getFacePathCount(symbol);
 
-        return pathIndex < count;
-    }
     /**
      * set the visibilty for all ImageViews and SVGPaths.
      * 

@@ -29,7 +29,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
 import phillockett65.Debug.Debug;
 
 
@@ -246,14 +245,6 @@ public class MultiPayload extends Payload {
             setImages(getImage());
             pattern = model.getCurrentPattern(item);
         }
-    }
-
-    private void debugPath(SVGPath path, Color colour) {
-        SvgPathData svgPathData = svgPaths.getSvgPathData(item);
-        path.setContent(svgPathData.getBorder());
-        path.setStroke(colour);
-        path.setStrokeWidth(2);
-        path.setStrokeLineCap(StrokeLineCap.BUTT);
     }
 
     /**

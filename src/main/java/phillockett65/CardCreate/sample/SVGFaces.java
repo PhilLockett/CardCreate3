@@ -24,8 +24,6 @@
 
 package phillockett65.CardCreate.sample;
 
-import phillockett65.Debug.Debug;
-
 public class SVGFaces {
 
     private static final Desc[] CJ = {
