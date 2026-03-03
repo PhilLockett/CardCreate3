@@ -151,13 +151,11 @@ public class MultiPayload extends Payload {
     /**
      * set the image in all ImageViews.
      * 
-     * @param imageIndex for the ImageView in views[].
-     * @return the indicated ImageView.
+     * @param image for the ImageView in views[].
      */
     private void setImages(Image image) {
         for (int i = 0; i < getImageCount(); ++i) {
             getImageView(i).setImage(image);
-
         }
     }
 
@@ -197,7 +195,7 @@ public class MultiPayload extends Payload {
      */
     protected void initImageViews() {
         setPath(item);
-        Debug.trace(DD, "initMultiImageViews(" + path + ") :: number");
+        Debug.trace(DD, "initImageViews(" + path + ") :: " + item);
 
         if (path.equals(""))
             return;

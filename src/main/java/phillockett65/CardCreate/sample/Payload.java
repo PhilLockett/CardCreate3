@@ -24,7 +24,6 @@
  */
 package phillockett65.CardCreate.sample;
 
-import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,11 +44,9 @@ public class Payload {
      * Support code for ImageView array management.
      */
 
-    public void removeFromGroup() {
-    }
+    public void removeFromGroup() { }
 
-    public void addToGroup() {
-    }
+    public void addToGroup() { }
 
     /**
      * Get the indexed ImageView.
@@ -186,33 +183,6 @@ public class Payload {
         return false;
     }
 
-    /**
-     * Paint both icons associated with this payload.
-     */
-    private void paintIcons() {
-        Debug.trace(DD, "paintIcon() :: " + item);
-
-        if (!hasImage())
-            return;
-
-        final Data data = new Data(image.getWidth(), image.getHeight());
-
-        ImageView view = getImageView(0);
-        double posX = data.originX;
-        double posY = data.originY;
-
-        view.relocate(posX, posY);
-        view.setFitWidth(data.width);
-        view.setFitHeight(data.height);
-
-        view = getImageView(1);
-        posX += data.winX;
-        posY += data.winY;
-
-        view.relocate(posX, posY);
-        view.setFitWidth(data.width);
-        view.setFitHeight(data.height);
-    }
 
     /**
      * Paint the icons associated with this payload if visible.

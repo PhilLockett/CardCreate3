@@ -50,10 +50,8 @@ public class ImagePayload extends Payload {
     private void createImageViewArray() {
 
         views = new ImageView[2];
-
         views[0] = new ImageView();
         views[0].setPreserveRatio(true);
-
         views[1] = new ImageView();
         views[1].setPreserveRatio(true);
         views[1].setRotate(180);
@@ -124,7 +122,7 @@ public class ImagePayload extends Payload {
      */
     protected void initImageViews() {
         setPath(Item.FACE);
-        Debug.trace(DD, "initImageViews(" + path + ") :: image");
+        Debug.trace(DD, "initImageViews(" + path + ") :: " + item);
 
         if (path.equals(""))
             return;
@@ -139,7 +137,7 @@ public class ImagePayload extends Payload {
      * Paint image(s) associated with this payload.
      */
     private void paintImage() {
-        Debug.trace(DD, "paintImage() :: ImagePayload");
+        Debug.trace(DD, "paintImage() :: " + item);
 
         if (!hasImage())
             return;
@@ -200,7 +198,6 @@ public class ImagePayload extends Payload {
             view = getImageView(1);
             view.setVisible(false);
         }
-
     }
 
     /**

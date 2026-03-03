@@ -509,97 +509,81 @@ public class AdditionalController {
     @FXML
     void clubIndexColourPickerActionPerformed(ActionEvent event) {
         model.setClubIndexColour(clubIndexColourPicker.getValue());
-        model.getSample().syncIndexColour();
     }
 
     @FXML
     void diamondIndexColourPickerActionPerformed(ActionEvent event) {
         model.setDiamondIndexColour(diamondIndexColourPicker.getValue());
-        model.getSample().syncIndexColour();
     }
 
     @FXML
     void heartIndexColourPickerActionPerformed(ActionEvent event) {
         model.setHeartIndexColour(heartIndexColourPicker.getValue());
-        model.getSample().syncIndexColour();
     }
 
     @FXML
     void spadeIndexColourPickerActionPerformed(ActionEvent event) {
         model.setSpadeIndexColour(spadeIndexColourPicker.getValue());
-        model.getSample().syncIndexColour();
     }
 
     @FXML
     void clubPipColourPickerActionPerformed(ActionEvent event) {
         model.setClubPipColour(clubPipColourPicker.getValue());
-        model.getSample().syncPipColour();
     }
 
     @FXML
     void diamondPipColourPickerActionPerformed(ActionEvent event) {
         model.setDiamondPipColour(diamondPipColourPicker.getValue());
-        model.getSample().syncPipColour();
     }
 
     @FXML
     void heartPipColourPickerActionPerformed(ActionEvent event) {
         model.setHeartPipColour(heartPipColourPicker.getValue());
-        model.getSample().syncPipColour();
     }
 
     @FXML
     void spadePipColourPickerActionPerformed(ActionEvent event) {
         model.setSpadePipColour(spadePipColourPicker.getValue());
-        model.getSample().syncPipColour();
     }
 
     @FXML
     void whiteColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsWhiteColour(whiteColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void steelColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsSteelColour(steelColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void hairColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsHairColour(hairColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void fleshColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsFleshColour(fleshColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void yellowColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsYellowColour(yellowColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void redColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsRedColour(redColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void blueColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsBlueColour(blueColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     @FXML
     void blackColourPickerActionPerformed(ActionEvent event) {
         model.setCourtsBlackColour(blackColourPicker.getValue());
-        model.getSample().syncCourtColourS();
     }
 
     /**

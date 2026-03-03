@@ -903,7 +903,7 @@ public class Model {
 
 
     /**
-     * Initialize"Generate" panel.
+     * Initialize "Generate" panel.
      */
     private void initializeGenerate() {
     }
@@ -1056,6 +1056,7 @@ public class Model {
      * handle based on the currently selected card.
      */
     private void updateDisplayForCurrentCard() {
+        Debug.trace(DD, "updateDisplayForCurrentCard()");
         showCurrentWatermark();
         updateCardItemDisplayStatus();
         setCardItemPayloads();
@@ -1405,16 +1406,15 @@ public class Model {
      * card, false otherwise.
      */
     private boolean shouldItemBeDisplayed(Item item) {
-        if (item == Item.INDEX)
-            return shouldIndexBeDisplayed();
-        if (item == Item.CORNER_PIP)
-            return shouldCornerPipBeDisplayed();
-        if (item == Item.STANDARD_PIP)
-            return shouldStandardPipBeDisplayed();
-        if (item == Item.FACE)
-            return shouldFaceImageBeDisplayed();
-        if (item == Item.FACE_PIP)
-            return shouldFacePipBeDisplayed();
+        if (item == Item.INDEX)         return shouldIndexBeDisplayed();
+
+        if (item == Item.CORNER_PIP)    return shouldCornerPipBeDisplayed();
+
+        if (item == Item.STANDARD_PIP)  return shouldStandardPipBeDisplayed();
+
+        if (item == Item.FACE)          return shouldFaceImageBeDisplayed();
+
+        if (item == Item.FACE_PIP)      return shouldFacePipBeDisplayed();
  
         return false;
     }
