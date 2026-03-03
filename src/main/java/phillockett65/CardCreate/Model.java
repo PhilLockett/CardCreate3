@@ -46,6 +46,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import phillockett65.CardCreate.sample.CardSample;
+import phillockett65.CardCreate.sample.ColourKey;
 import phillockett65.CardCreate.sample.Default;
 import phillockett65.CardCreate.sample.Handle;
 import phillockett65.CardCreate.sample.ImagePayload;
@@ -68,71 +69,6 @@ public class Model {
     public static final int FACE_PIP_ID = 3;
     public static final int FACE_ID = 4;
 
-    /************************************************************************
-     * Support code for embedded svg paths.
-     */
-
-    static class SvgPathData {
-        String symbol;
-        double width;
-        double height;
-        String path;
-
-        SvgPathData(String s, double w, double h, String p) {
-            symbol = s;
-            width = w;
-            height = h;
-            path = p;
-        }
-    }
-
-    private static final SvgPathData[] svgPathData = {
-
-        new SvgPathData("Joker", 0.0, 0.0, ""),
-        new SvgPathData("A", 25.26, 37, "M 2 35 v -2.82 h 2.69 l 5.74 -30.18 h 3.26 l 6.32 30.18 h 2.17 v 2.82 h -7.41 v -2.82 h 2 l -0.8 -4.62 h -7.47 l -0.58 4.62 h 2 v 2.82 z m 13.34 -10.74 l -3.25 -16.15 l -3.04 16.15 z"),
-        new SvgPathData("2", 22.78, 35.74, "M 2 33.67 l 0.16 -2.03 c 0.51 -6.29 1.86 -8.41 9.52 -14.97 c 3.72 -3.18 4.94 -4.75 5.11 -6.57 c 0.49 -4.3 -3.31 -5.64 -5.79 -5.66 c -3.21 -0.03 -6.84 1.92 -5.11 6.46 l -3.6 1.08 c -0.72 -4.23 0.02 -8.21 3.39 -9.97 c 4.5 -2.3 10.27 -1.4 13.18 2.22 c 1.96 2.43 2.41 5.79 1.36 8.42 c -3.07 6.72 -13.48 9.68 -14.34 17.45 h 11.51 v -4.33 h 3.39 v 7.97 l -18.78 -0.07 z" ),
-        new SvgPathData("3", 25.05, 36.97, "M 2 27.77 l 2.54 -1.87 c 2.2 3.59 4.67 5.96 8.44 5.55 c 5.66 -0.39 8 -6.32 6.82 -10.79 c -1.15 -4.01 -5.83 -5.96 -9.56 -3.83 c -0.88 0.51 -1.73 0.92 -1.89 0.92 c -0.39 0 -1.28 -1.76 -1.15 -2.3 c 2.5 -3.65 8.57 -10.05 8.57 -10.05 h -9.49 v 4.28 h -3.64 v -7.69 h 18.54 v 2.61 c 0 0 -4.97 5.15 -6.61 7.97 c 4.04 0.15 7.3 2.71 8.47 6.76 c 0.68 2.13 0.38 7.01 -0.52 9.11 c -1.49 3.51 -5.57 6.35 -9.3 6.51 c -6.26 0.42 -9.58 -3.96 -11.23 -7.21 z" ),
-        new SvgPathData("4", 24.59, 37, "M 12.53 35 v -2.91 h 2.63 v -4.81 h -13.16 v -3.39 l 14.24 -21.88 l 2.33 0.01 v 21.87 h 4.03 v 3.39 h -4.03 l -0.08 4.81 h 2.2 v 2.92 l -8.17 0 z m 2.63 -24.99 l -9.04 13.87 h 9.04 z" ),
-        new SvgPathData("5", 24.59, 37, "M 2 26.46 l 3.23 -0.03 c 0.62 1.99 1.98 4.02 3.84 4.58 c 5.24 1.25 8.61 -1.73 9.72 -5.17 c 1.35 -4.17 -0.03 -10.02 -3.64 -12.1 c -2.99 -1.72 -7.43 -0.27 -9.47 3.42 l -2.27 -1.41 l 1.22 13.74 h 14.8 v 3.25 h -11.99 l -0.19 5.72 c 2.58 -1.85 6.55 -1.83 9.13 -0.53 c 4.89 2.37 7.16 7.77 6.21 14.13 c -1.32 6.33 -4.22 9.91 -10.77 10.43 c -7.28 0.07 -9.85 -5.03 -9.82 -8.54 v 0 z" ),
-        new SvgPathData("6", 23.74, 36.69, "M 2.06 24.54 c -0.41 -2.78 -0.4 -9.96 -0.06 -12.08 c 1.02 -6.51 3.51 -9.48 7.67 -10.46 c 4.04 -0.95 9.72 0.11 10.97 5.55 l -3.38 0.07 c -1.83 -3.68 -6.45 -2.69 -9.06 -1.09 c -2.08 1.27 -3.02 6.59 -2.62 6.92 c 0 0 3.93 -2.91 7.03 -2.7 c 6.62 0.69 9.36 6.43 9.12 11.86 c -0.21 6.53 -2.28 11.74 -9.3 12.09 c -6.68 -0.26 -9.73 -3.9 -10.38 -10.15 v 0 z m 16.46 -1.72 c 0.04 -4.53 -2.02 -7.92 -5.91 -8.29 c -3.89 -0.37 -7.81 3.42 -7.54 8.04 c 0.27 4.63 2.06 8.53 6.78 8.51 c 5.07 -0.02 6.64 -5.03 6.67 -8.26 z" ),
-        new SvgPathData("7", 24.26, 37, "M 7.06 35 c 2.17 -11.47 4.48 -20.09 10.55 -29.43 h -12.33 v 4.02 h -3.27 v -7.59 h 18.03 l 2.22 3.56 c -6.44 7.03 -12.34 29.77 -11.29 29.43 z" ),
-        new SvgPathData("8", 25.44, 36.99, "M 2 25.33 c 0.16 -4.43 1.76 -6.09 4.91 -8.41 c -2.52 -1.81 -3.58 -4.49 -3.36 -6.77 c 0.52 -5.51 4.78 -8.27 9.42 -8.15 c 4.65 0.12 8.65 3.81 8.97 7.82 c 0.27 3.48 -0.76 5.16 -3.23 7 c 2.93 2.48 4.81 4.1 4.74 8.47 c -0.07 4.36 -3.78 9.56 -10.25 9.71 c -6.47 0.16 -11.35 -5.23 -11.19 -9.66 z m 18.06 0.02 c 0.28 -4.01 -3.27 -6.72 -7.27 -6.76 c -3.9 -0.04 -7.38 3.28 -7.38 6.89 c 0 3.87 4.53 5.97 7.46 5.98 c 3.56 0.02 6.95 -2.65 7.19 -6.11 z m -1.28 -14.35 c 0.08 -3.37 -3.04 -5.8 -6.25 -5.7 c -2.86 0.09 -5.88 2.27 -5.89 5.09 c 0 3.53 3.44 5.3 6.38 5.37 c 2.67 0.06 5.7 -2.21 5.76 -4.76 z" ),
-        new SvgPathData("9", 22.84, 36.32, "M 2.21 28.03 l 3.02 -0.96 c 1.14 3.04 3.44 3.94 5.88 3.75 c 4.37 -0.35 5.82 -5.23 6.15 -9.55 c -1.7 1.81 -4.26 2.72 -6.44 2.63 c -6.97 -0.37 -8.75 -5.95 -8.81 -11.78 c -0.19 -4.92 1.84 -8.48 5.33 -10.12 c 1.85 -0.83 6.08 -0.83 7.94 0.15 c 4.27 2.25 5.85 6.14 5.56 15.43 c 0 7.64 -1.62 16.54 -9.81 16.74 c -4.73 0.65 -8.33 -3.03 -8.81 -6.29 z m 11.86 -8.37 c 1.42 -0.9 2.22 -1.74 2.86 -3.01 c 0.52 -1.04 0.7 -1.58 0.55 -3.73 c -0.39 -5.54 -3.29 -8.69 -7.5 -8.06 c -2.35 0.35 -3.64 1.67 -4.37 4.11 c -1.36 4.52 0.37 9.81 3.6 11.03 c 1.46 0.55 3.71 0.39 4.87 -0.34 z" ),
-        new SvgPathData("10", 23.31, 37, "M 2 35 v -33 h 3.2 v 33 z m 0 0 M 13.95 2 c -3.08 0 -5.55 2.81 -5.55 6.31 v 20.39 c 0 3.49 2.48 6.3 5.55 6.3 h 1.8 c 3.08 0 5.56 -2.81 5.56 -6.3 v -20.39 c 0 -3.49 -2.48 -6.31 -5.56 -6.31 z m 0.93 3.12 c 1.82 0 3.28 1.39 3.28 3.14 v 20.66 c 0 1.74 -1.46 3.15 -3.28 3.15 c -1.82 0 -3.28 -1.41 -3.28 -3.15 v -20.66 c 0 -1.74 1.47 -3.14 3.28 -3.14 z m 0 0" ),
-        new SvgPathData("J", 24.2, 36.67, "M 11.99 2 v 3.45 h 3.35 c 0 0 0.08 3.33 0.11 10.39 c 0.03 6.86 0.17 10.26 -0.27 12.21 c -1.18 4.5 -7.7 4.53 -8.99 1.29 c -0.75 -1.88 -0.55 -3.35 -0.59 -5.24 h -3.61 c 0 0 0.02 0.95 0.03 2.12 c 0.02 5.06 1.7 7.48 5.62 8.44 c 4.03 1.09 8.75 -0.57 10.43 -4.02 c 1 -1.96 0.88 -2.1 0.91 -13.98 c 0.02 -7.92 0.14 -11.22 0.14 -11.22 h 3.09 v -3.45 h -10.21 z" ),
-        new SvgPathData("Q", 24.05, 37, "M 4.76 24.25 h -2.76 v -3.76 h 2.76 c 0 0 0.02 -2.03 0.1 -5.6 c 0.17 -7.62 0.36 -8.8 2.57 -10.9 c 4.35 -4.14 11.65 -0.77 11.56 5.46 c -0.13 8.79 -0.04 17.18 -0.29 18.36 c -0.46 2.09 -0.5 2.21 -0.32 2.59 c 0.38 0.77 3.68 1.1 3.68 0.89 v 3.7 c -2.52 0.2 -3.56 -0.04 -5.57 -1.48 c -1.26 1.21 -5.08 2.43 -8.13 1 c -2.31 -1.09 -4.07 -3.9 -3.59 -10.27 z m 9.32 6.56 c -1.37 -1.97 -3.67 -4.67 -5.83 -5.63 c -0.14 2.27 0.06 4.17 0.86 5.2 c 1.27 1.63 3.32 2 4.97 0.43 z m 1.13 -21.72 c -1.01 -2.87 -3.62 -3.85 -5.52 -2.05 c -1.19 1.12 -1.38 2.3 -1.41 8.69 c -0.02 3.94 -0.02 5.6 -0.02 5.6 c 3.71 1.2 7.17 5.52 7.14 5.47 l 0.09 -11.93 c 0.07 -1.94 -0.02 -3.87 -0.29 -5.78 v 0 z" ),
-        new SvgPathData("K", 26.13, 37, "M 13.86 31.37 h 3.32 l -4.88 -12.18 l -3.73 5.15 l 0.03 7.04 h 2.62 v 3.63 h -9.22 v -3.63 h 3.04 v -26.2 l -3.04 0.01 v -3.17 h 9.36 v 3.28 h -2.58 l -0.06 12.77 l 8.17 -12.88 h -2.88 v -3.17 h 9.95 v 3.17 h -2.63 l -6.72 10.52 l 6.58 15.67 h 2.92 l 0.02 3.63 h -10.24 l -0.03 -3.63 z" ),
-
-        new SvgPathData("C", 48.97, 52, "M 24.48 2 c -9.82 0.21 -14.22 11.25 -6.95 19.83 c 1.05 1.25 1.16 1.97 -0.77 0.77 c -4.9 -3.27 -14.28 -1.12 -14.76 8.88 c -0.59 12.32 16.64 15.87 19.87 2.77 c 0.17 -1.38 1.3 -1.35 1.02 0.61 c -0.3 5.32 -1.96 10.3 -4.25 15.15 h 11.67 c -2.29 -4.85 -3.95 -9.83 -4.25 -15.15 c -0.27 -1.96 0.85 -1.99 1.02 -0.61 c 3.24 13.1 20.47 9.55 19.87 -2.77 c -0.48 -10 -9.87 -12.15 -14.76 -8.88 c -1.93 1.2 -1.82 0.48 -0.77 -0.77 c 7.27 -8.57 2.87 -19.61 -6.95 -19.83 c 0 0 0 0 -0.01 0 z" ),
-        new SvgPathData("D", 38.92, 52, "M 19.46 50 c -5.19 -8.56 -10.64 -16.89 -17.46 -24 c 6.82 -7.11 12.27 -15.44 17.46 -24 c 5.19 8.56 10.64 16.89 17.46 24 c -6.82 7.11 -12.27 15.44 -17.46 24 z" ),
-        new SvgPathData("H", 41.7, 51.99, "M 20.85 49.99 c 0 0 -4.67 -7.66 -10.96 -16.66 c -4.21 -6.02 -7.58 -12.55 -7.89 -18.16 c -0.36 -6.42 3.04 -12.86 9.19 -13.17 c 6.15 -0.31 8.64 4.95 9.66 9.28 c 1.02 -4.34 3.51 -9.6 9.66 -9.28 c 6.15 0.31 9.55 6.75 9.19 13.17 c -0.31 5.55 -3.6 11.98 -7.74 17.95 c -0.05 0.07 -0.1 0.15 -0.15 0.22 c -6.29 9 -10.96 16.66 -10.96 16.66 z" ),
-        new SvgPathData("S", 40.88, 49.94, "M 20.44 2 c -8.83 12.59 -18.28 19.84 -18.44 29.67 c -0.05 3.18 1.67 8.59 7.06 9.62 c 3.5 0.67 8.31 -2.16 8.41 -7.91 c -0.02 -1.14 1.21 -1.11 1.2 0.45 c -0.16 4.53 -1.6 9.81 -4.01 14.11 h 11.57 c -2.41 -4.3 -3.85 -9.58 -4.01 -14.11 c -0.01 -1.57 1.22 -1.6 1.2 -0.45 c 0.1 5.75 4.91 8.58 8.41 7.91 c 5.39 -1.04 7.11 -6.44 7.06 -9.62 c -0.16 -9.83 -9.61 -17.07 -18.44 -29.67 z" ),
-
-        new SvgPathData("CS", 21.99, 24, "M 10.99 2 c -3.93 0.09 -5.69 4.69 -2.78 8.26 c 0.42 0.52 0.47 0.82 -0.31 0.32 c -1.96 -1.36 -5.71 -0.47 -5.91 3.7 c -0.24 5.13 6.65 6.61 7.95 1.15 c 0.07 -0.58 0.52 -0.56 0.41 0.25 c -0.12 2.22 -0.78 4.29 -1.7 6.31 h 4.67 c -0.92 -2.02 -1.58 -4.09 -1.7 -6.31 c -0.11 -0.82 0.34 -0.83 0.41 -0.25 c 1.29 5.46 8.19 3.98 7.95 -1.15 c -0.19 -4.16 -3.95 -5.06 -5.91 -3.7 c -0.77 0.5 -0.73 0.2 -0.31 -0.32 c 2.91 -3.57 1.15 -8.17 -2.78 -8.26 c 0 0 0 0 0 0 z" ),
-        new SvgPathData("DS", 18.55, 24, "M 9.28 22 c -2.16 -3.57 -4.43 -7.04 -7.28 -10 c 2.84 -2.96 5.11 -6.43 7.28 -10 c 2.16 3.57 4.43 7.04 7.28 10 c -2.84 2.96 -5.11 6.43 -7.28 10 z" ),
-        new SvgPathData("HS", 21.98, 23.99, "M 10.99 21.99 c 0 0 -2.22 -3.19 -5.23 -6.94 c -2.01 -2.51 -3.61 -5.23 -3.76 -7.57 c -0.17 -2.67 1.45 -5.36 4.38 -5.49 c 2.93 -0.13 4.12 2.06 4.61 3.87 c 0.48 -1.81 1.67 -4 4.61 -3.87 c 2.93 0.13 4.55 2.81 4.38 5.49 c -0.15 2.34 -1.75 5.06 -3.76 7.57 c -3 3.75 -5.23 6.94 -5.23 6.94 z" ),
-        new SvgPathData("SS", 20.83, 22.69, "M 10.42 2 c -4.03 5.12 -8.34 8.07 -8.42 12.07 c -0.02 1.29 0.76 3.49 3.22 3.92 c 1.6 0.27 3.79 -0.88 3.84 -3.22 c -0.01 -0.47 0.55 -0.45 0.55 0.18 c -0.07 1.84 -0.73 3.99 -1.83 5.74 h 5.28 c -1.1 -1.75 -1.76 -3.9 -1.83 -5.74 c -0.01 -0.64 0.55 -0.65 0.55 -0.18 c 0.05 2.34 2.24 3.49 3.84 3.22 c 2.46 -0.42 3.24 -2.62 3.22 -3.92 c -0.07 -4 -4.38 -6.95 -8.42 -12.07 z" ),
-
-    };
-
-    public static SvgPathData getSvgPathData(int index) {
-        if (index < 0 || index >= svgPathData.length) {
-            Debug.trace(DD, "getSvgPathData() - invalid index: " + index);
-            return null;
-        }
-        return svgPathData[index];
-    }
-
-    public static SvgPathData getSvgPathData(String symbol) {
-        for (int i = 0; i < svgPathData.length; i++) {
-            if (svgPathData[i].symbol.equals(symbol)) {
-                return svgPathData[i];
-            }
-        }
-
-        Debug.trace(DD, "getSvgPathData() - invalid symbol: " + symbol);
-        return null;
-    }
 
     /************************************************************************
      ************************************************************************
@@ -222,6 +158,8 @@ public class Model {
         primaryController.init();
         additionalController.init();
         sample.init();
+
+        syncAllUIs();
     }
 
     /**
@@ -594,6 +532,25 @@ public class Model {
     public Boolean isStandardIndices() { return useStandardIndices; }
     public Boolean isStandardPips() { return useStandardPips; }
 
+
+    /**
+     * @return true if the specified Item should be displayed for the current 
+     * card, false otherwise.
+     */
+    public boolean shouldStandardBeDisplayed(Item item) {
+        Debug.trace(DD, "shouldStandardBeDisplayed(" + item + ")");
+        if (item == Item.FACE) {
+            if (isFaceCard(card) == false)
+                return false;
+
+            return isStandardFaces();
+        }
+
+        if (item == Item.INDEX) return isStandardIndices();
+
+        return isStandardPips();
+    }
+
     public void setUseStandardFaces(boolean state) {
         useStandardFaces = state;
     }
@@ -819,21 +776,46 @@ public class Model {
         index.drawCard(gc, image, rotatedImage, pattern);
     }
 
+    public void drawCardIndex(GraphicsContext gc, int pattern, int card) {
+        index.drawCard(gc, pattern, getOrder(card));
+    }
+
+
     public void drawCardCornerPip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
         cornerPip.drawCard(gc, image, rotatedImage, pattern);
     }
+
+    public void drawCardCornerPip(GraphicsContext gc, int pattern, int suit) {
+        cornerPip.drawCard(gc, pattern, getSuit(suit) + "S");
+    }
+
 
     public void drawCardFace(GraphicsContext gc, Image image, Image rotatedImage) {
         face.drawCard(gc, image, rotatedImage, 1);
     }
 
+    public void drawCardFace(GraphicsContext gc, int suit, int card) {
+        face.drawCard(gc, 1, getCard(suit, card));
+    }
+
+
     public void drawCardStandardPip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
         standardPip.drawCard(gc, image, rotatedImage, pattern);
     }
 
+    public void drawCardStandardPip(GraphicsContext gc, int pattern, int suit) {
+        standardPip.drawCard(gc, pattern, getSuit(suit));
+    }
+
+
     public void drawCardFacePip(GraphicsContext gc, Image image, Image rotatedImage, int pattern) {
         facePip.drawCard(gc, image, rotatedImage, pattern);
     }
+
+    public void drawCardFacePip(GraphicsContext gc, int pattern, int suit) {
+        facePip.drawCard(gc, pattern, getSuit(suit));
+    }
+
 
     public void drawJokerIndex(GraphicsContext gc, Image image, Image rotatedImage) {
         index.drawJoker(gc, image, rotatedImage);
@@ -896,6 +878,19 @@ public class Model {
     public int currentPattern() { return isLeftHanded() ? 4 : 0; }
     public boolean isCurrentJoker() { return currentCard() == 0; }
     private boolean isCurrentAce() { return currentCard() == 1; }
+
+    public Color currentIndexColour() { return getIndexColour(currentSuit()); }
+    public Color currentSuitColour() { return getPipColour(currentSuit()); }
+    public Color getCurrentStandardColour(Item item) {
+        if (item == Item.FACE)
+            return Color.TRANSPARENT;
+
+        if (item == Item.INDEX)
+            return currentIndexColour();
+
+        return currentSuitColour();
+    }
+
 
     public String currentOutputImagePath() { 
         return getOutputImagePath(currentSuit(), currentCard());
@@ -999,7 +994,9 @@ public class Model {
     public void setCardIndex(int value) { card = value; }
 
     public String getSuit() { return suits[suit]; }
+    public String getSuit(int s) { return suits[s]; }
     public String getOrder() { return cards[card]; }
+    public String getOrder(int c) { return cards[c]; }
     public String getCard(int s, int c) { return suits[s] + cards[c]; }
     public String getCard() { return getCard(suit, card); }
 
@@ -1010,22 +1007,13 @@ public class Model {
      * @return the current standard symbol for the given Item.
      */
     public String getStandardSymbol(Item item) {
-        if (item == Item.FACE)
-            return getCard();
+        if (item == Item.FACE)          return getCard();
 
-        if (item == Item.INDEX)
-            return getOrder();
+        if (item == Item.INDEX)         return getOrder();
 
-        if (item == Item.STANDARD_PIP)
-            return getSuit();
+        if (item == Item.CORNER_PIP)    return getSuit() + "S";
 
-        if (item == Item.FACE_PIP)
-            return getSuit();
-
-        if (item == Item.CORNER_PIP)
-            return getSuit() + "S";
-
-        return "";
+        return getSuit();
     }
 
     /**
@@ -1035,17 +1023,13 @@ public class Model {
      * @return the current standard symbol for the given Item.
      */
     public int getCurrentPattern(Item item) {
-        if (item == Item.FACE)
-            return 1;
+        if (item == Item.FACE)          return 1;
 
-        if (item == Item.STANDARD_PIP)
-            return getCardIndex();
+        if (item == Item.FACE_PIP)      return 0;
 
-        if (item == Item.FACE_PIP)
-            return 0;
+        if (item == Item.STANDARD_PIP)  return getCardIndex();
 
-        if ((item == Item.INDEX) || (item == Item.CORNER_PIP))
-            return isLeftHanded() ? 4 : 0;
+        if (isLeftHanded()) return 4;
 
         return 0;
     }
@@ -1103,14 +1087,14 @@ public class Model {
      * @return true if the specified card is a face card (court card), false 
      * otherwise.
      */
-    private boolean isFaceCard(int c) {
+    public boolean isFaceCard(int c) {
         return c > 10;
     }
 
     /**
      * @return true if the specified card has an image file, false otherwise.
      */
-    private boolean isImageCard(int s, int c) {
+    public boolean isImageCard(int s, int c) {
         return isFaceImageExists(s, c);
     }
 
@@ -1373,10 +1357,10 @@ public class Model {
      * card, false otherwise.
      */
     public boolean shouldStandardPipBeDisplayed(int s, int c) {
-        if (!isImageCard(s, c))
-            return displayStandardPip;
-        
-        return false;
+        if (displayStandardPip == false)
+            return false;
+
+        return !isImageCard(s, c);
     }
 
     /**
@@ -1384,10 +1368,10 @@ public class Model {
      * card, false otherwise.
      */
     public boolean shouldFaceImageBeDisplayed(int s, int c) {
-        if (isImageCard(s, c))
-            return displayFaceImage;
+        if (displayFaceImage == false)
+            return false;
 
-        return false;
+        return isImageCard(s, c);
     }
 
     /**
@@ -1395,10 +1379,10 @@ public class Model {
      * card, false otherwise.
      */
     public boolean shouldFacePipBeDisplayed(int c) {
-        if (isFaceCard(c))
-            return displayFacePip;
+        if (displayFacePip == false)
+            return false;
 
-        return false;
+        return isFaceCard(c);
     }
 
     /**
@@ -1763,17 +1747,100 @@ public class Model {
         setPipCardItemPayloads();
     }
 
+    public enum DisplayType {
+        NONE, SVG_PIPS, SVG_FACE, FILE_PIPS, FILE_FACE, MAX
+    };
+
+    /**
+     * Determine the type to display for a specified card based on the current 
+     * display settings and the availability of image files.
+     * @param s suit of card to display.
+     * @param c card number of card to display.
+     * @return the type to display for the specified card.
+     */
+    public DisplayType getDisplayType(int s, int c) {
+        if (isFaceCard(c)) {
+            if (displayFaceImage == false)
+                return DisplayType.NONE;
+
+            if (useStandardFaces)
+                return DisplayType.SVG_FACE;
+        } else {
+            if (displayStandardPip == false)
+                return DisplayType.NONE;
+
+            if (useStandardPips)
+                return DisplayType.SVG_PIPS;
+        }
+
+        if (isImageCard(s, c))
+            return DisplayType.FILE_FACE;
+
+        return DisplayType.FILE_PIPS;
+    }
+
+    /**
+     * Determine the type to display for the current card based on the current 
+     * display settings and the availability of image files.
+     * @return the type to display for the specified card.
+     */
+    public DisplayType getDisplayType() {
+        return getDisplayType(suit, card);
+    }
+
+
+    public enum SourceType { NONE, SVG, FILE, MAX };
+
+    public SourceType getSourceType(int s, int c) {
+        final DisplayType type = getDisplayType(s, c);
+
+        if ((type == DisplayType.SVG_FACE) || (type == DisplayType.SVG_PIPS))
+            return SourceType.SVG;
+
+        if ((type == DisplayType.FILE_FACE) || (type == DisplayType.FILE_PIPS))
+            return SourceType.FILE;
+
+        return SourceType.NONE;
+    }
+
+    public SourceType getSourceType() {
+        return getSourceType(suit, card);
+    }
+
+
+    public enum TargetType { NONE, FACE, PIPS, MAX };
+
+    public TargetType getTargetType(int s, int c) {
+        final DisplayType type = getDisplayType(s, c);
+
+        if ((type == DisplayType.SVG_FACE) || (type == DisplayType.FILE_FACE))
+            return TargetType.FACE;
+
+        if ((type == DisplayType.SVG_PIPS) || (type == DisplayType.FILE_PIPS))
+            return TargetType.PIPS;
+
+        return TargetType.NONE;
+    }
+
+    public TargetType getTargetType() {
+        return getTargetType(suit, card);
+    }
+
+
     /**
      * Set the display status of the card items specifically for the current 
      * card.
      */
     private void updateCardItemDisplayStatus() {
+        Debug.trace(DD, "updateCardItemDisplayStatus()");
         index.setVisible(shouldIndexBeDisplayed());
         cornerPip.setVisible(shouldCornerPipBeDisplayed());
 
         showImageBox();
-        face.setVisible(shouldFaceImageBeDisplayed());
-        standardPip.setVisible(shouldStandardPipBeDisplayed());
+
+        final TargetType type = getTargetType(suit, card);
+        face.setVisible(type == TargetType.FACE);
+        standardPip.setVisible(type == TargetType.PIPS);
 
         facePip.setVisible(shouldFacePipBeDisplayed());
 
@@ -2365,22 +2432,23 @@ public class Model {
     /************************************************************************
      * Support code for "Select Standard Index/Pip Colour" panel. 
      */
+
     private Color clubIndexColour = Color.BLACK;
-    private Color diamondIndexColour = Color.RED;
-    private Color heartIndexColour = Color.RED;
+    private Color diamondIndexColour = Color.web("#F41E22");
+    private Color heartIndexColour = Color.web("#F41E22");
     private Color spadeIndexColour = Color.BLACK;
     private Color clubPipColour = Color.BLACK;
-    private Color diamondPipColour = Color.RED;
-    private Color heartPipColour = Color.RED;
+    private Color diamondPipColour = Color.web("#F41E22");
+    private Color heartPipColour = Color.web("#F41E22");
     private Color spadePipColour = Color.BLACK;
 
     private Color courtsWhiteColour = Color.WHITE;
-    private Color courtsSteelColour = Color.SILVER;
-    private Color courtshairColour = Color.OLIVE;
-    private Color courtsFleshColour = Color.PINK;
-    private Color courtsYellowColour = Color.YELLOW;
-    private Color courtsRedColour = Color.RED;
-    private Color courtsBlueColour = Color.BLUE;
+    private Color courtsSteelColour = Color.web("#E0E0F0");
+    private Color courtshairColour = Color.web("#F0F0F0");
+    private Color courtsFleshColour = Color.web("#FFF1E0");
+    private Color courtsYellowColour = Color.web("#F8D717");
+    private Color courtsRedColour = Color.web("#F41E22");
+    private Color courtsBlueColour = Color.web("#0F5AAA");
     private Color courtsBlackColour = Color.BLACK;
 
     public Color getClubIndexColour() { return clubIndexColour; }
@@ -2401,26 +2469,87 @@ public class Model {
     public Color getCourtsBlueColour() { return courtsBlueColour; }
     public Color getCourtsBlackColour() { return courtsBlackColour; }
 
-    public void setClubIndexColour(Color colour) { clubIndexColour = colour; }
-    public void setDiamondIndexColour(Color colour) { diamondIndexColour = colour; }
-    public void setHeartIndexColour(Color colour) { heartIndexColour = colour; }
-    public void setSpadeIndexColour(Color colour) { spadeIndexColour = colour; }
-    public void setClubPipColour(Color colour) { clubPipColour = colour; }
-    public void setDiamondPipColour(Color colour) { diamondPipColour = colour; }
-    public void setHeartPipColour(Color colour) { heartPipColour = colour; }
-    public void setSpadePipColour(Color colour) { spadePipColour = colour; }
+    public void setClubIndexColour(Color colour) { 
+        clubIndexColour = colour;
+        setIndexCardItemPayload();
+    }
 
-    public void setCourtsWhiteColour(Color colour) { courtsWhiteColour = colour; }
-    public void setCourtsSteelColour(Color colour) { courtsSteelColour = colour; }
-    public void setCourtsHairColour(Color colour) { courtshairColour = colour; }
-    public void setCourtsFleshColour(Color colour) { courtsFleshColour = colour; }
-    public void setCourtsYellowColour(Color colour) { courtsYellowColour = colour; }
-    public void setCourtsRedColour(Color colour) { courtsRedColour = colour; }
-    public void setCourtsBlueColour(Color colour) { courtsBlueColour = colour; }
-    public void setCourtsBlackColour(Color colour) { courtsBlackColour = colour; }
+    public void setDiamondIndexColour(Color colour) { 
+        diamondIndexColour = colour;
+        setIndexCardItemPayload();
+    }
 
-    public Color getIndexColour() {
-        switch (suit) {
+    public void setHeartIndexColour(Color colour) { 
+        heartIndexColour = colour;
+        setIndexCardItemPayload();
+    }
+
+    public void setSpadeIndexColour(Color colour) { 
+        spadeIndexColour = colour;
+        setIndexCardItemPayload();
+    }
+
+    public void setClubPipColour(Color colour) { 
+        clubPipColour = colour;
+        setPipCardItemPayloads();
+    }
+
+    public void setDiamondPipColour(Color colour) { 
+        diamondPipColour = colour;
+        setPipCardItemPayloads();
+    }
+
+    public void setHeartPipColour(Color colour) { 
+        heartPipColour = colour;
+        setPipCardItemPayloads();
+    }
+
+    public void setSpadePipColour(Color colour) { 
+        spadePipColour = colour;
+        setPipCardItemPayloads();
+    }
+
+    public void setCourtsWhiteColour(Color colour) {
+        courtsWhiteColour = colour;
+        setFaceCardItemPayload();
+    }
+    public void setCourtsSteelColour(Color colour) {
+        courtsSteelColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsHairColour(Color colour) {
+        courtshairColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsFleshColour(Color colour) {
+        courtsFleshColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsYellowColour(Color colour) {
+        courtsYellowColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsRedColour(Color colour) {
+        courtsRedColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsBlueColour(Color colour) {
+        courtsBlueColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public void setCourtsBlackColour(Color colour) {
+        courtsBlackColour = colour;
+        setFaceCardItemPayload();
+    }
+
+    public Color getIndexColour(int s) {
+        switch (s) {
             case 0: return clubIndexColour;
             case 1: return diamondIndexColour;
             case 2: return heartIndexColour;
@@ -2428,15 +2557,65 @@ public class Model {
 
         return spadeIndexColour;
     }
+    public Color getIndexColour() { return getIndexColour(suit); }
 
-    public Color getPipColour() {
-        switch (suit) {
+    public Color getPipColour(int s) {
+        switch (s) {
             case 0: return clubPipColour;
             case 1: return diamondPipColour;
             case 2: return heartPipColour;
         }
 
         return spadePipColour;
+    }
+    public Color getPipColour() { return getPipColour(suit); }
+
+    /**
+     * Get the current Standard Symbol for a specified Item.
+     * 
+     * @param item for which the current standard symbol is required.
+     * @return the current standard symbol for the given Item.
+     */
+    public Color getStandardColour(Item item) {
+        // Debug.trace(DD, "getStandardColour() :: " + item);
+
+        if (item == Item.FACE)
+            return Color.TRANSPARENT;
+
+        if (item == Item.INDEX)
+            return getIndexColour();
+
+        return getPipColour();
+    }
+
+    public Color getStandardColour(ColourKey colourKey) {
+        // Debug.trace(DD, "getStandardColour() :: " + colourKey);
+
+        if (colourKey == ColourKey.WHITE_ID)
+            return getCourtsWhiteColour();
+
+        if (colourKey == ColourKey.STEEL_ID)
+            return getCourtsSteelColour();
+
+        if (colourKey == ColourKey.FLESH_ID)
+            return getCourtsFleshColour();
+
+        if (colourKey == ColourKey.HAIR_ID)
+            return getCourtsHairColour();
+
+        if (colourKey == ColourKey.YELLOW_ID)
+            return getCourtsYellowColour();
+
+        if (colourKey == ColourKey.RED_ID)
+            return getCourtsRedColour();
+
+        if (colourKey == ColourKey.BLUE_ID)
+            return getCourtsBlueColour();
+
+        if (colourKey == ColourKey.BLACK_ID)
+            return getCourtsBlackColour();
+
+        return Color.TRANSPARENT;
     }
 
     /**

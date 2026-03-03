@@ -90,7 +90,7 @@ public class PrimaryController {
          * Initialize "Playing Card Generator" panel.
          */
 
-        setUpImageButton(generateButton, "icon-play.png", 60.0);
+        setUpImageButton(generateButton, "icon-play.png", 82.0);
         setUpImageButton(previousSuitButton, "icon-up.png", 48.0);
         setUpImageButton(previousCardButton, "icon-left.png", 48.0);
         setUpImageButton(nextCardButton, "icon-right.png", 48.0);

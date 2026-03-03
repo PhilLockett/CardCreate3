@@ -27,8 +27,9 @@ import javafx.concurrent.Task;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
+import phillockett65.CardCreate.Model.DisplayType;
 import phillockett65.CardCreate.sample.Default;
+import phillockett65.Debug.Debug;
 
 
 public class Generate extends Task<Long> {
@@ -116,6 +117,7 @@ public class Generate extends Task<Long> {
         final int card = model.currentCard();
         final int pattern = model.currentPattern();
         final Image[] images = model.currentImages();
+        Debug.trace(0, "generateCard(" + pattern +  ")");
 
         // Create blank card.
         CardContext cc = new CardContext();
@@ -126,6 +128,7 @@ public class Generate extends Task<Long> {
             gc.drawImage(model.getWatermark(), cc.getXOffset(), cc.getYOffset(), cc.getWidth(), cc.getHeight());
 
         int[] priorities = model.getPriorityList();
+        DisplayType type = DisplayType.NONE;
         for (int i = priorities.length-1; i >= 0; --i) {
 
             final int priority = priorities[i];
@@ -133,33 +136,60 @@ public class Generate extends Task<Long> {
             switch (priority) {
             case Model.INDEX_ID:
                 if (model.shouldIndexBeDisplayed()) {
-                    Image image = Utils.loadImage(model.getIndexImagePath(suit, card));
-                    Image rotatedImage = Utils.rotateImage(image);
-        
-                    model.drawCardIndex(gc, image, rotatedImage, pattern);
+                    if (model.isStandardIndices()) {
+                        model.drawCardIndex(gc, pattern, card);
+                    } else {
+                        Image image = Utils.loadImage(model.getIndexImagePath(suit, card));
+                        Image rotatedImage = Utils.rotateImage(image);
+            
+                        model.drawCardIndex(gc, image, rotatedImage, pattern);
+                    }
                 }
             break;
-        
+
             case Model.CORNER_PIP_ID:
-                if (model.shouldCornerPipBeDisplayed())
-                    model.drawCardCornerPip(gc, images[2], images[3], pattern);
+                if (model.shouldCornerPipBeDisplayed()) {
+                    if (model.isStandardPips()) {
+                        model.drawCardCornerPip(gc, pattern, suit);
+                    } else {
+                        model.drawCardCornerPip(gc, images[2], images[3], pattern);
+                    }
+                }
             break;
 
             case Model.STANDARD_PIP_ID:
-                if (model.shouldStandardPipBeDisplayed(suit, card))
+                type = model.getDisplayType(suit, card);
+                if (type == DisplayType.NONE)
+                    break;
+
+                if (type == DisplayType.SVG_PIPS) {
+                    model.drawCardStandardPip(gc, card, suit);
+                } else if (type == DisplayType.FILE_PIPS) {
                     model.drawCardStandardPip(gc, images[0], images[1], card);
+                }
             break;
 
             case Model.FACE_PIP_ID:
-                if (model.shouldFacePipBeDisplayed(card))
-                    model.drawCardFacePip(gc, images[4], images[5], 0);
+                if (model.shouldFacePipBeDisplayed(card)) {
+                    if (model.isStandardPips()) {
+                        model.drawCardFacePip(gc, pattern, suit);
+                    } else {
+                        model.drawCardFacePip(gc, images[4], images[5], 0);
+                    }
+                }
             break;
 
             case Model.FACE_ID:
-                if (model.shouldFaceImageBeDisplayed(suit, card)) {
+                type = model.getDisplayType(suit, card);
+                if (type == DisplayType.NONE)
+                    break;
+
+                if (type == DisplayType.SVG_FACE) {
+                    model.drawCardFace(gc, suit, card);
+                } else if (type == DisplayType.FILE_FACE) {
                     Image image = Utils.loadImage(model.getFaceImagePath(suit, card));
                     Image rotatedImage = Utils.rotateImage(image);
-        
+                    
                     model.drawCardFace(gc, image, rotatedImage);
                 }
             break;

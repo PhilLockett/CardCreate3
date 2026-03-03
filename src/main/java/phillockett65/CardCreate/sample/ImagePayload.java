@@ -27,6 +27,8 @@ import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import phillockett65.Debug.Debug;
 
 
@@ -41,6 +43,14 @@ public class ImagePayload extends Payload {
      */
 
     private ImageView[] views;
+    private SVGPath[] paths;
+
+    /**
+     * @return the active ImageView count.
+     */
+    private int getPathCount() {
+        return ColourKey.MAX_KEY.getKey();
+    }
 
     /**
      * Create the ImageView array to hold the image for this Payload.
@@ -48,6 +58,7 @@ public class ImagePayload extends Payload {
      * @param group node to add the ImageViews to.
      */
     private void createImageViewArray() {
+        Debug.trace(DD, "createImageViewArray(" + getPathCount() + ") :: " + item);
 
         views = new ImageView[2];
         views[0] = new ImageView();
@@ -55,6 +66,11 @@ public class ImagePayload extends Payload {
         views[1] = new ImageView();
         views[1].setPreserveRatio(true);
         views[1].setRotate(180);
+        
+        paths = new SVGPath[getPathCount()];
+        for (int i = 0; i < getPathCount(); ++i) {
+            paths[i] = new SVGPath();
+        }
     }
 
     public void removeFromGroup() {
@@ -62,6 +78,10 @@ public class ImagePayload extends Payload {
 
         group.getChildren().remove(views[0]);
         group.getChildren().remove(views[1]);
+
+        for (int i = 0; i < getPathCount(); ++i) {
+            group.getChildren().remove(paths[i]);
+        }
     }
 
     public void addToGroup() {
@@ -69,6 +89,10 @@ public class ImagePayload extends Payload {
 
         group.getChildren().add(views[0]);
         group.getChildren().add(views[1]);
+
+        for (int i = 0; i < getPathCount(); ++i) {
+            group.getChildren().add(paths[i]);
+        }
     }
 
     /**
@@ -90,6 +114,10 @@ public class ImagePayload extends Payload {
         return views[imageIndex];
     }
 
+    private SVGPath getSVGPath(int imageIndex) {
+        return paths[imageIndex];
+    }
+
     /**
      * Set the image in all ImageViews.
      * 
@@ -98,6 +126,69 @@ public class ImagePayload extends Payload {
     private void setImages(Image image) {
         views[0].setImage(image);
         views[1].setImage(image);
+    }
+
+    /**
+     * Indicates whether the indexed ImageView should be visible.
+     * 
+     * @param imageIndex for the ImageView in views[] (0 or 1).
+     * @return true if the image should be visible, false otherwise.
+     */
+    private boolean isImageViewVisible(int imageIndex) {
+        if (imageIndex == 0)
+            return true;
+
+        if (isLandscape())
+            return true;
+
+        return false;
+    }
+    /**
+     * Indicates whether the indexed SVGPath should be visible.
+     * 
+     * @param pathIndex for the SVGPath in paths[] (0 or 1).
+     * @return true if the image should be visible, false otherwise.
+     */
+    private boolean isSVGPathVisible(int pathIndex) {
+        final String symbol = model.getStandardSymbol(item);
+        final int count = SVGFaces.getFacePathCount(symbol);
+
+        return pathIndex < count;
+    }
+    /**
+     * set the visibilty for all ImageViews and SVGPaths.
+     * 
+     * @param imageIndex for the ImageView in views[].
+     */
+    private void setVisibility() {
+        if (isVisible() == false) {
+            getImageView(0).setVisible(false);
+            getImageView(1).setVisible(false);
+
+            for (int i = 0; i < getPathCount(); ++i) {
+                getSVGPath(i).setVisible(false);
+            }
+        } else if (model.shouldStandardBeDisplayed(item)) {
+            getImageView(0).setVisible(false);
+            getImageView(1).setVisible(false);
+
+            final String symbol = model.getStandardSymbol(item);
+            final int count = SVGFaces.getFacePathCount(symbol);
+            for (int i = 0; i < count; ++i) {
+                getSVGPath(i).setVisible(true);
+            }
+            for (int i = count; i < getPathCount(); ++i) {
+                getSVGPath(i).setVisible(false);
+            }
+        } else {
+            getImageView(0).setVisible(isImageViewVisible(0));
+            getImageView(1).setVisible(isImageViewVisible(1));
+
+            for (int i = 0; i < getPathCount(); ++i) {
+                getSVGPath(i).setVisible(false);
+            }
+        }
+
     }
 
 
@@ -129,7 +220,69 @@ public class ImagePayload extends Payload {
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            paintImage();
+        }
+    }
+
+    /**
+     * Draw the SVG paths associated with this payload.
+     */
+    private void drawSVGPaths() {
+        Debug.trace(DD, "drawSVGPaths() :: " + item);
+
+        final double cardWidthPX = model.getWidth();
+        final double cardHeightPX = model.getHeight();
+        final double xOffset = model.getMpcBorderWidth();
+        final double yOffset = model.getMpcBorderHeight();
+    
+        final double pixelsX = centreX.getPixels();
+        final double pixelsY = centreY.getPixels();
+
+        final String symbol = model.getStandardSymbol(item);
+        Desc[] facePathDescs = SVGFaces.getFace(symbol);
+        if (facePathDescs == null) {
+            Debug.major(DD, "drawSVGPaths() facePathDescs[" + symbol + "] == null " + item);
+            return;
+        }
+
+        for (int i = 0; i < facePathDescs.length; ++i) {
+
+            final double pathWidth = facePathDescs[i].width;
+            final double pathHeight = facePathDescs[i].height;
+            final Color colour = model.getStandardColour(facePathDescs[i].key);
+
+            double winX = cardWidthPX - (2*pixelsX);
+            double winY;
+            
+            double dX = 0;
+            double dY = 0;
+            
+            winY = cardHeightPX - (2*pixelsY);
+            
+            double scaleX = winX / pathWidth;
+            double scaleY = winY / pathHeight;
+            scaleX *= facePathDescs[i].a;
+            scaleY *= facePathDescs[i].d;
+            if (scaleX < scaleY) {
+                dY = (winY - (pathHeight * scaleX)) / 2;
+                winY = pathHeight * scaleX;
+            } else {
+                dX = (winX - (pathWidth * scaleY)) / 2;
+                winX = pathWidth * scaleY;
+            }
+
+
+            SVGPath path = getSVGPath(i);
+            path.setFill(colour);
+            path.setScaleX(scaleX);
+            path.setScaleY(scaleY);
+            // path.setTranslateX(pixelsX + dX + xOffset + (scaleX * facePathDescs[i].e));
+            // path.setTranslateY(pixelsY + dY + yOffset + (scaleY * facePathDescs[i].f));
+            path.setTranslateX(pixelsX + dX + xOffset);
+            path.setTranslateY(pixelsY + dY + yOffset);
+            path.setContent(facePathDescs[i].path);
+            // path.setScaleX(paths[i].a);
+            // path.setScaleY(paths[i].d);
+            // path.setTransform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
         }
     }
 
@@ -206,13 +359,13 @@ public class ImagePayload extends Payload {
     public void setPatterns() {
         Debug.trace(DD, "setPatterns() :: " + item);
 
-        final boolean visible = isVisible();
-
-        getImageView(0).setVisible(visible);
-        getImageView(1).setVisible(visible);
-
-        if (visible)
+        if (model.shouldStandardBeDisplayed(item)) {
+            drawSVGPaths();
+        } else {
             paintImage();
+        }
+
+        setVisibility();
     }
 
     /**
@@ -221,8 +374,16 @@ public class ImagePayload extends Payload {
      * @return true if the new file was loaded, false otherwise.
      */
     public boolean syncImageFile() {
+        Debug.trace(DD, "syncImageFile() :: " + item);
+
+        if (model.shouldStandardBeDisplayed(item)) {
+            Debug.trace(DD, "syncImageFile() :: " + item + ", using standard");
+            setPatterns();
+
+            return true;
+        }
+
         setPath(Item.FACE);
-        Debug.trace(DD, "syncImageFile() :: image");
 
         if (path.equals(""))
             return false;
@@ -400,14 +561,10 @@ public class ImagePayload extends Payload {
      * @param state if true, display the icons, hide them otherwise.
      */
     public void setVisible(boolean state) {
-        Debug.trace(DD, "setVisible(" + state + ") :: face");
+        Debug.trace(DD, "setVisible(" + state + ") :: " + item);
         display = state;
 
-        getImageView(0).setVisible(display);
-        if (isLandscape())
-            getImageView(1).setVisible(display);
-        else
-            getImageView(1).setVisible(false);
+        setVisibility();
     }
 
 
@@ -430,12 +587,12 @@ public class ImagePayload extends Payload {
         if (iconImage == null)
             return false;
 
+        Debug.trace(DD, "drawCard(" + pattern + ")");
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
 
-        Debug.trace(DD, "drawImage()");
         final double imageWidthPX = iconImage.getWidth();
         final double imageHeightPX = iconImage.getHeight();
         final boolean landscape = imageHeightPX < imageWidthPX;
@@ -485,6 +642,70 @@ public class ImagePayload extends Payload {
             }
 
             gc.drawImage(iconImage, pixelsX + dX + xOffset, pixelsY + dY + yOffset, winX, winY);
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Draw standard court image to a given graphics context using the user 
+     * specification.
+     * 
+     * @param gc graphics context to draw on.
+     * @param pattern ignored.
+     * @param symbol indicating the face to be drawn (e.g. "CK").
+     * @return true if the icons are drawn, false otherwise.
+     */
+    public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
+        Debug.trace(DD, "drawCard(" + symbol + ")");
+
+        final double cardWidthPX = model.getWidth();
+        final double cardHeightPX = model.getHeight();
+        final double xOffset = model.getMpcBorderWidth();
+        final double yOffset = model.getMpcBorderHeight();
+    
+        final double pixelsX = centreX.getPixels();
+        final double pixelsY = centreY.getPixels();
+
+        Desc[] paths = SVGFaces.getFace(symbol);
+        for (int i = 0; i < paths.length; ++i) {
+
+            final double pathWidth = paths[i].width;
+            final double pathHeight = paths[i].height;
+            final Color colour = model.getStandardColour(paths[i].key);
+
+            double winX = cardWidthPX - (2*pixelsX);
+            double winY;
+
+            double dX = 0;
+            double dY = 0;
+
+            winY = cardHeightPX - (2*pixelsY);
+
+            double scaleX = winX / pathWidth;
+            double scaleY = winY / pathHeight;
+            if (scaleX < scaleY) {
+                dY = (winY - (pathHeight * scaleX)) / 2;
+                winY = pathHeight * scaleX;
+            } else {
+                dX = (winX - (pathWidth * scaleY)) / 2;
+                winX = pathWidth * scaleY;
+            }
+
+            gc.save();
+
+            gc.setFill(colour);
+            gc.setLineWidth(0.0);
+            gc.translate(pixelsX + dX + xOffset, pixelsY + dY + yOffset);
+            gc.scale(scaleX, scaleY);
+            gc.transform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
+            gc.beginPath();
+            gc.appendSVGPath(paths[i].path);
+            gc.closePath();
+            gc.fill();
+
+            gc.restore();
         }
 
         return true;

@@ -122,6 +122,7 @@ public class Payload {
     // "image" refers to the image in the file, 
     // "sprite" refers to the image on screen (AKA icon).
     protected Model model;
+    protected SvgPaths svgPaths;
 
     protected final Item item;
     protected String path;
@@ -137,6 +138,7 @@ public class Payload {
         Debug.trace(DD, "Payload(" + it + ")");
 
         model = Model.getInstance();
+        svgPaths = SvgPaths.getInstance();
 
         item = it;
 
@@ -528,33 +530,56 @@ public class Payload {
         public final double cardHeightPX;
         private final double iconWidthPX;
         private final double iconHeightPX;
-        public final double width;
-        public final double height;
+        public final double aspectRatio;
+        public final double widthPX;
+        public final double heightPX;
 
         private final double pixelsX;
         private final double pixelsY;
         public final double winX;
         public final double winY;
 
+        public final double svgX;
+        public final double svgY;
         public final double originX;
         public final double originY;
 
-        public Data(double widthPX, double heightPX) {
+        /**
+         * Calculate the data needed to render the icons based on the current 
+         * card size, and Sprite size and position.
+         * @param width of image in pixels.
+         * @param height of image in pixels.
+         */
+        public Data(double width, double height) {
             cardWidthPX = model.getWidth();
             cardHeightPX = model.getHeight();
 
-            iconWidthPX = widthPX;
-            iconHeightPX = heightPX;
-            height = spriteHeight.getPixels();
-            width = height * iconWidthPX / iconHeightPX;
+            iconWidthPX = width;
+            iconHeightPX = height;
+            heightPX = spriteHeight.getPixels();
+            aspectRatio = iconWidthPX / iconHeightPX;
+            widthPX = heightPX * aspectRatio;
     
             pixelsX = centreX.getPixels();
             pixelsY = centreY.getPixels();
             winX = cardWidthPX - (2*pixelsX);
             winY = cardHeightPX - (2*pixelsY);
     
-            originX = pixelsX - (width/2) + model.getMpcBorderWidth();
-            originY = pixelsY - (height/2) + model.getMpcBorderHeight();
+            svgX = pixelsX + model.getMpcBorderWidth();
+            svgY = pixelsY + model.getMpcBorderHeight();
+            originX = svgX - (widthPX/2);
+            originY = svgY - (heightPX/2);
+        }
+
+        public void dump() {
+            Debug.trace(DD, "Data :: card size   = " + cardWidthPX + ", " + cardHeightPX);
+            Debug.trace(DD, "Data :: input size  = " + iconWidthPX + ", " + iconHeightPX);
+            Debug.trace(DD, "Data :: aspectRatio = " + aspectRatio);
+            Debug.trace(DD, "Data :: sprite size = " + widthPX + ", " + heightPX);
+            Debug.trace(DD, "Data :: centre pos  = " + pixelsX + ", " + pixelsY);
+            Debug.trace(DD, "Data :: window size = " + winX + ", " + winY);
+            Debug.trace(DD, "Data :: svg pos     = " + svgX + ", " + svgY);
+            Debug.trace(DD, "Data :: origin pos  = " + originX + ", " + originY);
         }
      }
 
@@ -570,6 +595,10 @@ public class Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
+        return true;
+    }
+
+    public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
         return true;
     }
 

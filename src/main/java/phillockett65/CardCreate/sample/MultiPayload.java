@@ -27,6 +27,9 @@ import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeLineCap;
 import phillockett65.Debug.Debug;
 
 
@@ -68,12 +71,13 @@ public class MultiPayload extends Payload {
     };
 
     private ImageView[] views;
+    private SVGPath[] paths;
 
     /**
      * @return the active ImageView count.
      */
     private int getImageCount() {
-        return views.length;
+        return locationList.length;
     }
 
 
@@ -103,30 +107,40 @@ public class MultiPayload extends Payload {
      * @param group node to add the ImageViews to.
      */
     private void createImageViewArray() {
-        int icons = locationList.length;
-        views = new ImageView[icons];
+        Debug.trace(DD, "createImageViewArray(" + getImageCount() + ") :: " + item);
 
-        for (int i = 0; i < views.length; ++i) {
+        int iconCount = getImageCount();
+        views = new ImageView[iconCount];
+        paths = new SVGPath[iconCount];
+
+        for (int i = 0; i < getImageCount(); ++i) {
             views[i] = new ImageView();
-
             views[i].setPreserveRatio(true);
-            if (getLocation(i).getRotate())
+            paths[i] = new SVGPath();
+
+            if (getLocation(i).getRotate()) {
                 views[i].setRotate(180);
+                paths[i].setRotate(180);
+            }
         }
     }
 
     public void removeFromGroup() {
         final Group group = model.getGroup();
 
-        for (int i = 0; i < views.length; ++i)
+        for (int i = 0; i < getImageCount(); ++i) {
             group.getChildren().remove(views[i]);
+            group.getChildren().remove(paths[i]);
+        }
     }
 
     public void addToGroup() {
         final Group group = model.getGroup();
 
-        for (int i = 0; i < views.length; ++i)
+        for (int i = 0; i < getImageCount(); ++i) {
             group.getChildren().add(views[i]);
+            group.getChildren().add(paths[i]);
+        }
     }
 
     /**
@@ -146,6 +160,10 @@ public class MultiPayload extends Payload {
      */
     protected ImageView getImageView(int imageIndex) {
         return views[imageIndex];
+    }
+
+    private SVGPath getSVGPath(int imageIndex) {
+        return paths[imageIndex];
     }
 
     /**
@@ -170,6 +188,30 @@ public class MultiPayload extends Payload {
             return false;
 
         return isIconVisible(pattern, imageIndex);
+    }
+
+    /**
+     * set the visibilty for all ImageViews and SVGPaths.
+     * 
+     * @param imageIndex for the ImageView in views[].
+     */
+    private void setVisibility() {
+        if (isVisible() == false) {
+            for (int i = 0; i < getImageCount(); ++i) {
+                getImageView(i).setVisible(false);
+                getSVGPath(i).setVisible(false);
+            }
+        } else if (model.shouldStandardBeDisplayed(item)) {
+            for (int i = 0; i < getImageCount(); ++i) {
+                getImageView(i).setVisible(false);
+                getSVGPath(i).setVisible(isImageViewVisible(i));
+            }
+        } else {
+            for (int i = 0; i < getImageCount(); ++i) {
+                getImageView(i).setVisible(isImageViewVisible(i));
+                getSVGPath(i).setVisible(false);
+            }
+        }
     }
 
 
@@ -203,23 +245,81 @@ public class MultiPayload extends Payload {
         if (loadNewImageFile()) {
             setImages(getImage());
             pattern = model.getCurrentPattern(item);
+        }
+    }
 
-            final Data data = new Data(getImageWidth(), getImageHeight());
+    private void debugPath(SVGPath path, Color colour) {
+        SvgPathData svgPathData = svgPaths.getSvgPathData(item);
+        path.setContent(svgPathData.getBorder());
+        path.setStroke(colour);
+        path.setStrokeWidth(2);
+        path.setStrokeLineCap(StrokeLineCap.BUTT);
+    }
 
-            final double pX = data.originX;
-            final double pY = data.originY;
+    /**
+     * Draw the SVG paths associated with this payload.
+     */
+    private void drawSVGPaths() {
+        Debug.trace(DD, "drawSVGPaths() :: " + item);
 
-            for (int i = 0; i < getImageCount(); ++i) {
-                ImageView view = getImageView(i);
-                view.setVisible(isImageViewVisible(i));
+        SvgPathData svgPathData = svgPaths.getSvgPathData(item);
+        final double width = svgPathData.getWidth();
+        final double height = svgPathData.getHeight();
+        final Data data = new Data(width, height);
+        // data.dump();
+        final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
+        final Color colour = model.getStandardColour(item);
+        
+        // Adjust for scaling around the centre of the path.
+        final double adjust = -0.5;
+        final double dX = width * adjust;
+        final double dY = height * adjust;
+        final double pX = data.svgX;
+        final double pY = data.svgY;
 
+        for (int i = 0; i < getImageCount(); ++i) {
+            if (isImageViewVisible(i)) {
                 Loc location = getLocation(i);
                 final double offX = location.getXOffset() * data.winX;
                 final double offY = location.getYOffset() * data.winY;
 
+                SVGPath path = getSVGPath(i);
+                path.setContent(svgPathData.getPath());
+                path.setScaleX(scale);
+                path.setScaleY(scale);
+                path.setTranslateX(dX);
+                path.setTranslateY(dY);
+                path.relocate(pX + offX, pY + offY);
+                path.setFill(colour);
+            }
+        }
+    }
+
+    /**
+     * Set PNG ImageViews associated with this payload.
+     */
+    private void setImageView() {
+    Debug.trace(DD, "setImageView() :: " + item);
+        if (!hasImage())
+            return;
+
+        final Data data = new Data(getImageWidth(), getImageHeight());
+        // data.dump();
+
+        final double pX = data.originX;
+        final double pY = data.originY;
+
+        for (int i = 0; i < getImageCount(); ++i) {
+            if (isImageViewVisible(i)) {
+                Loc location = getLocation(i);
+                final double offX = location.getXOffset() * data.winX;
+                final double offY = location.getYOffset() * data.winY;
+                Debug.trace(DD, "offset = " + offX + ", " + offY);
+
+                ImageView view = getImageView(i);
                 view.relocate(pX + offX, pY + offY);
-                view.setFitWidth(data.width);
-                view.setFitHeight(data.height);
+                view.setFitWidth(data.widthPX);
+                view.setFitHeight(data.heightPX);
             }
         }
     }
@@ -228,32 +328,17 @@ public class MultiPayload extends Payload {
      * Paint the icons associated with this payload.
      */
     public void setPatterns() {
-        Debug.trace(DD, "setPatterns()");
-
-        if (!hasImage())
-            return;
+        Debug.trace(DD, "setPatterns() :: " + item);
 
         pattern = model.getCurrentPattern(item);
-        final Data data = new Data(getImageWidth(), getImageHeight());
 
-        final double pX = data.originX;
-        final double pY = data.originY;
-
-        for (int i = 0; i < getImageCount(); ++i) {
-            final boolean visible = isImageViewVisible(i);
-            ImageView view = getImageView(i);
-            view.setVisible(visible);
-
-            if (visible) {
-                Loc location = getLocation(i);
-                final double offX = location.getXOffset() * data.winX;
-                final double offY = location.getYOffset() * data.winY;
-
-                view.relocate(pX + offX, pY + offY);
-                view.setFitWidth(data.width);
-                view.setFitHeight(data.height);
-            }
+        if (model.shouldStandardBeDisplayed(item)) {
+            drawSVGPaths();
+        } else {
+            setImageView();
         }
+
+        setVisibility();
     }
 
     /**
@@ -262,15 +347,22 @@ public class MultiPayload extends Payload {
      * @return true if the new file was loaded, false otherwise.
      */
     public boolean syncImageFile() {
+        Debug.trace(DD, "syncImageFile() :: " + item);
+
+        if (model.shouldStandardBeDisplayed(item)) {
+            Debug.trace(DD, "syncImageFile() :: " + item + ", using standard");
+            setPatterns();
+
+            return true;
+        }
+
         setPath(item);
-        Debug.trace(DD, "syncImageFile() :: number");
 
         if (path.equals(""))
             return false;
 
         if (loadNewImageFile()) {
             setImages(getImage());
-            pattern = model.getCurrentPattern(item);
             setPatterns();
 
             return true;
@@ -430,16 +522,10 @@ public class MultiPayload extends Payload {
      * @param state if true, display the icons, hide them otherwise.
      */
     public void setVisible(boolean state) {
-        Debug.trace(DD, "setVisible(" + state + ") :: ");
+        Debug.trace(DD, "setVisible(" + state + ") :: " + item);
         display = state;
 
-        for (int i = 0; i < getImageCount(); ++i) {
-            final boolean visible = isImageViewVisible(i);
-            getImageView(i).setVisible(visible);
-
-            if (visible)
-                setPatterns();
-        }
+        setVisibility();
     }
 
 
@@ -461,6 +547,7 @@ public class MultiPayload extends Payload {
     public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
         if (iconImage == null)
             return false;
+        Debug.trace(DD, "drawCard(" + pattern +  ")");
 
         final Data data = new Data(iconImage.getWidth(), iconImage.getHeight());
 
@@ -472,11 +559,120 @@ public class MultiPayload extends Payload {
                 final double posY = data.originY + (loc.getYOffset() * data.winY);
                 
                 if (loc.getRotate())
-                    gc.drawImage(rotatedImage, posX, posY, data.width, data.height);
+                    gc.drawImage(rotatedImage, posX, posY, data.widthPX, data.heightPX);
                 else
-                    gc.drawImage(iconImage, posX, posY, data.width, data.height);
+                    gc.drawImage(iconImage, posX, posY, data.widthPX, data.heightPX);
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Draw standard icons to a given graphics context using the user 
+     * specification.
+     * 
+     * @param gc graphics context to draw on.
+     * @param pattern indicating the arrangement of icons.
+     * @param symbol indicating the icon to be drawn.
+     * @return true if the icons are drawn, false otherwise.
+     */
+    public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
+        Debug.trace(DD, "drawCard(" + pattern + ", " + symbol + ")");
+        SvgPathData svgPathData = SvgPaths.getSvgPathData(symbol);
+        SvgPathData svgRotatedPath = SvgPaths.getSvgPathData("_" + symbol);
+        final double width = svgPathData.getWidth();
+        final double height = svgPathData.getHeight();
+        final Data data = new Data(width, height);
+
+        final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
+        final Color colour = model.getCurrentStandardColour(item);
+        
+        // Adjust for scaling around the centre of the path.
+        // final double adjust = -0.5;
+        // final double dX = width * adjust;
+        // final double dY = height * adjust;
+        // final double pX = data.svgX + dX;
+        // final double pY = data.svgY + dY;
+
+        gc.setFill(colour);
+        // gc.setStroke(colour);
+        gc.setLineWidth(0.0);
+        for (int i = 0; i < getImageCount(); ++i) {
+            if (isIconVisible(pattern, i)) {
+                gc.save();
+
+                final Loc loc = getLocation(i);
+                final double offX = loc.getXOffset() * data.winX;
+                final double offY = loc.getYOffset() * data.winY;
+                final double posX = data.originX + offX;
+                final double posY = data.originY + offY;
+
+                gc.translate(posX, posY);
+                gc.scale(scale, scale);
+                
+                gc.beginPath();
+                if (loc.getRotate()) {
+                    gc.appendSVGPath(svgRotatedPath.getPath());
+                } else {
+                    gc.appendSVGPath(svgPathData.getPath());
+                }
+                gc.closePath();
+                gc.fill();
+
+                gc.restore();
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Draw top left and rotated bottom right images to a given graphics 
+     * context for the Joker indices.
+     * 
+     * @param gc graphics context to draw on.
+     * @param image used for the icons.
+     * @param rotatedImage rotated version of the image used for the icons.
+     * @return true if the icons are drawn, false otherwise.
+     */
+    public boolean drawJoker(GraphicsContext gc, Image image, Image rotatedImage) {
+        if (image == null)
+            return false;
+
+        final double cardWidthPX = model.getWidth();
+        final double cardHeightPX = model.getHeight();
+        final double xOffset = model.getMpcBorderWidth();
+        final double yOffset = model.getMpcBorderHeight();
+
+        final double iconWidthPX = image.getWidth();
+        final double iconHeightPX = image.getHeight();
+        final boolean landscape = iconHeightPX < iconWidthPX;
+
+        double width;
+        double height;
+        double posX;
+        double posY;
+
+        if (landscape) {
+            height = cardHeightPX * 0.05;
+            width = height * iconWidthPX / iconHeightPX;
+
+            posX = cardHeightPX * 0.02;
+            posY = model.getArcWidthPX()/4;
+        } else {
+            width = cardWidthPX * 0.07;
+            height = width * iconHeightPX / iconWidthPX;
+
+            posX = cardWidthPX * 0.02;
+            posY = model.getArcHeightPX()/4;
+        }
+        gc.drawImage(image, posX + xOffset, posY + yOffset, width, height);
+
+        posX = cardWidthPX - posX - width;
+        posY = cardHeightPX - posY - height;
+        gc.drawImage(rotatedImage, posX + xOffset, posY + yOffset, width, height);
 
         return true;
     }
