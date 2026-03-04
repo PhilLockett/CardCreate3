@@ -28,26 +28,14 @@ import javafx.scene.transform.Affine;
 
 public class Desc {
 
-    final ColourKey key;
-	final double a;
-	final double b;
-	final double c;
-	final double d;
-	final double e;
-	final double f;
-    final double width;
-    final double height;
-    final String path;
-    Affine affine;
+    private final ColourKey key;
+    private final double width;
+    private final double height;
+    private final String path;
+    private final Affine affine;
 
-    Desc(ColourKey k, double a, double b, double c, double d, double e, double f, String p) {
+    public Desc(ColourKey k, double a, double b, double c, double d, double e, double f, String p) {
         key = k;
-        this.a = a;
-        this.b = b;
-        this.c = c;
-        this.d = d;
-        this.e = e;
-        this.f = f;
         path = p;
     
         // width = 1046.93;
@@ -56,5 +44,12 @@ public class Desc {
 
         affine = new Affine(a,c,e,b,d,f);
     }
+
+    public boolean isKey(ColourKey target) { return key == target; }
+    public ColourKey getKey() { return key; }
+    public double getWidth() { return width; }
+    public double getHeight() { return height; }
+    public String getPath() { return path; }
+    public Affine getAffine() { return affine; }
 
 };

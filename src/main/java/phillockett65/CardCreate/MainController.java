@@ -90,7 +90,7 @@ public class MainController {
      * images on the buttons and initialises all the controls.
      */
     @FXML public void initialize() {
-		Debug.trace(DD, "MainController initialize()");
+        Debug.trace(DD, "MainController initialize()");
 
         model.initialize();
 
@@ -105,7 +105,7 @@ public class MainController {
      * directory (or aborts) then completes the initialization.
      */
     public void init(Stage stage) {
-		Debug.trace(DD, "MainController init()");
+        Debug.trace(DD, "MainController init()");
 
         this.stage = stage;
         userGUI.setDisable(true);
@@ -240,7 +240,7 @@ public class MainController {
      * Synchronise all controls with the model.
      */
     public void syncUI() {
-		Debug.trace(DD, "MainController syncUI()");
+        Debug.trace(DD, "MainController syncUI()");
         syncFileLoadMenuItem();
     }
 

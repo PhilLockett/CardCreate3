@@ -223,7 +223,7 @@ public class ImagePayload extends Payload {
         final double cardHeightPX = model.getHeight();
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
-    
+
         final double pixelsX = centreX.getPixels();
         final double pixelsY = centreY.getPixels();
 
@@ -237,16 +237,16 @@ public class ImagePayload extends Payload {
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = pathDesc.width;
-            final double pathHeight = pathDesc.height;
-            final Color colour = model.getStandardColour(pathDesc.key);
+            final double pathWidth = pathDesc.getWidth();
+            final double pathHeight = pathDesc.getHeight();
+            final Color colour = model.getStandardColour(pathDesc.getKey());
 
             double winX = cardWidthPX - (2*pixelsX);
             double winY;
             
             double dX = 0;
             double dY = 0;
-            
+
             winY = cardHeightPX - (2*pixelsY);
             
             double scaleX = winX / pathWidth;
@@ -260,9 +260,9 @@ public class ImagePayload extends Payload {
             }
 
             SVGPath svgPath = getSVGPath(i);
-            svgPath.setContent(pathDesc.path);
+            svgPath.setContent(pathDesc.getPath());
             Affine affine = new Affine(scaleX, 0, pixelsX + dX + xOffset, 0, scaleY, pixelsY + dY + yOffset);
-            affine.append(pathDesc.affine);
+            affine.append(pathDesc.getAffine());
             svgPath.getTransforms().clear();
             svgPath.getTransforms().add(affine);
             svgPath.setFill(colour);
@@ -280,7 +280,7 @@ public class ImagePayload extends Payload {
 
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
-    
+
         final double imageWidthPX = getImage().getWidth();
         final double imageHeightPX = getImage().getHeight();
 
@@ -308,7 +308,7 @@ public class ImagePayload extends Payload {
             view.relocate(pX + dX, pY + dY);
             view.setFitWidth(winX);
             view.setFitHeight(winY);
-    
+
             view = getImageView(1);
             view.relocate(pX + dX, cardHeightPX/2);
             view.setFitWidth(winX);
@@ -655,9 +655,9 @@ public class ImagePayload extends Payload {
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = pathDesc.width;
-            final double pathHeight = pathDesc.height;
-            final Color colour = model.getStandardColour(pathDesc.key);
+            final double pathWidth = pathDesc.getWidth();
+            final double pathHeight = pathDesc.getHeight();
+            final Color colour = model.getStandardColour(pathDesc.getKey());
 
             double winX = cardWidthPX - (2*pixelsX);
             double winY;
@@ -682,9 +682,9 @@ public class ImagePayload extends Payload {
             gc.setFill(colour);
             gc.translate(pixelsX + dX + xOffset, pixelsY + dY + yOffset);
             gc.scale(scaleX, scaleY);
-            gc.transform(pathDesc.affine);
+            gc.transform(pathDesc.getAffine());
             gc.beginPath();
-            gc.appendSVGPath(pathDesc.path);
+            gc.appendSVGPath(pathDesc.getPath());
             gc.closePath();
             gc.fill();
 

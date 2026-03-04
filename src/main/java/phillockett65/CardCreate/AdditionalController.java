@@ -59,7 +59,7 @@ public class AdditionalController {
      * images on the buttons and initialises all the controls.
      */
     @FXML public void initialize() {
-		Debug.trace(DD, "AdditionalController initialize()");
+        Debug.trace(DD, "AdditionalController initialize()");
         model = Model.getInstance();
     }
 
@@ -68,7 +68,7 @@ public class AdditionalController {
      * reference to model, then completes the initialization.
      */
     public void init() {
-		Debug.trace(DD, "AdditionalController init()");
+        Debug.trace(DD, "AdditionalController init()");
         initializeCardCorners();
         initializeDisplayWatermark();
         initializeModifySelectedCardItem();
@@ -82,7 +82,7 @@ public class AdditionalController {
      * Synchronise all controls with the model.
      */
     public void syncUI() {
-		Debug.trace(DD, "AdditionalController syncUI()");
+        Debug.trace(DD, "AdditionalController syncUI()");
         independentRadiiCheckBox.setSelected(model.isSetCornerRadiiIndependently());
         cropCornersCheckBox.setSelected(model.isCropCorners());
 

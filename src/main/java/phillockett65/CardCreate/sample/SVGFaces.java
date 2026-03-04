@@ -410,7 +410,6 @@ public class SVGFaces {
 
 
 
-
     public static Desc[] getFace(String id) {
         switch (id) {
         case "CJ": return CJ;
@@ -433,7 +432,7 @@ public class SVGFaces {
     public static boolean isFaceColour(String id, ColourKey key) {
         Desc[] paths = getFace(id);
         for (int i = 0; i < paths.length; ++i) {
-            if (paths[i].key == key)
+            if (paths[i].isKey(key))
                 return true;
         }
 

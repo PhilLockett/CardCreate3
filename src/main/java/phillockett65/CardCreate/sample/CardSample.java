@@ -69,7 +69,7 @@ public class CardSample extends Stage {
      * @param title             - string displayed as the heading of the Stage.
      */
     public CardSample(Model mainModel, String title) {
-		Debug.trace(DD, "CardSample constructed: " + title);
+        Debug.trace(DD, "CardSample constructed: " + title);
 
         resizableProperty().setValue(false);
         setOnCloseRequest(e -> Platform.exit());
