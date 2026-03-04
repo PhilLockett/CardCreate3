@@ -251,8 +251,6 @@ public class ImagePayload extends Payload {
             
             double scaleX = winX / pathWidth;
             double scaleY = winY / pathHeight;
-            // scaleX *= facePathDescs[i].a;
-            // scaleY *= facePathDescs[i].d;
             if (scaleX < scaleY) {
                 dY = (winY - (pathHeight * scaleX)) / 2;
                 winY = pathHeight * scaleX;
@@ -261,7 +259,6 @@ public class ImagePayload extends Payload {
                 winX = pathWidth * scaleY;
             }
 
-
             SVGPath svgPath = getSVGPath(i);
             svgPath.setContent(pathDesc.path);
             Affine affine = new Affine(scaleX, 0, pixelsX + dX + xOffset, 0, scaleY, pixelsY + dY + yOffset);
@@ -269,23 +266,6 @@ public class ImagePayload extends Payload {
             svgPath.getTransforms().clear();
             svgPath.getTransforms().add(affine);
             svgPath.setFill(colour);
-
-        // svgPath.setStroke(colour);
-        // svgPath.setStrokeWidth(10);
-            // svgPath.setTranslateX(pixelsX + dX + xOffset + (scaleX * facePathDescs[i].e));
-            // svgPath.setTranslateY(pixelsY + dY + yOffset + (scaleY * facePathDescs[i].f));
-
-            // svgPath.setTranslateX(pixelsX + dX + xOffset);
-            // svgPath.setTranslateY(pixelsY + dY + yOffset);
-            // svgPath.setScaleX(scaleX);
-            // svgPath.setScaleY(scaleY);
-            // svgPath.getTransforms().add(pathDesc.affine);
-
-            // svgPath.setContent(pathDesc.path);
-        // svgPath.setContent(pathDesc.getBorder());
-            // svgPath.setScaleX(paths[i].a);
-            // svgPath.setScaleY(paths[i].d);
-            // svgPath.setTransform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
         }
     }
 
@@ -700,15 +680,11 @@ public class ImagePayload extends Payload {
             gc.save();
 
             gc.setFill(colour);
-        // gc.setStroke(colour);
-        // gc.setLineWidth(10.0);
             gc.translate(pixelsX + dX + xOffset, pixelsY + dY + yOffset);
             gc.scale(scaleX, scaleY);
-            // gc.transform(pathDesc.a, pathDesc.b, pathDesc.c, pathDesc.d, pathDesc.e, pathDesc.f);
             gc.transform(pathDesc.affine);
             gc.beginPath();
             gc.appendSVGPath(pathDesc.path);
-        // gc.appendSVGPath(pathDesc.getBorder());
             gc.closePath();
             gc.fill();
 

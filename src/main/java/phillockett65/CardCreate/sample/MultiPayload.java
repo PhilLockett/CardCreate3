@@ -257,7 +257,7 @@ public class MultiPayload extends Payload {
         final double width = svgPathData.getWidth();
         final double height = svgPathData.getHeight();
         final Data data = new Data(width, height);
-        // data.dump();
+
         final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
         final Color colour = model.getStandardColour(item);
         
@@ -295,7 +295,6 @@ public class MultiPayload extends Payload {
             return;
 
         final Data data = new Data(getImageWidth(), getImageHeight());
-        // data.dump();
 
         final double pX = data.originX;
         final double pY = data.originY;
@@ -578,16 +577,8 @@ public class MultiPayload extends Payload {
 
         final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
         final Color colour = model.getCurrentStandardColour(item);
-        
-        // Adjust for scaling around the centre of the path.
-        // final double adjust = -0.5;
-        // final double dX = width * adjust;
-        // final double dY = height * adjust;
-        // final double pX = data.svgX + dX;
-        // final double pY = data.svgY + dY;
 
         gc.setFill(colour);
-        // gc.setStroke(colour);
         gc.setLineWidth(0.0);
         for (int i = 0; i < getImageCount(); ++i) {
             if (isIconVisible(pattern, i)) {
