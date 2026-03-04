@@ -24,6 +24,8 @@
 
 package phillockett65.CardCreate.sample;
 
+import javafx.scene.transform.Affine;
+
 public class Desc {
 
     final ColourKey key;
@@ -36,6 +38,7 @@ public class Desc {
     final double width;
     final double height;
     final String path;
+    Affine affine;
 
     Desc(ColourKey k, double a, double b, double c, double d, double e, double f, String p) {
         key = k;
@@ -50,5 +53,14 @@ public class Desc {
         // width = 1046.93;
         width = 1051.5;
         height = 1673.16;
+
+        // affine = new Affine(a,b,c,d,e,f);
+        affine = new Affine(a,c,e,b,d,f);
     }
+
+    public String getBorder() {
+        // return "M 0 0 h " + width + " v " + height + " h -" + width + " Z";
+        return "M 0 0 l " + (width-e) + " " + (height-f) + " M " + width + " 0 l -" + width + " " + height;
+    }
+
 };

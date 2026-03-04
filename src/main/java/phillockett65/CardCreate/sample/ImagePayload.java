@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.transform.Affine;
 import phillockett65.Debug.Debug;
 
 
@@ -234,10 +235,11 @@ public class ImagePayload extends Payload {
         }
 
         for (int i = 0; i < facePathDescs.length; ++i) {
+            Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = facePathDescs[i].width;
-            final double pathHeight = facePathDescs[i].height;
-            final Color colour = model.getStandardColour(facePathDescs[i].key);
+            final double pathWidth = pathDesc.width;
+            final double pathHeight = pathDesc.height;
+            final Color colour = model.getStandardColour(pathDesc.key);
 
             double winX = cardWidthPX - (2*pixelsX);
             double winY;
@@ -249,8 +251,8 @@ public class ImagePayload extends Payload {
             
             double scaleX = winX / pathWidth;
             double scaleY = winY / pathHeight;
-            scaleX *= facePathDescs[i].a;
-            scaleY *= facePathDescs[i].d;
+            // scaleX *= facePathDescs[i].a;
+            // scaleY *= facePathDescs[i].d;
             if (scaleX < scaleY) {
                 dY = (winY - (pathHeight * scaleX)) / 2;
                 winY = pathHeight * scaleX;
@@ -260,18 +262,30 @@ public class ImagePayload extends Payload {
             }
 
 
-            SVGPath path = getSVGPath(i);
-            path.setFill(colour);
-            path.setScaleX(scaleX);
-            path.setScaleY(scaleY);
-            // path.setTranslateX(pixelsX + dX + xOffset + (scaleX * facePathDescs[i].e));
-            // path.setTranslateY(pixelsY + dY + yOffset + (scaleY * facePathDescs[i].f));
-            path.setTranslateX(pixelsX + dX + xOffset);
-            path.setTranslateY(pixelsY + dY + yOffset);
-            path.setContent(facePathDescs[i].path);
-            // path.setScaleX(paths[i].a);
-            // path.setScaleY(paths[i].d);
-            // path.setTransform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
+            SVGPath svgPath = getSVGPath(i);
+            svgPath.setContent(pathDesc.path);
+            Affine affine = new Affine(scaleX, 0, pixelsX + dX + xOffset, 0, scaleY, pixelsY + dY + yOffset);
+            affine.append(pathDesc.affine);
+            svgPath.getTransforms().clear();
+            svgPath.getTransforms().add(affine);
+            svgPath.setFill(colour);
+
+        // svgPath.setStroke(colour);
+        // svgPath.setStrokeWidth(10);
+            // svgPath.setTranslateX(pixelsX + dX + xOffset + (scaleX * facePathDescs[i].e));
+            // svgPath.setTranslateY(pixelsY + dY + yOffset + (scaleY * facePathDescs[i].f));
+
+            // svgPath.setTranslateX(pixelsX + dX + xOffset);
+            // svgPath.setTranslateY(pixelsY + dY + yOffset);
+            // svgPath.setScaleX(scaleX);
+            // svgPath.setScaleY(scaleY);
+            // svgPath.getTransforms().add(pathDesc.affine);
+
+            // svgPath.setContent(pathDesc.path);
+        // svgPath.setContent(pathDesc.getBorder());
+            // svgPath.setScaleX(paths[i].a);
+            // svgPath.setScaleY(paths[i].d);
+            // svgPath.setTransform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
         }
     }
 
@@ -657,12 +671,13 @@ public class ImagePayload extends Payload {
         final double pixelsX = centreX.getPixels();
         final double pixelsY = centreY.getPixels();
 
-        Desc[] paths = SVGFaces.getFace(symbol);
-        for (int i = 0; i < paths.length; ++i) {
+        Desc[] facePathDescs = SVGFaces.getFace(symbol);
+        for (int i = 0; i < facePathDescs.length; ++i) {
+            Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = paths[i].width;
-            final double pathHeight = paths[i].height;
-            final Color colour = model.getStandardColour(paths[i].key);
+            final double pathWidth = pathDesc.width;
+            final double pathHeight = pathDesc.height;
+            final Color colour = model.getStandardColour(pathDesc.key);
 
             double winX = cardWidthPX - (2*pixelsX);
             double winY;
@@ -685,12 +700,15 @@ public class ImagePayload extends Payload {
             gc.save();
 
             gc.setFill(colour);
-            gc.setLineWidth(0.0);
+        // gc.setStroke(colour);
+        // gc.setLineWidth(10.0);
             gc.translate(pixelsX + dX + xOffset, pixelsY + dY + yOffset);
             gc.scale(scaleX, scaleY);
-            gc.transform(paths[i].a, paths[i].b, paths[i].c, paths[i].d, paths[i].e, paths[i].f);
+            // gc.transform(pathDesc.a, pathDesc.b, pathDesc.c, pathDesc.d, pathDesc.e, pathDesc.f);
+            gc.transform(pathDesc.affine);
             gc.beginPath();
-            gc.appendSVGPath(paths[i].path);
+            gc.appendSVGPath(pathDesc.path);
+        // gc.appendSVGPath(pathDesc.getBorder());
             gc.closePath();
             gc.fill();
 

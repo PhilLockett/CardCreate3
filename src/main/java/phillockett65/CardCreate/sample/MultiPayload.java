@@ -274,14 +274,14 @@ public class MultiPayload extends Payload {
                 final double offX = location.getXOffset() * data.winX;
                 final double offY = location.getYOffset() * data.winY;
 
-                SVGPath path = getSVGPath(i);
-                path.setContent(svgPathData.getPath());
-                path.setScaleX(scale);
-                path.setScaleY(scale);
-                path.setTranslateX(dX);
-                path.setTranslateY(dY);
-                path.relocate(pX + offX, pY + offY);
-                path.setFill(colour);
+                SVGPath svgPath = getSVGPath(i);
+                svgPath.setContent(svgPathData.getPath());
+                svgPath.setScaleX(scale);
+                svgPath.setScaleY(scale);
+                svgPath.setTranslateX(dX);
+                svgPath.setTranslateY(dY);
+                svgPath.relocate(pX + offX, pY + offY);
+                svgPath.setFill(colour);
             }
         }
     }
