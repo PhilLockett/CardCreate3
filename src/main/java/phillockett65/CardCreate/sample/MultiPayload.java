@@ -170,7 +170,7 @@ public class MultiPayload extends Payload {
      * 
      * @param image for the ImageView in views[].
      */
-    private void setImages(Image image) {
+    protected void setImages(Image image) {
         for (int i = 0; i < getImageCount(); ++i) {
             getImageView(i).setImage(image);
         }
@@ -194,7 +194,7 @@ public class MultiPayload extends Payload {
      * 
      * @param imageIndex for the ImageView in views[].
      */
-    private void setVisibility() {
+    protected void setVisibility() {
         if (isVisible() == false) {
             for (int i = 0; i < getImageCount(); ++i) {
                 getImageView(i).setVisible(false);
@@ -330,194 +330,6 @@ public class MultiPayload extends Payload {
 
         setVisibility();
     }
-
-    /**
-     * Set up the new image file based on the current file path.
-     * 
-     * @return true if the new file was loaded, false otherwise.
-     */
-    public boolean syncImageFile() {
-        Debug.trace(DD, "syncImageFile() :: " + item);
-
-        if (model.shouldStandardBeDisplayed(item)) {
-            Debug.trace(DD, "syncImageFile() :: " + item + ", using standard");
-            setPatterns();
-
-            return true;
-        }
-
-        setPath(item);
-
-        if (path.equals(""))
-            return false;
-
-        if (loadNewImageFile()) {
-            setImages(getImage());
-            setPatterns();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Synchronise to the current card size.
-     */
-    public void syncCardSize() {
-        Debug.trace(DD, "syncCardSize() :: number");
-
-        setPatterns();
-    }
-
-    
-    /**
-     * Set the X co-ordinate of the centre of the sprite.
-     * @param value as a percentage of the card width.
-     */
-    public void setX(double value) {
-        if (setSpriteCentreX(value))
-            setPatterns();
-    }
-
-    /**
-     * Set the Y co-ordinate of the centre of the sprite.
-     * @param value as a percentage of the card height.
-     */
-    public void setY(double value) {
-        if (setSpriteCentreY(value))
-            setPatterns();
-    }
-
-    /**
-     * Set the position of the centre of the sprite and the size.
-     * @param x co-ordinate as a percentage of the card width.
-     * @param y co-ordinate as a percentage of the card height.
-     */
-    public void setPos(double x, double y) {
-        Debug.trace(DD, "setPos(" + x + ", " + y + ") :: ");
-        boolean valid = true;
-
-        if (!setSpriteCentreX(x))
-            valid = false;
-
-        if (!setSpriteCentreY(y))
-            valid = false;
-
-        if (valid)
-            setPatterns();
-    }
-
-    /**
-     * Set the size of the sprite.
-     * @param size as a percentage of the card height.
-     */
-    public void setSize(double size) {
-        if (setSpriteSize(size))
-            setPatterns();
-    }
-
-    /**
-     * Set the position of the centre of the sprite and the size.
-     * @param x co-ordinate as a percentage of the card width.
-     * @param y co-ordinate as a percentage of the card height.
-     * @param size as a percentage of the card height.
-     */
-    public void update(double x, double y, double size) {
-        Debug.trace(DD, "update(" + x + ", " + y + ", " + size + ") :: number");
-        boolean valid = true;
-
-        if (!setSpriteCentreX(x))
-            valid = false;
-
-        if (!setSpriteCentreY(y))
-            valid = false;
-
-        if (!setSpriteSize(size))
-            valid = false;
-
-        if (valid)
-            setPatterns();
-    }
-
-    /**
-     * Increase the size of the sprite.
-     */
-    public void incSize() {
-        if (incSpriteSize(Default.STEP_COUNT.getInt()))
-            setPatterns();
-    }
-
-    /**
-     * Decrease the size of the sprite.
-     */
-    public void decSize() {
-        if (decSpriteSize(Default.STEP_COUNT.getInt()))
-            setPatterns();
-    }
-
-    /**
-     * Resize of the sprite.
-     * @param steps number of Default.STEP_SIZE steps to resize by.
-     */
-    public void resize(int steps) {
-        if (steps > 0) {
-            if (incSpriteSize(steps))
-                setPatterns();
-        } else {
-            if (decSpriteSize(-steps))
-                setPatterns();
-        }
-    }
-
-    /**
-     * Move the sprite up.
-     */
-    public void moveUp(int steps) {
-        if (moveSpriteUp(steps))
-            setPatterns();
-    }
-    public void moveUp() { moveUp(Default.STEP_COUNT.getInt()); }
-
-    /**
-     * Move the sprite down.
-     */
-    public void moveDown(int steps) {
-        if (moveSpriteDown(steps))
-            setPatterns();
-    }
-    public void moveDown() { moveDown(Default.STEP_COUNT.getInt()); }
-
-    /**
-     * Move the sprite left.
-     */
-    public void moveLeft(int steps) {
-        if (moveSpriteLeft(steps))
-            setPatterns();
-    }
-    public void moveLeft() { moveLeft(Default.STEP_COUNT.getInt()); }
-
-    /**
-     * Move the sprite right.
-     */
-    public void moveRight(int steps) {
-        if (moveSpriteRight(steps))
-            setPatterns();
-    }
-    public void moveRight() { moveRight(Default.STEP_COUNT.getInt()); }
-
-
-    /**
-     * Hide/display all locations of icons for this item.
-     * @param state if true, display the icons, hide them otherwise.
-     */
-    public void setVisible(boolean state) {
-        Debug.trace(DD, "setVisible(" + state + ") :: " + item);
-        display = state;
-
-        setVisibility();
-    }
-
 
 
 
