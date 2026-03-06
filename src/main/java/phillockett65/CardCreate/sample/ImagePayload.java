@@ -227,46 +227,39 @@ public class ImagePayload extends Payload {
 
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
-        final double xOffset = model.getMpcBorderWidth();
-        final double yOffset = model.getMpcBorderHeight();
 
-        final double pixelsX = centreX.getPixels();
-        final double pixelsY = centreY.getPixels();
+        final double pX = centreX.getPixels();
+        final double pY = centreY.getPixels();
 
         Desc[] facePathDescs = face.getDescs();
-        if (facePathDescs == null) {
-            Debug.major(DD, "drawSVGPaths() facePathDescs[" + symbol + "] == null " + item);
-            return;
-        }
-
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = pathDesc.getWidth();
-            final double pathHeight = pathDesc.getHeight();
+            final double imageWidth = pathDesc.getWidth();
+            final double imageHeight = pathDesc.getHeight();
             final Color colour = model.getStandardColour(pathDesc.getKey());
 
-            double winX = cardWidthPX - (2*pixelsX);
-            double winY;
+            double winX = cardWidthPX - (2*pX);
+            double winY = cardHeightPX - (2*pY);
             
             double dX = 0;
             double dY = 0;
 
-            winY = cardHeightPX - (2*pixelsY);
-            
-            double scaleX = winX / pathWidth;
-            double scaleY = winY / pathHeight;
-            if (scaleX < scaleY) {
-                dY = (winY - (pathHeight * scaleX)) / 2;
-                winY = pathHeight * scaleX;
-            } else {
-                dX = (winX - (pathWidth * scaleY)) / 2;
-                winX = pathWidth * scaleY;
+            double scaleX = winX / imageWidth;
+            double scaleY = winY / imageHeight;
+            if (keepAspectRatio) {
+                if (scaleX < scaleY) {
+                    dY = (winY - (imageHeight * scaleX)) / 2;
+                    scaleY = scaleX;
+                } else {
+                    dX = (winX - (imageWidth * scaleY)) / 2;
+                    scaleX = scaleY;
+                }
             }
 
             SVGPath svgPath = getSVGPath(i);
             svgPath.setContent(pathDesc.getPath());
-            Affine affine = new Affine(scaleX, 0, pixelsX + dX + xOffset, 0, scaleY, pixelsY + dY + yOffset);
+            Affine affine = new Affine(scaleX, 0, pX + dX, 0, scaleY, pY + dY);
             affine.append(pathDesc.getAffine());
             svgPath.getTransforms().clear();
             svgPath.getTransforms().add(affine);
@@ -286,8 +279,8 @@ public class ImagePayload extends Payload {
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
 
-        final double imageWidthPX = getImage().getWidth();
-        final double imageHeightPX = getImage().getHeight();
+        final double imageWidth = getImage().getWidth();
+        final double imageHeight = getImage().getHeight();
 
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
@@ -300,12 +293,12 @@ public class ImagePayload extends Payload {
             final double winY = (cardHeightPX / 2) - pY;
 
             if (keepAspectRatio) {
-                double scaleX = winX / imageWidthPX;
-                double scaleY = winY / imageHeightPX;
+                double scaleX = winX / imageWidth;
+                double scaleY = winY / imageHeight;
                 if (scaleX < scaleY) {
-                    dY = (winY - (imageHeightPX * scaleX));
+                    dY = (winY - (imageHeight * scaleX));
                 } else {
-                    dX = (winX - (imageWidthPX * scaleY)) / 2;
+                    dX = (winX - (imageWidth * scaleY)) / 2;
                 }
             }
 
@@ -322,12 +315,12 @@ public class ImagePayload extends Payload {
             final double winY = cardHeightPX - (2*pY);
 
             if (keepAspectRatio) {
-                double scaleX = winX / imageWidthPX;
-                double scaleY = winY / imageHeightPX;
+                double scaleX = winX / imageWidth;
+                double scaleY = winY / imageHeight;
                 if (scaleX < scaleY) {
-                    dY = (winY - (imageHeightPX * scaleX)) / 2;
+                    dY = (winY - (imageHeight * scaleX)) / 2;
                 } else {
-                    dX = (winX - (imageWidthPX * scaleY)) / 2;
+                    dX = (winX - (imageWidth * scaleY)) / 2;
                 }
             } 
 
@@ -366,7 +359,7 @@ public class ImagePayload extends Payload {
 
         getImageView(0).setPreserveRatio(keepAspectRatio);
         getImageView(1).setPreserveRatio(keepAspectRatio);
-        paintImage();
+        setPatterns();
     }
 
 
@@ -395,13 +388,13 @@ public class ImagePayload extends Payload {
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
 
-        final double imageWidthPX = iconImage.getWidth();
-        final double imageHeightPX = iconImage.getHeight();
-        final boolean landscape = imageHeightPX < imageWidthPX;
+        final double imageWidth = iconImage.getWidth();
+        final double imageHeight = iconImage.getHeight();
+        final boolean landscape = imageHeight < imageWidth;
 
-        final double pixelsX = centreX.getPixels();
-        final double pixelsY = centreY.getPixels();
-        double winX = cardWidthPX - (2*pixelsX);
+        final double pX = centreX.getPixels();
+        final double pY = centreY.getPixels();
+        double winX = cardWidthPX - (2*pX);
         double winY;
 
         double dX = 0;
@@ -410,40 +403,40 @@ public class ImagePayload extends Payload {
         if (landscape) {
             Debug.info(DD, "landscape");
 
-            winY = (cardHeightPX / 2) - pixelsY;
+            winY = (cardHeightPX / 2) - pY;
 
             if (keepAspectRatio) {
-                double scaleX = winX / imageWidthPX;
-                double scaleY = winY / imageHeightPX;
+                double scaleX = winX / imageWidth;
+                double scaleY = winY / imageHeight;
                 if (scaleX < scaleY) {
-                    dY = (winY - (imageHeightPX * scaleX));
-                    winY = imageHeightPX * scaleX;
+                    dY = (winY - (imageHeight * scaleX));
+                    winY = imageHeight * scaleX;
                 } else {
-                    dX = (winX - (imageWidthPX * scaleY)) / 2;
-                    winX = imageWidthPX * scaleY;
+                    dX = (winX - (imageWidth * scaleY)) / 2;
+                    winX = imageWidth * scaleY;
                 }
             }
 
-            gc.drawImage(rotatedImage, pixelsX + dX + xOffset, cardHeightPX/2 + yOffset, winX, winY);
-            gc.drawImage(iconImage, pixelsX + dX + xOffset, pixelsY + dY + yOffset, winX, winY);
+            gc.drawImage(rotatedImage, pX + dX + xOffset, cardHeightPX/2 + yOffset, winX, winY);
+            gc.drawImage(iconImage, pX + dX + xOffset, pY + dY + yOffset, winX, winY);
         } else {
             Debug.info(DD, "portrait");
 
-            winY = cardHeightPX - (2*pixelsY);
+            winY = cardHeightPX - (2*pY);
 
             if (keepAspectRatio) {
-                double scaleX = winX / imageWidthPX;
-                double scaleY = winY / imageHeightPX;
+                double scaleX = winX / imageWidth;
+                double scaleY = winY / imageHeight;
                 if (scaleX < scaleY) {
-                    dY = (winY - (imageHeightPX * scaleX)) / 2;
-                    winY = imageHeightPX * scaleX;
+                    dY = (winY - (imageHeight * scaleX)) / 2;
+                    winY = imageHeight * scaleX;
                 } else {
-                    dX = (winX - (imageWidthPX * scaleY)) / 2;
-                    winX = imageWidthPX * scaleY;
+                    dX = (winX - (imageWidth * scaleY)) / 2;
+                    winX = imageWidth * scaleY;
                 }
             }
 
-            gc.drawImage(iconImage, pixelsX + dX + xOffset, pixelsY + dY + yOffset, winX, winY);
+            gc.drawImage(iconImage, pX + dX + xOffset, pY + dY + yOffset, winX, winY);
         }
 
         return true;
@@ -472,39 +465,39 @@ public class ImagePayload extends Payload {
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
     
-        final double pixelsX = centreX.getPixels();
-        final double pixelsY = centreY.getPixels();
+        final double pX = centreX.getPixels();
+        final double pY = centreY.getPixels();
 
         Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double pathWidth = pathDesc.getWidth();
-            final double pathHeight = pathDesc.getHeight();
+            final double imageWidth = pathDesc.getWidth();
+            final double imageHeight = pathDesc.getHeight();
             final Color colour = model.getStandardColour(pathDesc.getKey());
 
-            double winX = cardWidthPX - (2*pixelsX);
-            double winY;
+            double winX = cardWidthPX - (2*pX);
+            double winY = cardHeightPX - (2*pY);
 
             double dX = 0;
             double dY = 0;
 
-            winY = cardHeightPX - (2*pixelsY);
-
-            double scaleX = winX / pathWidth;
-            double scaleY = winY / pathHeight;
-            if (scaleX < scaleY) {
-                dY = (winY - (pathHeight * scaleX)) / 2;
-                winY = pathHeight * scaleX;
-            } else {
-                dX = (winX - (pathWidth * scaleY)) / 2;
-                winX = pathWidth * scaleY;
+            double scaleX = winX / imageWidth;
+            double scaleY = winY / imageHeight;
+            if (keepAspectRatio) {
+                if (scaleX < scaleY) {
+                    dY = (winY - (imageHeight * scaleX)) / 2;
+                    scaleY = scaleX;
+                } else {
+                    dX = (winX - (imageWidth * scaleY)) / 2;
+                    scaleX = scaleY;
+                }
             }
 
             gc.save();
 
             gc.setFill(colour);
-            gc.translate(pixelsX + dX + xOffset, pixelsY + dY + yOffset);
+            gc.translate(pX + dX + xOffset, pY + dY + yOffset);
             gc.scale(scaleX, scaleY);
             gc.transform(pathDesc.getAffine());
             gc.beginPath();
