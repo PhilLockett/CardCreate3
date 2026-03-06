@@ -219,6 +219,12 @@ public class ImagePayload extends Payload {
     private void drawSVGPaths() {
         Debug.trace(DD, "drawSVGPaths() :: " + item);
 
+        final String symbol = model.getStandardSymbol(item);
+        Face face = SVGFaces.getFace(symbol);
+        if (face == null) {
+            return;
+        }
+
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
         final double xOffset = model.getMpcBorderWidth();
@@ -227,8 +233,7 @@ public class ImagePayload extends Payload {
         final double pixelsX = centreX.getPixels();
         final double pixelsY = centreY.getPixels();
 
-        final String symbol = model.getStandardSymbol(item);
-        Desc[] facePathDescs = SVGFaces.getFace(symbol);
+        Desc[] facePathDescs = face.getDescs();
         if (facePathDescs == null) {
             Debug.major(DD, "drawSVGPaths() facePathDescs[" + symbol + "] == null " + item);
             return;
@@ -457,6 +462,11 @@ public class ImagePayload extends Payload {
     public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
         Debug.trace(DD, "drawCard(" + symbol + ")");
 
+        Face face = SVGFaces.getFace(symbol);
+        if (face == null) {
+            return false;
+        }
+
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
         final double xOffset = model.getMpcBorderWidth();
@@ -465,7 +475,7 @@ public class ImagePayload extends Payload {
         final double pixelsX = centreX.getPixels();
         final double pixelsY = centreY.getPixels();
 
-        Desc[] facePathDescs = SVGFaces.getFace(symbol);
+        Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
