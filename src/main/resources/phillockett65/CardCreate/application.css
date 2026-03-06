@@ -7,8 +7,18 @@
     -fx-border-color: silver;
 }
 
-.top-bar, .menu-bar{
+.top-bar{
+    -fx-background-color: linear-gradient(to bottom, #505050, #303030);
+}
+.top-bar:hover{
+    -fx-background-color: linear-gradient(to bottom, #606060, #404040);
+}
+.unfocussed-bar{
     -fx-background-color: linear-gradient(to bottom, #404040, #202020);
+}
+
+.unfocussed-root{
+    -fx-border-color: grey;
 }
 
 .top-bar-icon{
@@ -112,6 +122,7 @@
     -fx-font-weight: bold;
 }
 .menu-bar{
+    -fx-background-color: transparent;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
