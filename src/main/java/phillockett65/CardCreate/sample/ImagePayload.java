@@ -529,8 +529,8 @@ public class ImagePayload extends Payload {
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
 
-        final double imageWidthPX = image.getWidth();
-        final double imageHeightPX = image.getHeight();
+        final double imageWidth = image.getWidth();
+        final double imageHeight = image.getHeight();
 
         final boolean borderless = model.isBorderlessJokers();
         final double pixelsX = borderless ? 0 : cardWidthPX * 0.07D;
@@ -546,14 +546,14 @@ public class ImagePayload extends Payload {
         double dX = 0;
         double dY = 0;
 
-        double scaleX = winX / imageWidthPX;
-        double scaleY = winY / imageHeightPX;
+        double scaleX = winX / imageWidth;
+        double scaleY = winY / imageHeight;
         if (scaleX < scaleY) {
-            dY = (winY - (imageHeightPX * scaleX)) / 2;
-            winY = imageHeightPX * scaleX;
+            dY = (winY - (imageHeight * scaleX)) / 2;
+            winY = imageHeight * scaleX;
         } else {
-            dX = (winX - (imageWidthPX * scaleY)) / 2;
-            winX = imageWidthPX * scaleY;
+            dX = (winX - (imageWidth * scaleY)) / 2;
+            winX = imageWidth * scaleY;
         }
 
         gc.drawImage(image, pixelsX + dX + xOffset, pixelsY + dY + yOffset, winX, winY);

@@ -254,17 +254,21 @@ public class MultiPayload extends Payload {
         Debug.trace(DD, "drawSVGPaths() :: " + item);
 
         SvgPathData svgPathData = svgPaths.getSvgPathData(item);
-        final double width = svgPathData.getWidth();
-        final double height = svgPathData.getHeight();
-        final Data data = new Data(width, height);
+        if (svgPathData == null) {
+            return;
+        }
+
+        final double imageWidth = svgPathData.getWidth();
+        final double imageHeight = svgPathData.getHeight();
+        final Data data = new Data(imageWidth, imageHeight);
 
         final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
         final Color colour = model.getStandardColour(item);
         
         // Adjust for scaling around the centre of the path.
         final double adjust = -0.5;
-        final double dX = width * adjust;
-        final double dY = height * adjust;
+        final double dX = imageWidth * adjust;
+        final double dY = imageHeight * adjust;
         final double pX = data.svgX;
         final double pY = data.svgY;
 
@@ -383,9 +387,7 @@ public class MultiPayload extends Payload {
         Debug.trace(DD, "drawCard(" + pattern + ", " + symbol + ")");
         SvgPathData svgPathData = SvgPaths.getSvgPathData(symbol);
         SvgPathData svgRotatedPath = SvgPaths.getSvgPathData("_" + symbol);
-        final double width = svgPathData.getWidth();
-        final double height = svgPathData.getHeight();
-        final Data data = new Data(width, height);
+        final Data data = new Data(svgPathData.getWidth(), svgPathData.getHeight());
 
         final double scale = svgPathData.getScale(data.widthPX, data.heightPX);
         final Color colour = model.getCurrentStandardColour(item);
@@ -440,9 +442,9 @@ public class MultiPayload extends Payload {
         final double xOffset = model.getMpcBorderWidth();
         final double yOffset = model.getMpcBorderHeight();
 
-        final double iconWidthPX = image.getWidth();
-        final double iconHeightPX = image.getHeight();
-        final boolean landscape = iconHeightPX < iconWidthPX;
+        final double imageWidth = image.getWidth();
+        final double imageHeight = image.getHeight();
+        final boolean landscape = imageHeight < imageWidth;
 
         double width;
         double height;
@@ -451,13 +453,13 @@ public class MultiPayload extends Payload {
 
         if (landscape) {
             height = cardHeightPX * 0.05;
-            width = height * iconWidthPX / iconHeightPX;
+            width = height * imageWidth / imageHeight;
 
             posX = cardHeightPX * 0.02;
             posY = model.getArcWidthPX()/4;
         } else {
             width = cardWidthPX * 0.07;
-            height = width * iconHeightPX / iconWidthPX;
+            height = width * imageHeight / imageWidth;
 
             posX = cardWidthPX * 0.02;
             posY = model.getArcHeightPX()/4;
