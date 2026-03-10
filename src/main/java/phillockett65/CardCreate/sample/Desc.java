@@ -39,8 +39,8 @@ public class Desc {
         path = p;
     
         // width = 1046.93;
-        width = 1051.5;
-        height = 1673.16;
+        width = 163.28437;
+        height = 263.19374;
 
         affine = new Affine(a,c,e,b,d,f);
     }
