@@ -58,7 +58,7 @@ public class SVGFaces {
         return null;
     }
 
-    public static boolean isFaceColour(String id, ColourKey key) {
+    public static boolean isFaceColour(String id, CourtColourKey key) {
         Face face = getFace(id);
         if (face == null) {
             return false;
@@ -73,7 +73,7 @@ public class SVGFaces {
     }
 
     public static boolean isFaceColour(String id, int index) {
-        return isFaceColour(id, ColourKey.getColourKey(index));
+        return isFaceColour(id, CourtColourKey.getKey(index));
     }
 
     public static int getFacePathCount(String id) {

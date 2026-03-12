@@ -28,13 +28,13 @@ import javafx.scene.transform.Affine;
 
 public class Desc {
 
-    private final ColourKey key;
+    private final CourtColourKey key;
     private final double width;
     private final double height;
     private final String path;
     private final Affine affine;
 
-    public Desc(ColourKey k, double a, double b, double c, double d, double e, double f, String p) {
+    public Desc(CourtColourKey k, double a, double b, double c, double d, double e, double f, String p) {
         key = k;
         path = p;
     
@@ -45,8 +45,8 @@ public class Desc {
         affine = new Affine(a,c,e,b,d,f);
     }
 
-    public boolean isKey(ColourKey target) { return key == target; }
-    public ColourKey getKey() { return key; }
+    public boolean isKey(CourtColourKey target) { return key == target; }
+    public CourtColourKey getKey() { return key; }
     public double getWidth() { return width; }
     public double getHeight() { return height; }
     public String getPath() { return path; }

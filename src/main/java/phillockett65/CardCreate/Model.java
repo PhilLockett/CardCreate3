@@ -47,6 +47,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import phillockett65.CardCreate.sample.CardSample;
 import phillockett65.CardCreate.sample.ColourKey;
+import phillockett65.CardCreate.sample.CourtColourKey;
 import phillockett65.CardCreate.sample.Default;
 import phillockett65.CardCreate.sample.Handle;
 import phillockett65.CardCreate.sample.ImagePayload;
@@ -2588,31 +2589,31 @@ public class Model {
         return getPipColour();
     }
 
-    public Color getStandardColour(ColourKey colourKey) {
+    public Color getStandardColour(CourtColourKey colourKey) {
         // Debug.trace(DD, "getStandardColour() :: " + colourKey);
 
-        if (colourKey == ColourKey.WHITE_ID)
+        if (colourKey == CourtColourKey.WHITE_ID)
             return getCourtsWhiteColour();
 
-        if (colourKey == ColourKey.STEEL_ID)
+        if (colourKey == CourtColourKey.STEEL_ID)
             return getCourtsSteelColour();
 
-        if (colourKey == ColourKey.FLESH_ID)
+        if (colourKey == CourtColourKey.FLESH_ID)
             return getCourtsFleshColour();
 
-        if (colourKey == ColourKey.HAIR_ID)
+        if (colourKey == CourtColourKey.HAIR_ID)
             return getCourtsHairColour();
 
-        if (colourKey == ColourKey.YELLOW_ID)
+        if (colourKey == CourtColourKey.YELLOW_ID)
             return getCourtsYellowColour();
 
-        if (colourKey == ColourKey.RED_ID)
+        if (colourKey == CourtColourKey.RED_ID)
             return getCourtsRedColour();
 
-        if (colourKey == ColourKey.BLUE_ID)
+        if (colourKey == CourtColourKey.BLUE_ID)
             return getCourtsBlueColour();
 
-        if (colourKey == ColourKey.BLACK_ID)
+        if (colourKey == CourtColourKey.BLACK_ID)
             return getCourtsBlackColour();
 
         return Color.TRANSPARENT;
