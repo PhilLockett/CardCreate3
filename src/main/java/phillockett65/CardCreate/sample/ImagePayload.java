@@ -50,7 +50,7 @@ public class ImagePayload extends Payload {
      * @return the active ImageView count.
      */
     private int getPathCount() {
-        return ColourKey.MAX_KEY.getKey();
+        return CourtColourKey.MAX_KEY.getKey();
     }
 
     /**
