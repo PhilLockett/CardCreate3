@@ -62,7 +62,7 @@ public class Model {
     // Debug delta used to adjust the local logging level.
     private static final int DD = 0;
 
-    private final static String DATAFILE = "x_Settings.dat";
+    private final static String DATAFILE = "x_Settings";
 
     public static final int INDEX_ID = 0;
     public static final int CORNER_PIP_ID = 1;
@@ -935,14 +935,36 @@ public class Model {
         return baseDirectory + "\\cards\\" + getOutputName();
     }
 
-    public String getSettingsFile() {
-        return getOutputDirectory() + "\\" + DATAFILE;
+    public String getSettingsFile(int version) {
+        if (version == 2) {
+            return getOutputDirectory() + "\\" + DATAFILE + ".dat";
+        }
+        return getOutputDirectory() + "\\" + DATAFILE + version + ".dat";
     }
 
-    public boolean isSettingsFileExist() {
-        File file = new File(getSettingsFile());
+    public boolean isSettingsFileExist(int version) {
+        File file = new File(getSettingsFile(version));
 
         return file.exists();
+    }
+
+    public boolean isAnySettingsFileExist() {
+        if (isSettingsFileExist(3)) {
+            return true;
+        } 
+
+        return isSettingsFileExist(2);
+    }
+
+    public int whichSettingsFileExists() {
+        if (isSettingsFileExist(3)) {
+            return 3;
+        } 
+
+        if (isSettingsFileExist(2)) {
+            return 2;
+        } 
+        return 0;
     }
 
     public String getOutputImagePath(int s, int c) {
@@ -2445,7 +2467,7 @@ public class Model {
 
     private Color courtsWhiteColour = Color.WHITE;
     private Color courtsSteelColour = Color.web("#E0E0F0");
-    private Color courtshairColour = Color.web("#F0F0F0");
+    private Color courtsHairColour = Color.web("#F0F0F0");
     private Color courtsFleshColour = Color.web("#FFF1E0");
     private Color courtsYellowColour = Color.web("#F8D717");
     private Color courtsRedColour = Color.web("#F41E22");
@@ -2463,7 +2485,7 @@ public class Model {
 
     public Color getCourtsWhiteColour() { return courtsWhiteColour; }
     public Color getCourtsSteelColour() { return courtsSteelColour; }
-    public Color getCourtsHairColour() { return courtshairColour; }
+    public Color getCourtsHairColour() { return courtsHairColour; }
     public Color getCourtsFleshColour() { return courtsFleshColour; }
     public Color getCourtsYellowColour() { return courtsYellowColour; }
     public Color getCourtsRedColour() { return courtsRedColour; }
@@ -2520,7 +2542,7 @@ public class Model {
     }
 
     public void setCourtsHairColour(Color colour) {
-        courtshairColour = colour;
+        courtsHairColour = colour;
         setFaceCardItemPayload();
     }
 
@@ -2548,6 +2570,72 @@ public class Model {
         courtsBlackColour = colour;
         setFaceCardItemPayload();
     }
+
+
+
+    /**
+     * Used by DataStore3 to get the latest colours.
+     * @return the list of colours.
+     */
+    public ArrayList<String> buildColourList() {
+
+        ArrayList<String> dataList = new ArrayList<String>(ColourKey.MAX_KEY.getKey());
+
+        dataList.add(backgroundColour.toString());
+
+		dataList.add(clubIndexColour.toString());
+		dataList.add(diamondIndexColour.toString());
+		dataList.add(heartIndexColour.toString());
+		dataList.add(spadeIndexColour.toString());
+
+		dataList.add(clubPipColour.toString());
+		dataList.add(diamondPipColour.toString());
+		dataList.add(heartPipColour.toString());
+		dataList.add(spadePipColour.toString());
+
+		dataList.add(courtsWhiteColour.toString());
+		dataList.add(courtsSteelColour.toString());
+		dataList.add(courtsHairColour.toString());
+		dataList.add(courtsFleshColour.toString());
+
+		dataList.add(courtsYellowColour.toString());
+		dataList.add(courtsRedColour.toString());
+		dataList.add(courtsBlueColour.toString());
+		dataList.add(courtsBlackColour.toString());
+
+        return dataList;
+    }
+
+    /**
+     * Set all the colours and update the ColorPickers.
+     */
+    public void injectColourList(ArrayList<String> dataList) {
+
+        setBackgroundColour(Color.web(dataList.get(ColourKey.CARD_ID.getKey())));
+
+		setClubIndexColour(Color.web(dataList.get(ColourKey.CLUB_INDEX_ID.getKey())));
+		setDiamondIndexColour(Color.web(dataList.get(ColourKey.DIAMOND_INDEX_ID.getKey())));
+		setHeartIndexColour(Color.web(dataList.get(ColourKey.HEART_INDEX_ID.getKey())));
+		setSpadeIndexColour(Color.web(dataList.get(ColourKey.SPADE_INDEX_ID.getKey())));
+
+		setClubPipColour(Color.web(dataList.get(ColourKey.CLUB_PIP_ID.getKey())));
+		setDiamondPipColour(Color.web(dataList.get(ColourKey.DIAMOND_PIP_ID.getKey())));
+		setHeartPipColour(Color.web(dataList.get(ColourKey.HEART_PIP_ID.getKey())));
+		setSpadePipColour(Color.web(dataList.get(ColourKey.SPADE_PIP_ID.getKey())));
+
+		setCourtsWhiteColour(Color.web(dataList.get(ColourKey.COURT_WHITE_ID.getKey())));
+		setCourtsSteelColour(Color.web(dataList.get(ColourKey.COURT_STEEL_ID.getKey())));
+		setCourtsHairColour(Color.web(dataList.get(ColourKey.COURT_FLESH_ID.getKey())));
+		setCourtsFleshColour(Color.web(dataList.get(ColourKey.COURT_HAIR_ID.getKey())));
+
+		setCourtsYellowColour(Color.web(dataList.get(ColourKey.COURT_YELLOW_ID.getKey())));
+		setCourtsRedColour(Color.web(dataList.get(ColourKey.COURT_RED_ID.getKey())));
+		setCourtsBlueColour(Color.web(dataList.get(ColourKey.COURT_BLUE_ID.getKey())));
+		setCourtsBlackColour(Color.web(dataList.get(ColourKey.COURT_BLACK_ID.getKey())));
+
+        syncAllUIs();
+    }
+
 
     public Color getIndexColour(int s) {
         switch (s) {

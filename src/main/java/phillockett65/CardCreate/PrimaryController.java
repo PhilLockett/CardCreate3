@@ -132,7 +132,7 @@ public class PrimaryController {
     public void syncUI() {
         Debug.trace(DD, "PrimaryController syncUI().");
 
-        loadButton.setDisable(!model.isSettingsFileExist());
+        loadButton.setDisable(!model.isAnySettingsFileExist());
 
         faceChoiceBox.setValue(model.getFaceStyle());
         faceChoiceBox.setDisable(model.isStandardFaces());
@@ -419,7 +419,7 @@ public class PrimaryController {
         Debug.trace(DD, "outputjTextFieldKeyTyped()" + event.toString());
         model.setOutputName(outputTextField.getText());
         model.getMainController().syncFileLoadMenuItem();
-        loadButton.setDisable(!model.isSettingsFileExist());
+        loadButton.setDisable(!model.isAnySettingsFileExist());
     }
 
     @FXML
@@ -436,7 +436,7 @@ public class PrimaryController {
     private void syncOutputTextField() {
         outputTextField.setText(model.getOutputName());
         model.getMainController().syncFileLoadMenuItem();
-        loadButton.setDisable(!model.isSettingsFileExist());
+        loadButton.setDisable(!model.isAnySettingsFileExist());
     }
 
     /**

@@ -246,19 +246,27 @@ public class MainController {
 
     public void loadSettings() {
         Debug.trace(DD, "loadSettings()");
-        DataStore.readData();
+        final int version = model.whichSettingsFileExists();
+        switch (version) {
+        case 3:
+            DataStore3.readData();
+            break;
+        case 2:
+            DataStore.readData();
+            break;
+        }
 
         model.syncAllUIs();
 
-        setStatusMessage("Settings loaded from: " + model.getSettingsFile());
+        setStatusMessage("Settings loaded from: " + model.getSettingsFile(version));
     }
 
     public void saveSettings() {
-        DataStore.writeData();
+        DataStore3.writeData();
 
         model.syncAllUIs();
 
-        setStatusMessage("Settings saved as: " + model.getSettingsFile());
+        setStatusMessage("Settings saved as: " + model.getSettingsFile(3));
     }
 
     /**
@@ -500,7 +508,7 @@ public class MainController {
      */
 
     public void syncFileLoadMenuItem() {
-        fileLoadMenuItem.setDisable(!model.isSettingsFileExist());
+        fileLoadMenuItem.setDisable(!model.isAnySettingsFileExist());
     }
 
     /************************************************************************

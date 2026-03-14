@@ -32,15 +32,18 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javafx.scene.paint.Color;
 import phillockett65.Debug.Debug;
 
 
-public class DataStore implements Serializable {
+public class DataStore3 implements Serializable {
     private static final long serialVersionUID = 1L;
 
     // Debug delta used to adjust the local logging level.
     private static final int DD = 0;
+
+    private Boolean useStandardFaces;
+    private Boolean useStandardIndices;
+    private Boolean useStandardPips;
 
     private String faceStyle;
     private String indexStyle;
@@ -56,9 +59,7 @@ public class DataStore implements Serializable {
     private Double cardHeightPX;
     private Double cardWidthPX;
 
-    private Double red;
-    private Double green;
-    private Double blue;
+    ArrayList<String> colourList; 
 
     private Boolean displayIndex;
     private Boolean displayCornerPip;
@@ -85,13 +86,16 @@ public class DataStore implements Serializable {
 
     private Boolean borderlessJokers;
 
+    public DataStore3() {
 
-    public DataStore() {
-        
     }
 
     private boolean pull(Model model) {
         boolean success = true;
+
+        useStandardFaces = model.isStandardFaces();
+        useStandardIndices = model.isStandardIndices();
+        useStandardPips = model.isStandardPips();
 
         faceStyle   = model.getFaceStyle();
         indexStyle  = model.getIndexStyle();
@@ -107,9 +111,7 @@ public class DataStore implements Serializable {
         cardHeightPX = model.getHeight();
         cardWidthPX = model.getUserWidth();
 
-        red = model.getBackgroundColour().getRed();
-        green = model.getBackgroundColour().getGreen();
-        blue = model.getBackgroundColour().getBlue();
+        colourList = model.buildColourList();
 
         displayIndex = model.isDisplayIndex();
         displayCornerPip = model.isDisplayCornerPip();
@@ -141,7 +143,11 @@ public class DataStore implements Serializable {
 
     private boolean push(Model model) {
         boolean success = true;
-        
+
+        model.setUseStandardFaces(useStandardFaces);
+        model.setUseStandardIndices(useStandardIndices);
+        model.setUseStandardPips(useStandardPips);
+
         model.setFaceStyle(faceStyle);
         model.setIndexStyle(indexStyle);
         model.setPipStyle(pipStyle);
@@ -156,7 +162,7 @@ public class DataStore implements Serializable {
         model.setHeight(cardHeightPX);
         model.setWidth(cardWidthPX);
 
-        model.setBackgroundColour(Color.color(red, green, blue));
+        model.injectColourList(colourList);
 
         model.setDisplayIndex(displayIndex);
         model.setDisplayCornerPip(displayCornerPip);
@@ -199,12 +205,12 @@ public class DataStore implements Serializable {
         // Ensure that the output directory exists.
         model.makeOutputDirectory();
 
-        DataStore dataStore = new DataStore();
+        DataStore3 dataStore = new DataStore3();
         dataStore.pull(model);
 
         ObjectOutputStream objectOutputStream;
         try {
-            objectOutputStream = new ObjectOutputStream(new FileOutputStream(model.getSettingsFile(2)));
+            objectOutputStream = new ObjectOutputStream(new FileOutputStream(model.getSettingsFile(3)));
 
             objectOutputStream.writeObject(dataStore);
             success = true;
@@ -222,9 +228,9 @@ public class DataStore implements Serializable {
 
         ObjectInputStream objectInputStream;
         try {
-            objectInputStream = new ObjectInputStream(new FileInputStream(model.getSettingsFile(2)));
+            objectInputStream = new ObjectInputStream(new FileInputStream(model.getSettingsFile(3)));
 
-            DataStore dataStore = (DataStore)objectInputStream.readObject();
+            DataStore3 dataStore = (DataStore3)objectInputStream.readObject();
             success = dataStore.push(model);
         } catch (IOException e) {
             Debug.critical(DD, e.getMessage());
