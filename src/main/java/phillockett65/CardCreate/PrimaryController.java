@@ -38,8 +38,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 import phillockett65.CardCreate.sample.Item;
@@ -68,17 +66,6 @@ public class PrimaryController {
         model = Model.getInstance();
     }
 
-    private void setUpImageButton(Button button, String imageFileName, double size)
-    {
-        Image image = new Image(getClass().getResourceAsStream(imageFileName));
-        ImageView view = new ImageView(image);
-        view.setFitWidth(size);
-        view.setFitHeight(size);
-
-        button.setGraphic(view);
-        button.setText(null);
-    }
-
     /**
      * Called by the FXML mechanism to initialize the controller. Sets up the 
      * images on the buttons and initialises all the controls.
@@ -86,20 +73,8 @@ public class PrimaryController {
     @FXML public void initialize() {
         Debug.trace(DD, "PrimaryController initialize().");
 
-        /**
-         * Initialize "Playing Card Generator" panel.
-         */
-
-        setUpImageButton(generateButton, "icon-play.png", 82.0);
-        setUpImageButton(previousSuitButton, "icon-up.png", 48.0);
-        setUpImageButton(previousCardButton, "icon-left.png", 48.0);
-        setUpImageButton(nextCardButton, "icon-right.png", 48.0);
-        setUpImageButton(nextSuitButton, "icon-down.png", 48.0);
-
         initializeInputDirectories();
-        initializeGenerate();
         initializeOutputDirectory();
-        initializeSampleNavigation();
         initializeDisplayCardItems();
         initializeSelectCardItem();
     }
@@ -151,7 +126,6 @@ public class PrimaryController {
 
         setCardSizeRadioState();
 
-        cardColourTextField.setText(model.getBackgroundColourString());
         cardColourPicker.setValue(model.getBackgroundColour());
 
         indicesCheckBox.setSelected(model.isDisplayIndex());
@@ -379,31 +353,6 @@ public class PrimaryController {
 
 
     /************************************************************************
-     * Support code for "Generate" panel. 
-     */
-
-    @FXML
-    private Button generateButton;
-
-    @FXML
-    void generateButtonActionPerformed(ActionEvent event) {
-        model.getMainController().startGeneration();
-    }
-
-    public void disableGenerateButton(boolean state) {
-        generateButton.setDisable(state);
-    }
-
-     /**
-      * Initialize"Generate" panel.
-      */
-      private void initializeGenerate() {
-        generateButton.setTooltip(new Tooltip("Generate the card images to the selected output directory"));
-    }
-
-
-
-    /************************************************************************
      * Support code for "Output Directory" panel. 
      */
 
@@ -445,58 +394,6 @@ public class PrimaryController {
     private void initializeOutputDirectory() {
         outputTextField.setTooltip(new Tooltip("Preferred output directory name"));
         outputToggleButton.setTooltip(new Tooltip("Manually enter the output directory name, otherwise use same name as selected Face"));
-    }
-
-
-
-    /************************************************************************
-     * Support code for "Sample Navigation" panel. 
-     */
-
-    @FXML
-    private Button previousCardButton;
-
-    @FXML
-    private Button previousSuitButton;
-
-    @FXML
-    private Button nextCardButton;
-
-    @FXML
-    private Button nextSuitButton;
-
-    @FXML
-    void previousCardButtonActionPerformed(ActionEvent event) {
-        model.prevCard();
-        setCardItemRadioState();
-    }
-
-    @FXML
-    void previousSuitButtonActionPerformed(ActionEvent event) {
-        model.prevSuit();
-        setCardItemRadioState();
-    }
-
-    @FXML
-    void nextCardButtonActionPerformed(ActionEvent event) {
-        model.nextCard();
-        setCardItemRadioState();
-    }
-
-    @FXML
-    void nextSuitButtonActionPerformed(ActionEvent event) {
-        model.nextSuit();
-        setCardItemRadioState();
-    }
-
-    /**
-     * Initialize "Sample Navigation" panel.
-     */
-    private void initializeSampleNavigation() {
-        previousCardButton.setTooltip(new Tooltip("Display previous card as Sample"));
-        previousSuitButton.setTooltip(new Tooltip("Display previous suit as Sample"));
-        nextCardButton.setTooltip(new Tooltip("Display next card as Sample"));
-        nextSuitButton.setTooltip(new Tooltip("Display next suit as Sample"));
     }
 
 
@@ -629,7 +526,7 @@ public class PrimaryController {
      */
 
     @FXML
-    private TextField cardColourTextField;
+    private ChoiceBox<String> themeChoiceBox;
 
     @FXML
     private ColorPicker cardColourPicker;
@@ -638,17 +535,20 @@ public class PrimaryController {
     void cardColourPickerActionPerformed(ActionEvent event) {
         model.setBackgroundColour(cardColourPicker.getValue());
         model.getSample().syncBackgroundColour();
-        cardColourTextField.setText(model.getBackgroundColourString());
     }
 
     /**
      * Initialize "Background Colour" panel.
      */
     private void initializeBackgroundColour() {
-        cardColourTextField.setTooltip(new Tooltip("Copy and paste where needed"));
+        themeChoiceBox.setTooltip(new Tooltip("Apply a colour theme to the cards"));
         cardColourPicker.setTooltip(new Tooltip("Select the background colour for the card"));
 
-        cardColourTextField.setText(model.getBackgroundColourString());
+        themeChoiceBox.setItems(model.getThemeNames());
+
+        themeChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
+            model.setTheme(newValue);
+        });
     }
 
 

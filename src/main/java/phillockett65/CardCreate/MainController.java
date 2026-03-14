@@ -25,6 +25,7 @@
 package phillockett65.CardCreate;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 
 import java.io.File;
 import java.util.Optional;
@@ -34,16 +35,19 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -63,17 +67,37 @@ public class MainController {
 
 
     /************************************************************************
+     * General support code. 
+     */
+
+    private void setUpImageButton(Button button, String imageFileName, double size)
+    {
+        Image image = new Image(getClass().getResourceAsStream(imageFileName));
+        ImageView view = new ImageView(image);
+        view.setFitWidth(size);
+        view.setFitHeight(size);
+
+        button.setGraphic(view);
+        button.setText(null);
+    }
+
+
+
+    /************************************************************************
      * Support code for "Playing Card Generator" panel. 
      */ 
 
     @FXML
-    private VBox userGUI;
+    private BorderPane userGUI;
 
     @FXML
     PrimaryController primaryTabController;
 
     @FXML
     AdditionalController additionalTabController;
+
+    @FXML
+    ColourController colourTabController;
 
     /**
      * Constructor.
@@ -97,6 +121,7 @@ public class MainController {
         initializeTopBar();
         initializeMenu();
         initializeGenerate();
+        initializeSampleNavigation();
         initializeStatus();
     }
 
@@ -109,7 +134,7 @@ public class MainController {
 
         this.stage = stage;
         userGUI.setDisable(true);
-        model.setControllers(stage, this, primaryTabController, additionalTabController);
+        model.setControllers(stage, this, primaryTabController, additionalTabController, colourTabController);
 
         if ((!model.isValidBaseDirectory()) &&
             (!selectValidBaseDirectory())) {
@@ -373,6 +398,18 @@ public class MainController {
 
     private int defaults = 0;
 
+    @FXML
+    private Button generateButton;
+
+    @FXML
+    void generateButtonActionPerformed(ActionEvent event) {
+        startGeneration();
+    }
+
+    public void disableGenerateButton(boolean state) {
+        generateButton.setDisable(state);
+    }
+
     private void finaliseSize() {
 
         if (!model.isMpcCardSize()) {
@@ -498,10 +535,14 @@ public class MainController {
      * Initialize"Generate" panel.
     */
     private void initializeGenerate() {
+        setUpImageButton(generateButton, "icon-play.png", 82.0);
+        generateButton.setTooltip(new Tooltip("Generate the card images to the selected output directory"));
+
         parameters = new SnapshotParameters();
         parameters.setFill(Color.TRANSPARENT);
     }
  
+
 
     /************************************************************************
      * Support code for "Output Directory" panel. 
@@ -510,6 +551,61 @@ public class MainController {
     public void syncFileLoadMenuItem() {
         fileLoadMenuItem.setDisable(!model.isAnySettingsFileExist());
     }
+
+
+
+    /************************************************************************
+     * Support code for "Sample Navigation" panel. 
+     */
+
+    @FXML
+    private Button previousCardButton;
+
+    @FXML
+    private Button previousSuitButton;
+
+    @FXML
+    private Button nextCardButton;
+
+    @FXML
+    private Button nextSuitButton;
+
+    @FXML
+    void previousCardButtonActionPerformed(ActionEvent event) {
+        model.prevCard();
+    }
+
+    @FXML
+    void previousSuitButtonActionPerformed(ActionEvent event) {
+        model.prevSuit();
+    }
+
+    @FXML
+    void nextCardButtonActionPerformed(ActionEvent event) {
+        model.nextCard();
+    }
+
+    @FXML
+    void nextSuitButtonActionPerformed(ActionEvent event) {
+        model.nextSuit();
+    }
+
+    /**
+     * Initialize "Sample Navigation" panel.
+     */
+    private void initializeSampleNavigation() {
+        setUpImageButton(previousSuitButton, "icon-up.png", 48.0);
+        setUpImageButton(previousCardButton, "icon-left.png", 48.0);
+        setUpImageButton(nextCardButton, "icon-right.png", 48.0);
+        setUpImageButton(nextSuitButton, "icon-down.png", 48.0);
+
+        previousCardButton.setTooltip(new Tooltip("Display previous card as Sample"));
+        previousSuitButton.setTooltip(new Tooltip("Display previous suit as Sample"));
+        nextCardButton.setTooltip(new Tooltip("Display next card as Sample"));
+        nextSuitButton.setTooltip(new Tooltip("Display next suit as Sample"));
+    }
+
+
 
     /************************************************************************
      * Support code for "Status" panel. 
@@ -536,7 +632,7 @@ public class MainController {
      * button.
      */
     private void showProgressState(boolean state) {
-        primaryTabController.disableGenerateButton(state);
+        disableGenerateButton(state);
         statusLabel.setVisible(!state);
         progressBar.setVisible(state);
     }

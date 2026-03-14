@@ -67,7 +67,7 @@ public enum Default {
     MPC_HEIGHT (1050),
     MIN_HEIGHT (38F * 7 / 5),
     MAX_HEIGHT (3800F * 7 / 5),
-    RADIUS (10F),
+    RADIUS (6F),
     MIN_RADIUS (0F),
     MAX_RADIUS (100F);
 

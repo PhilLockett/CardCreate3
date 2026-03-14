@@ -84,6 +84,7 @@ public class Model {
     private MainController mainController;
     private PrimaryController primaryController;
     private AdditionalController additionalController;
+    private ColourController colourController;
     private CardSample sample;
 
 
@@ -126,7 +127,8 @@ public class Model {
     public void setControllers(Stage mainStage, 
         MainController mainC,
         PrimaryController primaryC,
-        AdditionalController additionalC) {
+        AdditionalController additionalC,
+        ColourController colourC) {
 
         Debug.trace(DD, "Model setControllers()");
 
@@ -134,6 +136,7 @@ public class Model {
         mainController = mainC;
         primaryController = primaryC;
         additionalController = additionalC;
+        colourController = colourC;
     }
     
     /**
@@ -152,12 +155,15 @@ public class Model {
         initializeCardItemPayloads();
         makeCardsDirectory();
         
+        setTheme(defaults[0][0]);
+
         // Add handle to the group last so that it is displayed on top.
         group.getChildren().add(box);
         group.getChildren().add(handle);
         
         primaryController.init();
         additionalController.init();
+        colourController.init();
         sample.init();
 
         syncAllUIs();
@@ -172,6 +178,7 @@ public class Model {
         mainController.syncUI();
         primaryController.syncUI();
         additionalController.syncUI();
+        colourController.syncUI();
         sample.syncUI();
         updateDisplayForCurrentCard();
     }
@@ -180,6 +187,7 @@ public class Model {
     public MainController getMainController() { return mainController; }
     public PrimaryController getPrimaryController() { return primaryController; }
     public AdditionalController getAdditionalController() { return additionalController; }
+    public ColourController getColourController() { return colourController; }
     public CardSample getSample() { return sample; }
 
     public void rebuildGroup() {
@@ -1074,7 +1082,7 @@ public class Model {
         if (++suit >= suits.length)
             suit = 0;
 
-        updateDisplayForCurrentCard();
+        syncAllUIs();
 
         return suit;
     }
@@ -1083,7 +1091,7 @@ public class Model {
         if (++card >= cards.length)
             card = 1;
 
-        updateDisplayForCurrentCard();
+        syncAllUIs();
 
         return card;
     }
@@ -1092,7 +1100,7 @@ public class Model {
         if (--suit < 0)
             suit = suits.length - 1;
 
-        updateDisplayForCurrentCard();
+        syncAllUIs();
 
         return suit;
     }
@@ -1101,7 +1109,7 @@ public class Model {
         if (--card <= 0)
             card = cards.length - 1;
 
-        updateDisplayForCurrentCard();
+        syncAllUIs();
 
         return card;
     }
@@ -2452,9 +2460,85 @@ public class Model {
     private void initializeJokers() {
     }
 
+
     /************************************************************************
      * Support code for "Select Standard Index/Pip Colour" panel. 
      */
+
+    ObservableList<String> themeList = FXCollections.observableArrayList();
+
+    public ObservableList<String> getThemeNames() { return themeList; }
+
+    /**
+     *     theme       background
+     * index/pip C I  D I       H I       S I       C P       D P       H P       S P
+     * courts white   steel     hair      flesh     yellow    red       blue      black
+     */
+    final String[][] defaults = { 
+        {
+            "Defaults", "FFFFFF",
+            "000000", "F41E22", "F41E22", "000000", "000000", "F41E22", "F41E22", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "F8D717", "F41E22", "0F5AAA", "000000"
+        },
+        {
+            "4 Colour", "FFFFFF",
+            "007000", "0F5AAA", "F41E22", "000000", "007000", "0F5AAA", "F41E22", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "F8D717", "F41E22", "0F5AAA", "000000"
+        },
+        {
+            "ekatMagic", "FFFFFF",
+            "000000", "E00000", "E00000", "000000", "000000", "E00000", "E00000", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "FFB400", "E00000", "00006C", "000000"
+        },
+        {
+            "52faces", "FFFFFF",
+            "000000", "D40000", "D40000", "000000", "000000", "D40000", "D40000", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "E2CF00", "D40000", "131F67", "000000"
+        },
+        {
+            "Scan", "FFFFFF",
+            "000000", "BD0504", "BD0504", "000000", "000000", "BD0504", "BD0504", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "E2BA0D", "BD0504", "032479", "000000"
+        },
+        {
+            "Green", "FFFFFF",
+            "000000", "F41E22", "F41E22", "000000", "000000", "F41E22", "F41E22", "000000",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "F8D717", "007000", "00005B", "000000"
+        },
+        {
+            "Black", "000000",
+            "FFFFFF", "F41E22", "F41E22", "FFFFFF", "FFFFFF", "F41E22", "F41E22", "FFFFFF",
+            "FFFFFF", "FFFFFF", "FFFFFF", "FFFFFF", "F8D717", "F41E22", "0F5AAA", "000000"
+        },
+        {
+            "Custom", "FFFFFF",
+            "000000", "8B0000", "8B0000", "000000", "000000", "8B0000", "8B0000", "000000",
+            "FFFFFF", "E0E0F0", "F0F0F0", "FFF1E0", "DAA520", "8B0000", "000049", "000000"
+        },
+    };
+
+    /**
+     * Set the selected colour theme and update the necessary card item Payloads.
+     * 
+     * @param theme selected.
+     */
+    public void setTheme(String theme) {
+        Debug.trace(DD, "setTheme(" + theme + ")");
+
+        for (int i = 0; i < defaults.length; ++i) {
+            if (defaults[i][0] == theme) {
+                ArrayList<String> dataList = new ArrayList<String>();
+
+                for (int j = 1; j < defaults[i].length; ++j) {
+                    dataList.add("#" + defaults[i][j]);
+                }
+
+                injectColourList(dataList);
+
+                return;
+            }
+        }
+    }
 
     private Color clubIndexColour = Color.BLACK;
     private Color diamondIndexColour = Color.web("#F41E22");
@@ -2711,7 +2795,9 @@ public class Model {
      * Initialize "Select Standard Index/Pip Colour" panel.
      */
     private void initializeStandardColours() {
-
+        for (int i = 0; i < defaults.length; ++i) {
+            themeList.add(defaults[i][0]);
+        }
     }
 
 }
