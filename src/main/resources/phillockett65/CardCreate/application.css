@@ -70,6 +70,37 @@
 .text-area{
     -fx-text-fill: #e8e8e8;
 }
+.slider .track {
+    -fx-background-color: linear-gradient(to right, #404040, #B0B0B0);
+    -fx-pref-height: 20;
+    -fx-background-radius: 10;
+}
+
+.slider .thumb {
+    -fx-background-color: radial-gradient(center 50% 25%, radius 100%, #e8a8a8, #9B4642);
+    -fx-pref-height: 20;
+    -fx-pref-width: 20;
+}
+
+.red-slider .track{
+    -fx-background-color: linear-gradient(to right, #400000, #D00000);
+}
+
+.green-slider .track{
+    -fx-background-color: linear-gradient(to right, #004000, #00D000);
+}
+
+.blue-slider .track{
+    -fx-background-color: linear-gradient(to right, #000040, #0000D0);
+}
+
+.colour-selected{
+    -fx-stroke: -main-fore-col;
+}
+
+.colour-unselected{
+    -fx-stroke: -main-back-col;
+}
 .content{
     -fx-background-color: #080808;
 	-fx-border-color: yellow;

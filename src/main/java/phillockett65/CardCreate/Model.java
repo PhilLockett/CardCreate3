@@ -1303,20 +1303,9 @@ public class Model {
      * Support code for "Background Colour" panel.
      */
 
-    private Color backgroundColour = Color.WHITE;
-
-    public Color getBackgroundColour() { return backgroundColour; }
-    public void setBackgroundColour(Color colour) { backgroundColour = colour; }
-
-    private int colourRealToInt(double comp) {
-        return (int)(comp * 256);
-    }
-
-    public String getBackgroundColourString() {
-        return String.format("rgb(%d, %d, %d)",
-                colourRealToInt(backgroundColour.getRed()),
-                colourRealToInt(backgroundColour.getGreen()),
-                colourRealToInt(backgroundColour.getBlue()));
+    public Color getBackgroundColour() { return getColour(ColourKey.CARD_ID); }
+    public void setBackgroundColour(Color colour) {
+        setColour(ColourKey.CARD_ID, colour);
     }
 
     /**
@@ -2540,119 +2529,64 @@ public class Model {
         }
     }
 
-    private Color clubIndexColour = Color.BLACK;
-    private Color diamondIndexColour = Color.web("#F41E22");
-    private Color heartIndexColour = Color.web("#F41E22");
-    private Color spadeIndexColour = Color.BLACK;
-    private Color clubPipColour = Color.BLACK;
-    private Color diamondPipColour = Color.web("#F41E22");
-    private Color heartPipColour = Color.web("#F41E22");
-    private Color spadePipColour = Color.BLACK;
+    private int colourSelected = 0;
+    Color[] colours = new Color[ColourKey.MAX_KEY.getKey()];
 
-    private Color courtsWhiteColour = Color.WHITE;
-    private Color courtsSteelColour = Color.web("#E0E0F0");
-    private Color courtsHairColour = Color.web("#F0F0F0");
-    private Color courtsFleshColour = Color.web("#FFF1E0");
-    private Color courtsYellowColour = Color.web("#F8D717");
-    private Color courtsRedColour = Color.web("#F41E22");
-    private Color courtsBlueColour = Color.web("#0F5AAA");
-    private Color courtsBlackColour = Color.BLACK;
-
-    public Color getClubIndexColour() { return clubIndexColour; }
-    public Color getDiamondIndexColour() { return diamondIndexColour; }
-    public Color getHeartIndexColour() { return heartIndexColour; }
-    public Color getSpadeIndexColour() { return spadeIndexColour; }
-    public Color getClubPipColour() { return clubPipColour; }
-    public Color getDiamondPipColour() { return diamondPipColour; }
-    public Color getHeartPipColour() { return heartPipColour; }
-    public Color getSpadePipColour() { return spadePipColour; }
-
-    public Color getCourtsWhiteColour() { return courtsWhiteColour; }
-    public Color getCourtsSteelColour() { return courtsSteelColour; }
-    public Color getCourtsHairColour() { return courtsHairColour; }
-    public Color getCourtsFleshColour() { return courtsFleshColour; }
-    public Color getCourtsYellowColour() { return courtsYellowColour; }
-    public Color getCourtsRedColour() { return courtsRedColour; }
-    public Color getCourtsBlueColour() { return courtsBlueColour; }
-    public Color getCourtsBlackColour() { return courtsBlackColour; }
-
-    public void setClubIndexColour(Color colour) { 
-        clubIndexColour = colour;
-        setIndexCardItemPayload();
+    private Color getColour(ColourKey key) {
+        return colours[key.getKey()];
     }
 
-    public void setDiamondIndexColour(Color colour) { 
-        diamondIndexColour = colour;
-        setIndexCardItemPayload();
+    private void setColour(ColourKey key, Color c) {
+        colours[key.getKey()] = c;
+
+        if (key.isIndex()) {
+            setIndexCardItemPayload();
+        } else if (key.isPip()) {
+            setPipCardItemPayloads();
+        } else if (key.isFace()) {
+            setFaceCardItemPayload();
+        } else {
+            getSample().syncBackgroundColour();
+        }
     }
 
-    public void setHeartIndexColour(Color colour) { 
-        heartIndexColour = colour;
-        setIndexCardItemPayload();
+    private void setColour(ColourKey key, String colour) {
+        setColour(key, Color.web(colour));
     }
 
-    public void setSpadeIndexColour(Color colour) { 
-        spadeIndexColour = colour;
-        setIndexCardItemPayload();
+
+    public int setSelectedColourIndex(int index) { 
+        if (index < colours.length) {
+            final int previous = colourSelected;
+            colourSelected = index;
+
+            return previous;
+        }
+
+        return index;
     }
 
-    public void setClubPipColour(Color colour) { 
-        clubPipColour = colour;
-        setPipCardItemPayloads();
+    public int getSelectedColourIndex() { return colourSelected; }
+
+    public Color getSelectedColour() {
+        return colours[colourSelected];
     }
 
-    public void setDiamondPipColour(Color colour) { 
-        diamondPipColour = colour;
-        setPipCardItemPayloads();
+    public Color getSwatchColour(int index) {
+        if (index < colours.length) {
+            return colours[index];
+        }
+
+        return Color.WHITE;
     }
 
-    public void setHeartPipColour(Color colour) { 
-        heartPipColour = colour;
-        setPipCardItemPayloads();
-    }
+    public boolean setSwatchColour(int index, Color colour) {
+        if (index < colours.length) {
+            setColour(ColourKey.getKey(index), colour);
+            return true;
+        }
 
-    public void setSpadePipColour(Color colour) { 
-        spadePipColour = colour;
-        setPipCardItemPayloads();
-    }
-
-    public void setCourtsWhiteColour(Color colour) {
-        courtsWhiteColour = colour;
-        setFaceCardItemPayload();
-    }
-    public void setCourtsSteelColour(Color colour) {
-        courtsSteelColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsHairColour(Color colour) {
-        courtsHairColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsFleshColour(Color colour) {
-        courtsFleshColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsYellowColour(Color colour) {
-        courtsYellowColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsRedColour(Color colour) {
-        courtsRedColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsBlueColour(Color colour) {
-        courtsBlueColour = colour;
-        setFaceCardItemPayload();
-    }
-
-    public void setCourtsBlackColour(Color colour) {
-        courtsBlackColour = colour;
-        setFaceCardItemPayload();
+        return false;
     }
 
 
@@ -2663,29 +2597,11 @@ public class Model {
      */
     public ArrayList<String> buildColourList() {
 
-        ArrayList<String> dataList = new ArrayList<String>(ColourKey.MAX_KEY.getKey());
+        ArrayList<String> dataList = new ArrayList<String>(colours.length);
 
-        dataList.add(backgroundColour.toString());
-
-		dataList.add(clubIndexColour.toString());
-		dataList.add(diamondIndexColour.toString());
-		dataList.add(heartIndexColour.toString());
-		dataList.add(spadeIndexColour.toString());
-
-		dataList.add(clubPipColour.toString());
-		dataList.add(diamondPipColour.toString());
-		dataList.add(heartPipColour.toString());
-		dataList.add(spadePipColour.toString());
-
-		dataList.add(courtsWhiteColour.toString());
-		dataList.add(courtsSteelColour.toString());
-		dataList.add(courtsHairColour.toString());
-		dataList.add(courtsFleshColour.toString());
-
-		dataList.add(courtsYellowColour.toString());
-		dataList.add(courtsRedColour.toString());
-		dataList.add(courtsBlueColour.toString());
-		dataList.add(courtsBlackColour.toString());
+        for (int i = 0; i < colours.length; ++i) {
+            dataList.add(colours[i].toString());
+        }
 
         return dataList;
     }
@@ -2695,53 +2611,35 @@ public class Model {
      */
     public void injectColourList(ArrayList<String> dataList) {
 
-        setBackgroundColour(Color.web(dataList.get(ColourKey.CARD_ID.getKey())));
-
-		setClubIndexColour(Color.web(dataList.get(ColourKey.CLUB_INDEX_ID.getKey())));
-		setDiamondIndexColour(Color.web(dataList.get(ColourKey.DIAMOND_INDEX_ID.getKey())));
-		setHeartIndexColour(Color.web(dataList.get(ColourKey.HEART_INDEX_ID.getKey())));
-		setSpadeIndexColour(Color.web(dataList.get(ColourKey.SPADE_INDEX_ID.getKey())));
-
-		setClubPipColour(Color.web(dataList.get(ColourKey.CLUB_PIP_ID.getKey())));
-		setDiamondPipColour(Color.web(dataList.get(ColourKey.DIAMOND_PIP_ID.getKey())));
-		setHeartPipColour(Color.web(dataList.get(ColourKey.HEART_PIP_ID.getKey())));
-		setSpadePipColour(Color.web(dataList.get(ColourKey.SPADE_PIP_ID.getKey())));
-
-		setCourtsWhiteColour(Color.web(dataList.get(ColourKey.COURT_WHITE_ID.getKey())));
-		setCourtsSteelColour(Color.web(dataList.get(ColourKey.COURT_STEEL_ID.getKey())));
-		setCourtsHairColour(Color.web(dataList.get(ColourKey.COURT_FLESH_ID.getKey())));
-		setCourtsFleshColour(Color.web(dataList.get(ColourKey.COURT_HAIR_ID.getKey())));
-
-		setCourtsYellowColour(Color.web(dataList.get(ColourKey.COURT_YELLOW_ID.getKey())));
-		setCourtsRedColour(Color.web(dataList.get(ColourKey.COURT_RED_ID.getKey())));
-		setCourtsBlueColour(Color.web(dataList.get(ColourKey.COURT_BLUE_ID.getKey())));
-		setCourtsBlackColour(Color.web(dataList.get(ColourKey.COURT_BLACK_ID.getKey())));
+        for (int i = 0; i < dataList.size(); ++i) {
+            setColour(ColourKey.getKey(i), dataList.get(i));
+        }
 
         syncAllUIs();
     }
 
 
-    public Color getIndexColour(int s) {
+    private Color getIndexColour(int s) {
         switch (s) {
-            case 0: return clubIndexColour;
-            case 1: return diamondIndexColour;
-            case 2: return heartIndexColour;
+            case 0: return getColour(ColourKey.CLUB_INDEX_ID);
+            case 1: return getColour(ColourKey.DIAMOND_INDEX_ID);
+            case 2: return getColour(ColourKey.HEART_INDEX_ID);
         }
 
-        return spadeIndexColour;
+        return getColour(ColourKey.SPADE_INDEX_ID);
     }
-    public Color getIndexColour() { return getIndexColour(suit); }
+    private Color getIndexColour() { return getIndexColour(suit); }
 
-    public Color getPipColour(int s) {
+    private Color getPipColour(int s) {
         switch (s) {
-            case 0: return clubPipColour;
-            case 1: return diamondPipColour;
-            case 2: return heartPipColour;
+            case 0: return getColour(ColourKey.CLUB_PIP_ID);
+            case 1: return getColour(ColourKey.DIAMOND_PIP_ID);
+            case 2: return getColour(ColourKey.HEART_PIP_ID);
         }
 
-        return spadePipColour;
+        return getColour(ColourKey.SPADE_PIP_ID);
     }
-    public Color getPipColour() { return getPipColour(suit); }
+    private Color getPipColour() { return getPipColour(suit); }
 
     /**
      * Get the current Standard Symbol for a specified Item.
@@ -2765,28 +2663,28 @@ public class Model {
         // Debug.trace(DD, "getStandardColour() :: " + colourKey);
 
         if (colourKey == CourtColourKey.WHITE_ID)
-            return getCourtsWhiteColour();
+            return getColour(ColourKey.COURT_WHITE_ID);
 
         if (colourKey == CourtColourKey.STEEL_ID)
-            return getCourtsSteelColour();
+            return getColour(ColourKey.COURT_STEEL_ID);
 
         if (colourKey == CourtColourKey.FLESH_ID)
-            return getCourtsFleshColour();
+            return getColour(ColourKey.COURT_FLESH_ID);
 
         if (colourKey == CourtColourKey.HAIR_ID)
-            return getCourtsHairColour();
+            return getColour(ColourKey.COURT_HAIR_ID);
 
         if (colourKey == CourtColourKey.YELLOW_ID)
-            return getCourtsYellowColour();
+            return getColour(ColourKey.COURT_YELLOW_ID);
 
         if (colourKey == CourtColourKey.RED_ID)
-            return getCourtsRedColour();
+            return getColour(ColourKey.COURT_RED_ID);
 
         if (colourKey == CourtColourKey.BLUE_ID)
-            return getCourtsBlueColour();
+            return getColour(ColourKey.COURT_BLUE_ID);
 
         if (colourKey == CourtColourKey.BLACK_ID)
-            return getCourtsBlackColour();
+            return getColour(ColourKey.COURT_BLACK_ID);
 
         return Color.TRANSPARENT;
     }

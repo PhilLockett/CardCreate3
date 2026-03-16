@@ -24,11 +24,23 @@
  */
 package phillockett65.CardCreate;
 
-import javafx.event.ActionEvent;
+import java.util.ArrayList;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.ColorPicker;
+import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import phillockett65.CardCreate.sample.ColourKey;
+import phillockett65.ColourSelect.ColourEvent;
+import phillockett65.ColourSelect.ColourExtend;
+import phillockett65.ColourSelect.ColourSelect;
 import phillockett65.Debug.Debug;
 
 
@@ -38,10 +50,23 @@ public class ColourController {
     private static final int DD = 0;
 
     private Model model;
+    private GridPane colourPaletteGrid;
+    private ColourSelect colourSelect;
+    private ColourExtend colourExtend;
+
+    @FXML
+    private VBox colourPaletteVBox;
+
+    @FXML
+    private VBox colourSelectVBox;
+
+    @FXML
+    private VBox colourSetUpVBox;
+
 
 
     /************************************************************************
-     * Support code for "Settings" panel. 
+     * Support code for "Colours" tab initialization and synchronization. 
      */
 
     /**
@@ -51,6 +76,19 @@ public class ColourController {
     @FXML public void initialize() {
         Debug.trace(DD, "ColourController initialize()");
         model = Model.getInstance();
+
+        colourPaletteGrid = new GridPane();
+        colourSelect = new ColourSelect(true);
+        colourExtend = new ColourExtend();
+
+        colourPaletteVBox.getChildren().add(colourPaletteGrid);
+        colourSelectVBox.getChildren().add(colourSelect);
+        colourSetUpVBox.getChildren().add(colourExtend);
+        
+        colourSelect.addEventFilter(ColourEvent.ANY, this::handleColourSelectEvent);
+        colourExtend.addEventFilter(ColourEvent.ANY, this::handleColourExtendEvent);
+
+        initializeStandardColours();
     }
 
     /**
@@ -59,8 +97,9 @@ public class ColourController {
      */
     public void init() {
         Debug.trace(DD, "ColourController init()");
-        initializeStandardColours();
         syncUI();
+        syncSelectedColour();
+        swatches[model.getSelectedColourIndex()].setSelected(true);
     }
 
     /**
@@ -69,217 +108,250 @@ public class ColourController {
     public void syncUI() {
         Debug.trace(DD, "ColourController syncUI()");
 
-        clubIndexColourPicker.setValue(model.getClubIndexColour());
-        diamondIndexColourPicker.setValue(model.getDiamondIndexColour());
-        heartIndexColourPicker.setValue(model.getHeartIndexColour());
-        spadeIndexColourPicker.setValue(model.getSpadeIndexColour());
+        syncColours();
+        syncIndexDisabled();
+        syncPipDisabled();
+        syncCourtDisabled();
+    }
 
-        clubPipColourPicker.setValue(model.getClubPipColour());
-        diamondPipColourPicker.setValue(model.getDiamondPipColour());
-        heartPipColourPicker.setValue(model.getHeartPipColour());
-        spadePipColourPicker.setValue(model.getSpadePipColour());
+    public void syncColours() {
+        ArrayList<String> colours = model.buildColourList();
+        for (int i = 0; i < colours.size(); i++) {
+            Swatch swatch = swatches[i];
+            swatch.setColour(colours.get(i));
+        }
+    }
 
-        whiteColourPicker.setValue(model.getCourtsWhiteColour());
-        steelColourPicker.setValue(model.getCourtsSteelColour());
-        hairColourPicker.setValue(model.getCourtsHairColour());
-        fleshColourPicker.setValue(model.getCourtsFleshColour());
+    public void syncIndexDisabled() {
+        boolean state = !model.isStandardIndices();
+        for (Swatch swatch : swatches) {
+            swatch.setIndexDisabled(state);
+        }
+    }
 
-        yellowColourPicker.setValue(model.getCourtsYellowColour());
-        redColourPicker.setValue(model.getCourtsRedColour());
-        blueColourPicker.setValue(model.getCourtsBlueColour());
-        blackColourPicker.setValue(model.getCourtsBlackColour());
+    public void syncPipDisabled() {
+        boolean state = !model.isStandardPips();
+        for (Swatch swatch : swatches) {
+            swatch.setPipDisabled(state);
+        }
+    }
 
-        clubIndexColourPicker.setDisable(!model.isStandardIndices());
-        diamondIndexColourPicker.setDisable(!model.isStandardIndices());
-        heartIndexColourPicker.setDisable(!model.isStandardIndices());
-        spadeIndexColourPicker.setDisable(!model.isStandardIndices());
-
-        clubPipColourPicker.setDisable(!model.isStandardPips());
-        diamondPipColourPicker.setDisable(!model.isStandardPips());
-        heartPipColourPicker.setDisable(!model.isStandardPips());
-        spadePipColourPicker.setDisable(!model.isStandardPips());
-
-        whiteColourPicker.setDisable(!model.isStandardFaces());
-        steelColourPicker.setDisable(!model.isStandardFaces());
-        hairColourPicker.setDisable(!model.isStandardFaces());
-        fleshColourPicker.setDisable(!model.isStandardFaces());
-
-        yellowColourPicker.setDisable(!model.isStandardFaces());
-        redColourPicker.setDisable(!model.isStandardFaces());
-        blueColourPicker.setDisable(!model.isStandardFaces());
-        blackColourPicker.setDisable(!model.isStandardFaces());
+    public void syncCourtDisabled() {
+        boolean state = !model.isStandardFaces();
+        for (Swatch swatch : swatches) {
+            swatch.setCourtDisabled(state);
+        }
     }
 
 
 
     /************************************************************************
-     * Support code for "Select Standard Index/Pip Colour" panel. 
+     * Support code for Colour event handlers. 
      */
 
-    @FXML
-    private Label clubIndexLabel;
+    private Color handleColourEvent(ColourEvent event) {
+        final int index = model.getSelectedColourIndex();
+        final Color colour = event.getColour();
+        model.setSwatchColour(index, colour);
+        swatches[index].setColour(colour);
 
-    @FXML
-    private Label diamondIndexLabel;
-
-    @FXML
-    private Label heartIndexLabel;
-
-    @FXML
-    private Label spadeIndexLabel;
-
-    @FXML
-    private ColorPicker clubIndexColourPicker;
-
-    @FXML
-    private ColorPicker diamondIndexColourPicker;
-
-    @FXML
-    private ColorPicker heartIndexColourPicker;
-
-    @FXML
-    private ColorPicker spadeIndexColourPicker;
-
-    @FXML
-    private ColorPicker clubPipColourPicker;
-
-    @FXML
-    private ColorPicker diamondPipColourPicker;
-
-    @FXML
-    private ColorPicker heartPipColourPicker;
-
-    @FXML
-    private ColorPicker spadePipColourPicker;
-
-    @FXML
-    private ColorPicker whiteColourPicker;
-
-    @FXML
-    private ColorPicker steelColourPicker;
-
-    @FXML
-    private ColorPicker hairColourPicker;
-
-    @FXML
-    private ColorPicker fleshColourPicker;
-
-    @FXML
-    private ColorPicker yellowColourPicker;
-
-    @FXML
-    private ColorPicker redColourPicker;
-
-    @FXML
-    private ColorPicker blueColourPicker;
-
-    @FXML
-    private ColorPicker blackColourPicker;
-
-
-    @FXML
-    void clubIndexColourPickerActionPerformed(ActionEvent event) {
-        model.setClubIndexColour(clubIndexColourPicker.getValue());
+        return colour;
     }
 
-    @FXML
-    void diamondIndexColourPickerActionPerformed(ActionEvent event) {
-        model.setDiamondIndexColour(diamondIndexColourPicker.getValue());
+    private void handleColourSelectEvent(ColourEvent event) {
+        final Color colour = handleColourEvent(event);
+        colourExtend.handleColourEvent(colour);
     }
 
-    @FXML
-    void heartIndexColourPickerActionPerformed(ActionEvent event) {
-        model.setHeartIndexColour(heartIndexColourPicker.getValue());
+    private void handleColourExtendEvent(ColourEvent event) {
+        final Color colour = handleColourEvent(event);
+        colourSelect.setColour(colour);
     }
 
-    @FXML
-    void spadeIndexColourPickerActionPerformed(ActionEvent event) {
-        model.setSpadeIndexColour(spadeIndexColourPicker.getValue());
+
+    private void syncSelectedColour() {
+        final Color selectedColour = model.getSelectedColour();
+        colourSelect.setColour(selectedColour);
+        colourExtend.setColour(selectedColour);
     }
 
-    @FXML
-    void clubPipColourPickerActionPerformed(ActionEvent event) {
-        model.setClubPipColour(clubPipColourPicker.getValue());
+    private void selectedColourActionPerformed(int index) {
+        Debug.trace(DD, "selectedColourActionPerformed(" + index + ")");
+
+        final int previous = model.setSelectedColourIndex(index);
+        swatches[previous].setSelected(false);
+        swatches[index].setSelected(true);
+
+        syncSelectedColour();
     }
 
-    @FXML
-    void diamondPipColourPickerActionPerformed(ActionEvent event) {
-        model.setDiamondPipColour(diamondPipColourPicker.getValue());
+
+
+    /************************************************************************
+     * Support code for Colour Swatches and their placement in the GridPane. 
+     */
+
+    /**
+     * Class that represents a colour swatch.
+     */
+    private class Swatch {
+        private final Rectangle rectangle;
+        private final Label label;
+        private final ColourKey key;
+
+        public Swatch(ColourKey k, String p, String t) {
+            key = k;
+
+            rectangle = new Rectangle(50, 28);
+            rectangle.setStroke(Color.GREY);
+            rectangle.setStrokeWidth(4);
+            
+            rectangle.setOnMousePressed(mouseEvent -> {
+                selectedColourActionPerformed(key.getKey());
+            });
+
+            label = new Label(p);
+            label.setTooltip(new Tooltip(t));
+
+            setDisabled(false);
+            setSelected(false);
+        }
+
+        public void setColour(String colour) {
+            rectangle.setFill(Color.web(colour));
+        }
+
+        public void setColour(Color colour) {
+            rectangle.setFill(colour);
+        }
+
+        public void setDisabled(boolean state) {
+            rectangle.setDisable(state);
+            label.setDisable(state);
+        }
+
+        public void setIndexDisabled(boolean state) {
+            if (key.isIndex()) {
+                setDisabled(state);
+            }
+        }
+
+        public void setPipDisabled(boolean state) {
+            if (key.isPip()) {
+                setDisabled(state);
+            }
+        }
+
+        public void setCourtDisabled(boolean state) {
+            if (key.isFace()) {
+                setDisabled(state);
+            }
+        }
+
+        public void setSelected(boolean state) {
+            rectangle.setStroke(state ? Color.WHITE : Color.GRAY);
+        }
+
+        public void addToGrid(GridPane grid, int row) {
+            final int col = key.isFace() ? 2 : 0;
+            grid.add(rectangle, col, row);
+            grid.add(label, col+1, row);
+            if (row == 0) {
+                GridPane.setColumnSpan(label, 2);
+            }
+        }
     }
 
-    @FXML
-    void heartPipColourPickerActionPerformed(ActionEvent event) {
-        model.setHeartPipColour(heartPipColourPicker.getValue());
+    Swatch[] swatches = new Swatch[ColourKey.MAX_KEY.getKey()];
+
+    private void setSwatch(ColourKey key, int row, String label, String tooltip) {
+        Swatch swatch = new Swatch(key, label, tooltip);
+        swatch.addToGrid(colourPaletteGrid, row);
+
+        swatches[key.getKey()] = swatch;
     }
 
-    @FXML
-    void spadePipColourPickerActionPerformed(ActionEvent event) {
-        model.setSpadePipColour(spadePipColourPicker.getValue());
+    /**
+     * Create a new swatch, add it to the swatches, and add the component Label 
+     * and Rectangle to colourPaletteGrid to be displayed.
+     * Note: the display order differs from the ColourKey order and hence the 
+     * order they appear in colourPaletteGrid.
+     */
+    private void setSwatches() {
+        setSwatch(ColourKey.CARD_ID, 0, "Background Colour", "Select the background colour for the card");
+
+        int row = 2;
+        setSwatch(ColourKey.SPADE_INDEX_ID, row++, "Spade Indices", "Select Standard Spade Index colour");
+        setSwatch(ColourKey.SPADE_PIP_ID, row++, "Spade Pips", "Select Standard Spade Pip colour");
+        setSwatch(ColourKey.CLUB_INDEX_ID, row++, "Club Indices", "Select Standard Club Index colour");
+        setSwatch(ColourKey.CLUB_PIP_ID, row++, "Club Pips", "Select Standard Club Pip colour");
+
+        setSwatch(ColourKey.DIAMOND_INDEX_ID, row++, "Diamond Indices", "Select Standard Diamond Index colour");
+        setSwatch(ColourKey.DIAMOND_PIP_ID, row++, "Diamond Pips", "Select Standard Diamond Pip colour");
+        setSwatch(ColourKey.HEART_INDEX_ID, row++, "Heart Indices", "Select Standard Heart Index colour");
+        setSwatch(ColourKey.HEART_PIP_ID, row++, "Heart Pips", "Select Standard Heart Pip colour");
+
+        row = 2;
+        setSwatch(ColourKey.COURT_WHITE_ID, row++, "Courts White", "Select Standard Court White colour");
+        setSwatch(ColourKey.COURT_STEEL_ID, row++, "Courts Steel", "Select Standard Court Steel colour");
+        setSwatch(ColourKey.COURT_HAIR_ID, row++, "Courts Hair", "Select Standard Court Hair colour");
+        setSwatch(ColourKey.COURT_FLESH_ID, row++, "Courts Flesh", "Select Standard Court Flesh colour");
+
+        setSwatch(ColourKey.COURT_YELLOW_ID, row++, "Courts Yellow", "Select Standard Court Yellow colour");
+        setSwatch(ColourKey.COURT_RED_ID, row++, "Courts Red", "Select Standard Court Red colour");
+        setSwatch(ColourKey.COURT_BLUE_ID, row++, "Courts Blue", "Select Standard Court Blue colour");
+        setSwatch(ColourKey.COURT_BLACK_ID, row++, "Courts Black", "Select Standard Court Black colour");
     }
 
-    @FXML
-    void whiteColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsWhiteColour(whiteColourPicker.getValue());
+
+
+    /************************************************************************
+     * Support code for Colour Colour palette GridPane. 
+     */
+
+    private void addColumnConstraint(double width) {
+        ColumnConstraints col = new ColumnConstraints();
+        col.setHalignment(HPos.LEFT);
+        col.setHgrow(Priority.SOMETIMES);
+        col.setMinWidth(width);
+        col.setPrefWidth(width);
+
+        colourPaletteGrid.getColumnConstraints().add(col);
     }
 
-    @FXML
-    void steelColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsSteelColour(steelColourPicker.getValue());
+    private void addRowConstraint(double height) {
+        RowConstraints row = new RowConstraints();
+        row.setVgrow(Priority.SOMETIMES);
+        row.setMinHeight(height);
+        row.setPrefHeight(height);
+
+        colourPaletteGrid.getRowConstraints().add(row);
     }
 
-    @FXML
-    void hairColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsHairColour(hairColourPicker.getValue());
+    /**
+     * Build the Grid layout, but don't fill it.
+     */
+    private void buildGrid() {
+        final double swatchWidth = 56.0;
+        final double labelWidth = 120.0;
+        addColumnConstraint(swatchWidth);
+        addColumnConstraint(labelWidth);
+        addColumnConstraint(swatchWidth);
+        addColumnConstraint(labelWidth);
+
+        final double rowHeight = 30.0;
+        for (int i = 0; i < 10; ++i) {
+            addRowConstraint(rowHeight);
+        }
     }
 
-    @FXML
-    void fleshColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsFleshColour(fleshColourPicker.getValue());
-    }
-
-    @FXML
-    void yellowColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsYellowColour(yellowColourPicker.getValue());
-    }
-
-    @FXML
-    void redColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsRedColour(redColourPicker.getValue());
-    }
-
-    @FXML
-    void blueColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsBlueColour(blueColourPicker.getValue());
-    }
-
-    @FXML
-    void blackColourPickerActionPerformed(ActionEvent event) {
-        model.setCourtsBlackColour(blackColourPicker.getValue());
-    }
 
     /**
      * Initialize "Select Standard Index/Pip Colour" panel.
      */
     private void initializeStandardColours() {
-        clubIndexColourPicker.setTooltip(new Tooltip("Select Standard Club Index colour"));
-        diamondIndexColourPicker.setTooltip(new Tooltip("Select Standard Diamond Index colour"));
-        heartIndexColourPicker.setTooltip(new Tooltip("Select Standard Heart Index colour"));
-        spadeIndexColourPicker.setTooltip(new Tooltip("Select Standard Spade Index colour"));
-
-        clubPipColourPicker.setTooltip(new Tooltip("Select Standard Club Pip colour"));
-        diamondPipColourPicker.setTooltip(new Tooltip("Select Standard Diamond Pip colour"));
-        heartPipColourPicker.setTooltip(new Tooltip("Select Standard Heart Pip colour"));
-        spadePipColourPicker.setTooltip(new Tooltip("Select Standard Spade Pip colour"));
-
-        whiteColourPicker.setTooltip(new Tooltip("Select White Court colour"));
-        steelColourPicker.setTooltip(new Tooltip("Select Steel Court colour"));
-        hairColourPicker.setTooltip(new Tooltip("Select Hair Court colour"));
-        fleshColourPicker.setTooltip(new Tooltip("Select Flesh Court colour"));
-
-        yellowColourPicker.setTooltip(new Tooltip("Select Yellow Court colour"));
-        redColourPicker.setTooltip(new Tooltip("Select Red Court colour"));
-        blueColourPicker.setTooltip(new Tooltip("Select Blue Court colour"));
-        blackColourPicker.setTooltip(new Tooltip("Select Black Court colour"));
+        buildGrid();
+        setSwatches();
     }
 
 

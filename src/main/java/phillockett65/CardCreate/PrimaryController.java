@@ -29,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -125,8 +124,6 @@ public class PrimaryController {
         syncOutputTextField();
 
         setCardSizeRadioState();
-
-        cardColourPicker.setValue(model.getBackgroundColour());
 
         indicesCheckBox.setSelected(model.isDisplayIndex());
         cornerPipCheckBox.setSelected(model.isDisplayCornerPip());
@@ -528,21 +525,12 @@ public class PrimaryController {
     @FXML
     private ChoiceBox<String> themeChoiceBox;
 
-    @FXML
-    private ColorPicker cardColourPicker;
-
-    @FXML
-    void cardColourPickerActionPerformed(ActionEvent event) {
-        model.setBackgroundColour(cardColourPicker.getValue());
-        model.getSample().syncBackgroundColour();
-    }
 
     /**
      * Initialize "Background Colour" panel.
      */
     private void initializeBackgroundColour() {
         themeChoiceBox.setTooltip(new Tooltip("Apply a colour theme to the cards"));
-        cardColourPicker.setTooltip(new Tooltip("Select the background colour for the card"));
 
         themeChoiceBox.setItems(model.getThemeNames());
 
