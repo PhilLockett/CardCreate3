@@ -77,7 +77,7 @@ public class ColourController {
         Debug.trace(DD, "ColourController initialize()");
         model = Model.getInstance();
 
-        colourPaletteGrid = new GridPane();
+        colourPaletteGrid = buildPaletteGrid();
         colourSelect = new ColourSelect(true);
         colourExtend = new ColourExtend();
 
@@ -109,12 +109,10 @@ public class ColourController {
         Debug.trace(DD, "ColourController syncUI()");
 
         syncColours();
-        syncIndexDisabled();
-        syncPipDisabled();
-        syncCourtDisabled();
+        syncDisabled();
     }
 
-    public void syncColours() {
+    private void syncColours() {
         ArrayList<String> colours = model.buildColourList();
         for (int i = 0; i < colours.size(); i++) {
             Swatch swatch = swatches[i];
@@ -122,24 +120,14 @@ public class ColourController {
         }
     }
 
-    public void syncIndexDisabled() {
-        boolean state = !model.isStandardIndices();
+    private void syncDisabled() {
+        boolean indexState = !model.isStandardIndices();
+        boolean pipState = !model.isStandardPips();
+        boolean courtState = !model.isStandardFaces();
         for (Swatch swatch : swatches) {
-            swatch.setIndexDisabled(state);
-        }
-    }
-
-    public void syncPipDisabled() {
-        boolean state = !model.isStandardPips();
-        for (Swatch swatch : swatches) {
-            swatch.setPipDisabled(state);
-        }
-    }
-
-    public void syncCourtDisabled() {
-        boolean state = !model.isStandardFaces();
-        for (Swatch swatch : swatches) {
-            swatch.setCourtDisabled(state);
+            swatch.setIndexDisabled(indexState);
+            swatch.setPipDisabled(pipState);
+            swatch.setCourtDisabled(courtState);
         }
     }
 
@@ -309,40 +297,45 @@ public class ColourController {
      * Support code for Colour Colour palette GridPane. 
      */
 
-    private void addColumnConstraint(double width) {
+    private void addColumnConstraint(GridPane grid, double width) {
         ColumnConstraints col = new ColumnConstraints();
         col.setHalignment(HPos.LEFT);
         col.setHgrow(Priority.SOMETIMES);
         col.setMinWidth(width);
+        col.setMaxWidth(width);
         col.setPrefWidth(width);
 
-        colourPaletteGrid.getColumnConstraints().add(col);
+        grid.getColumnConstraints().add(col);
     }
 
-    private void addRowConstraint(double height) {
+    private void addRowConstraint(GridPane grid, double height) {
         RowConstraints row = new RowConstraints();
         row.setVgrow(Priority.SOMETIMES);
         row.setMinHeight(height);
         row.setPrefHeight(height);
 
-        colourPaletteGrid.getRowConstraints().add(row);
+        grid.getRowConstraints().add(row);
     }
 
     /**
      * Build the Grid layout, but don't fill it.
      */
-    private void buildGrid() {
+    private GridPane buildPaletteGrid() {
+        GridPane grid = new GridPane();
+
         final double swatchWidth = 56.0;
-        final double labelWidth = 120.0;
-        addColumnConstraint(swatchWidth);
-        addColumnConstraint(labelWidth);
-        addColumnConstraint(swatchWidth);
-        addColumnConstraint(labelWidth);
+        // final double labelWidth = 120.0;
+        addColumnConstraint(grid, swatchWidth);
+        addColumnConstraint(grid, 120.0);
+        addColumnConstraint(grid, swatchWidth);
+        addColumnConstraint(grid, 100.0);
 
         final double rowHeight = 30.0;
         for (int i = 0; i < 10; ++i) {
-            addRowConstraint(rowHeight);
+            addRowConstraint(grid, rowHeight);
         }
+
+        return grid;
     }
 
 
@@ -350,7 +343,6 @@ public class ColourController {
      * Initialize "Select Standard Index/Pip Colour" panel.
      */
     private void initializeStandardColours() {
-        buildGrid();
         setSwatches();
     }
 

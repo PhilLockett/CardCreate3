@@ -253,9 +253,9 @@ public class ColourExtend extends GridPane {
      * Build the Grid layout, but don't fill it.
      */
     private void buildGrid() {
-        final double LeftWidth = 100.0;
+        final double LeftWidth = 90.0;
         addColumnConstraint(60.0, false);
-        addColumnConstraint(LeftWidth, true);
+        addColumnConstraint(70.0, true);
         addColumnConstraint(LeftWidth, true);
         addColumnConstraint(LeftWidth, true);
 
