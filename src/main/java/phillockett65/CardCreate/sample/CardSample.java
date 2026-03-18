@@ -222,14 +222,6 @@ public class CardSample extends Stage {
                 moveSample(true);
                 break;
 
-            case ALT:
-                decreaseSize();
-                break;
-
-            case CONTROL: 
-                increaseSize();
-                break;
-
             case TAB: 
                 model.setNextPayload();
                 model.getPrimaryController().syncToCurrentCardItem();
@@ -328,15 +320,9 @@ public class CardSample extends Stage {
                 moveSample(false);
                 break;
 
-            case ALT:
-                decreaseSize();
-                break;
-
             case CONTROL:
                 if (model.isColoursTabSelected()) {
                     model.setStatusMessage("Select multiple swatches to change colours simultaneously.");
-                } else {
-                    increaseSize();
                 }
                 break;
 
@@ -380,29 +366,6 @@ public class CardSample extends Stage {
         this.setX(pos);
     }
 
-
-
-    /**
-     * Show increase size of current card item message on status line.
-     */
-    private void increaseSize() {
-        final String name = model.getCurrentCardItemName();
-        if (!name.equals("")) {
-            model.setStatusMessage("Click on Sample to increase size of card " + name + ".");
-            setResize(true);
-        }
-    }
-
-    /**
-     * Show decrease size of current card item message on status line.
-     */
-    private void decreaseSize() {
-        final String name = model.getCurrentCardItemName();
-        if (!name.equals("")) {
-            model.setStatusMessage("Click on Sample to decrease size of card " + name + ".");
-            setResize(true);
-        }
-    }
 
     /**
      * Show move sample message.
