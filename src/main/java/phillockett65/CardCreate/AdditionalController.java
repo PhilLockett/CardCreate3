@@ -154,15 +154,15 @@ public class AdditionalController {
     private void setArcLabelsAndToolsTips(boolean indy) {
 
         if (indy) {
-            arcHeightLabel.setText("Corner Radius Arc Height (%)");
-            arcHeightLabel.setTooltip(new Tooltip("Card arc height radius as a percentage of card height (default: 10)"));
-            arcHeightSpinner.setTooltip(new Tooltip("Set card arc height corner radius as a percentage of card height"));
-            arcHeightButton.setTooltip(new Tooltip("Reset arc corner radius height to default value of 10 percent"));
+            arcHeightLabel.setText("Corner Diameter Arc Height (%)");
+            arcHeightLabel.setTooltip(new Tooltip("Card arc height diameter as a percentage of card height (default: 6.8)"));
+            arcHeightSpinner.setTooltip(new Tooltip("Set card arc height corner diameter as a percentage of card height"));
+            arcHeightButton.setTooltip(new Tooltip("Reset arc corner diameter height to default value of 6.8 percent"));
         } else {
-            arcHeightLabel.setText("Corner Radius (%)");
-            arcHeightLabel.setTooltip(new Tooltip("Corner radius as a percentage of card height (default: 10)"));
-            arcHeightSpinner.setTooltip(new Tooltip("Set corner radius as a percentage of card height"));
-            arcHeightButton.setTooltip(new Tooltip("Reset corner radius to default value of 10 percent"));
+            arcHeightLabel.setText("Corner Diameter (%)");
+            arcHeightLabel.setTooltip(new Tooltip("Corner diameter as a percentage of card height (default: 6.8)"));
+            arcHeightSpinner.setTooltip(new Tooltip("Set corner diameter as a percentage of card height"));
+            arcHeightButton.setTooltip(new Tooltip("Reset corner diameter to default value of 6.8 percent"));
         }
 
         arcWidthLabel.setDisable(!indy);
@@ -170,17 +170,18 @@ public class AdditionalController {
         arcWidthButton.setDisable(!indy);
 
     }
+
     /**
      * Initialize "Card Corners" panel.
      */
     private void initializeCardCorners() {
         final boolean indy = model.isSetCornerRadiiIndependently();
         independentRadiiCheckBox.setSelected(indy);
-        independentRadiiCheckBox.setTooltip(new Tooltip("Independently set card corner radius width and height"));
+        independentRadiiCheckBox.setTooltip(new Tooltip("Independently set card corner diameter width and height"));
 
-        arcWidthLabel.setTooltip(new Tooltip("Card arc width radius as a percentage of card width (default: 10)"));
-        arcWidthSpinner.setTooltip(new Tooltip("Set card arc width corner radius as a percentage of card width"));
-        arcWidthButton.setTooltip(new Tooltip("Reset arc width corner radius to default value of 10 percent"));
+        arcWidthLabel.setTooltip(new Tooltip("Card arc width diameter as a percentage of card width (default: 6.8)"));
+        arcWidthSpinner.setTooltip(new Tooltip("Set card arc width corner diameter as a percentage of card width"));
+        arcWidthButton.setTooltip(new Tooltip("Reset arc width corner diameter to default value of 6.8 percent"));
 
         arcWidthSpinner.setValueFactory(model.getArcWidthSVF());
         arcHeightSpinner.setValueFactory(model.getArcHeightSVF());

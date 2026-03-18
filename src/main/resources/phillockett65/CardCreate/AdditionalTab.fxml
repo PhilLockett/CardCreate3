@@ -32,7 +32,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <CheckBox fx:id="independentRadiiCheckBox" mnemonicParsing="false" onAction="#independentRadiiCheckBoxActionPerformed" text="Set Corner Radii Independently">
+                        <CheckBox fx:id="independentRadiiCheckBox" mnemonicParsing="false" onAction="#independentRadiiCheckBoxActionPerformed" text="Set Corner Diameters Independently">
                            <padding>
                               <Insets right="16.0" />
                            </padding>
@@ -42,7 +42,7 @@
                               <Insets right="16.0" />
                            </padding>
                         </CheckBox>
-                        <Label fx:id="arcWidthLabel" disable="true" text="Corner Radius Arc Width (%)" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                        <Label fx:id="arcWidthLabel" disable="true" text="Corner Diameter Arc Width (%)" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
@@ -50,7 +50,7 @@
                               <Insets left="16.0" />
                            </padding>
                         </Label>
-                        <Label fx:id="arcHeightLabel" text="Corner Radius (%)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <Label fx:id="arcHeightLabel" text="Corner Diameter (%)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>

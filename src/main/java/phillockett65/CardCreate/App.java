@@ -51,7 +51,7 @@ public class App extends Application {
         ObservableList<Image> icons = stage.getIcons();
         icons.add(new Image(getClass().getResourceAsStream("icon32.png")));
 
-        stage.setTitle("Playing Card Generator 2.0.2");
+        stage.setTitle("Playing Card Generator 3.0");
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.resizableProperty().setValue(false);
         stage.initStyle(StageStyle.UNDECORATED);
