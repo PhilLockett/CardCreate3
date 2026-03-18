@@ -236,6 +236,22 @@ public class MainController {
 
 
     @FXML
+    private void primaryTabSelected() {
+        model.primaryTabSelected();
+    }
+
+    @FXML
+    private void additionalTabSelected() {
+        model.additionalTabSelected();
+    }
+
+    @FXML
+    private void coloursTabSelected() {
+        model.coloursTabSelected();
+    }
+
+
+    @FXML
     private void helpAboutOnAction() {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("About CardCreate");

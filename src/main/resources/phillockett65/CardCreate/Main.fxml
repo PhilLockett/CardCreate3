@@ -102,17 +102,17 @@
    <center>
       <TabPane BorderPane.alignment="CENTER">
          <tabs>
-            <Tab closable="false" text="Primary">
+            <Tab closable="false" onSelectionChanged="#primaryTabSelected" text="Primary">
                <content>
                   <fx:include fx:id="primaryTab" source="PrimaryTab.fxml" />
                </content>
             </Tab>
-            <Tab closable="false" text="Additional">
+            <Tab closable="false" onSelectionChanged="#additionalTabSelected" text="Additional">
               <content>
                  <fx:include fx:id="additionalTab" source="AdditionalTab.fxml" />
               </content>
             </Tab>
-            <Tab closable="false" text="Colours">
+            <Tab closable="false" onSelectionChanged="#coloursTabSelected" text="Colours">
                <content>
                   <fx:include fx:id="colourTab" source="ColourTab.fxml" />
                </content>

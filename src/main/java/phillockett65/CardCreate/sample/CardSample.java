@@ -332,8 +332,12 @@ public class CardSample extends Stage {
                 decreaseSize();
                 break;
 
-            case CONTROL: 
-                increaseSize();
+            case CONTROL:
+                if (model.isColoursTabSelected()) {
+                    model.setStatusMessage("Select multiple swatches to change colours simultaneously.");
+                } else {
+                    increaseSize();
+                }
                 break;
 
             default:

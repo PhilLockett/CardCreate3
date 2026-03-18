@@ -280,6 +280,31 @@ public class Model {
      * Support code for "Main" Settings panel.
      */
 
+    private int tab = 0;
+
+    public void primaryTabSelected() {
+        tab = 0;
+    }
+
+    public void additionalTabSelected() {
+        tab = 1;
+    }   
+
+    public void coloursTabSelected() {
+        tab = 2;
+    }
+
+    public boolean isPrimaryTabSelected() {
+        return tab == 0;
+    }
+
+    public boolean isAdditionalTabSelected() {
+        return tab == 1;
+    }   
+
+    public boolean isColoursTabSelected() {
+        return tab == 2;
+    }
 
     /**
      * Short cut to update the status line message.
@@ -294,7 +319,6 @@ public class Model {
      */
     private void initializeMainPanel() {
         Debug.trace(DD, "Main Settings panel initialized.");
-
     }
 
 
@@ -2529,8 +2553,8 @@ public class Model {
         }
     }
 
-    private int colourSelected = 0;
-    Color[] colours = new Color[ColourKey.MAX_KEY.getKey()];
+    private ArrayList<Integer> selectedColours = new ArrayList<>(ColourKey.MAX_KEY.getKey());
+    private Color[] colours = new Color[ColourKey.MAX_KEY.getKey()];
 
     private Color getColour(ColourKey key) {
         return colours[key.getKey()];
@@ -2546,7 +2570,7 @@ public class Model {
         } else if (key.isFace()) {
             setFaceCardItemPayload();
         } else {
-            getSample().syncBackgroundColour();
+            sample.syncBackgroundColour();
         }
     }
 
@@ -2555,22 +2579,27 @@ public class Model {
     }
 
 
-    public int setSelectedColourIndex(int index) { 
-        if (index < colours.length) {
-            final int previous = colourSelected;
-            colourSelected = index;
-
-            return previous;
+    public void setSelectedColourIndex(int index, boolean add) { 
+        if (index >= colours.length) {
+            return;
         }
 
-        return index;
+        if (add) {
+            setSwatchColour(index, getSelectedColour());
+        } else {
+            selectedColours.clear();
+        }
+
+        if (selectedColours.contains(index)) {
+            selectedColours.remove((Integer)index);
+        } else {
+            selectedColours.add(index);
+        }
     }
 
-    public int getSelectedColourIndex() { return colourSelected; }
+    public ArrayList<Integer> getSelectedColourIndices() { return selectedColours; }
 
-    public Color getSelectedColour() {
-        return colours[colourSelected];
-    }
+    public Color getSelectedColour() { return colours[selectedColours.get(0)]; }
 
     public Color getSwatchColour(int index) {
         if (index < colours.length) {
@@ -2693,6 +2722,8 @@ public class Model {
      * Initialize "Select Standard Index/Pip Colour" panel.
      */
     private void initializeStandardColours() {
+        selectedColours.add(0);
+
         for (int i = 0; i < defaults.length; ++i) {
             themeList.add(defaults[i][0]);
         }

@@ -98,8 +98,8 @@ public class ColourController {
     public void init() {
         Debug.trace(DD, "ColourController init()");
         syncUI();
+        syncSelectedState();
         syncSelectedColour();
-        swatches[model.getSelectedColourIndex()].setSelected(true);
     }
 
     /**
@@ -138,10 +138,14 @@ public class ColourController {
      */
 
     private Color handleColourEvent(ColourEvent event) {
-        final int index = model.getSelectedColourIndex();
+        final ArrayList<Integer> selected = model.getSelectedColourIndices();
         final Color colour = event.getColour();
-        model.setSwatchColour(index, colour);
-        swatches[index].setColour(colour);
+
+        for (int i = 0; i < selected.size(); ++i) {
+            final int index = selected.get(i);
+            model.setSwatchColour(index, colour);
+            swatches[index].setColour(colour);
+        }
 
         return colour;
     }
@@ -163,14 +167,25 @@ public class ColourController {
         colourExtend.setColour(selectedColour);
     }
 
-    private void selectedColourActionPerformed(int index) {
+    private void syncSelectedState() {
+        final ArrayList<Integer> selected = model.getSelectedColourIndices();
+        for (int i = 0; i < swatches.length; ++i) {
+            swatches[i].setSelected(false);
+        }
+        for (int i = 0; i < selected.size(); ++i) {
+            swatches[selected.get(i)].setSelected(true);
+        }
+    }
+
+    private void selectedColourActionPerformed(int index, boolean controlDown) {
         Debug.trace(DD, "selectedColourActionPerformed(" + index + ")");
 
-        final int previous = model.setSelectedColourIndex(index);
-        swatches[previous].setSelected(false);
-        swatches[index].setSelected(true);
-
+        model.setSelectedColourIndex(index, controlDown);
+        
+        syncSelectedState();
         syncSelectedColour();
+        
+        swatches[index].setColour(model.getSelectedColour());
     }
 
 
@@ -195,7 +210,7 @@ public class ColourController {
             rectangle.setStrokeWidth(4);
             
             rectangle.setOnMousePressed(mouseEvent -> {
-                selectedColourActionPerformed(key.getKey());
+                selectedColourActionPerformed(key.getKey(), mouseEvent.isControlDown());
             });
 
             label = new Label(p);
