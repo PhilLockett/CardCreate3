@@ -353,7 +353,7 @@ public class MultiPayload extends Payload {
     public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
         if (iconImage == null)
             return false;
-        Debug.trace(DD, "drawCard(" + pattern +  ")");
+        Debug.trace(DD, "drawCard(" + pattern +  ") " + item);
 
         final Data data = new Data(iconImage.getWidth(), iconImage.getHeight());
 
@@ -364,10 +364,11 @@ public class MultiPayload extends Payload {
                 final double posX = data.originX + (loc.getXOffset() * data.winX);
                 final double posY = data.originY + (loc.getYOffset() * data.winY);
                 
-                if (loc.getRotate())
+                if (loc.getRotate()) {
                     gc.drawImage(rotatedImage, posX, posY, data.widthPX, data.heightPX);
-                else
+                } else {
                     gc.drawImage(iconImage, posX, posY, data.widthPX, data.heightPX);
+                }
             }
         }
 
@@ -384,7 +385,8 @@ public class MultiPayload extends Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
-        Debug.trace(DD, "drawCard(" + pattern + ", " + symbol + ")");
+        Debug.trace(DD, "drawCard(" + pattern + ", \"" + symbol + "\") " + item);
+
         SvgPathData svgPathData = SvgPaths.getSvgPathData(symbol);
         SvgPathData svgRotatedPath = SvgPaths.getSvgPathData("_" + symbol);
         final Data data = new Data(svgPathData.getWidth(), svgPathData.getHeight());
@@ -399,10 +401,9 @@ public class MultiPayload extends Payload {
                 gc.save();
 
                 final Loc loc = getLocation(i);
-                final double offX = loc.getXOffset() * data.winX;
-                final double offY = loc.getYOffset() * data.winY;
-                final double posX = data.originX + offX;
-                final double posY = data.originY + offY;
+
+                final double posX = data.originX + (loc.getXOffset() * data.winX);
+                final double posY = data.originY + (loc.getYOffset() * data.winY);
 
                 gc.translate(posX, posY);
                 gc.scale(scale, scale);

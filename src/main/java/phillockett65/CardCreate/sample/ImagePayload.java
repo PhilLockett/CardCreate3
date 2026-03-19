@@ -382,7 +382,7 @@ public class ImagePayload extends Payload {
         if (iconImage == null)
             return false;
 
-        Debug.trace(DD, "drawCard(" + pattern + ")");
+        Debug.trace(DD, "drawCard(" + pattern + ") " + item);
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
         final double xOffset = model.getMpcBorderWidth();
@@ -453,7 +453,7 @@ public class ImagePayload extends Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawCard(GraphicsContext gc, int pattern, String symbol) {
-        Debug.trace(DD, "drawCard(" + symbol + ")");
+        Debug.trace(DD, "drawCard(\"" + symbol + "\") " + item);
 
         Face face = SVGFaces.getFace(symbol);
         if (face == null) {

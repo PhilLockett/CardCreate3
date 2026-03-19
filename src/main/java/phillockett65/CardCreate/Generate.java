@@ -172,7 +172,7 @@ public class Generate extends Task<Long> {
             case Model.FACE_PIP_ID:
                 if (model.shouldFacePipBeDisplayed(card)) {
                     if (model.isStandardPips()) {
-                        model.drawCardFacePip(gc, pattern, suit);
+                        model.drawCardFacePip(gc, 0, suit);
                     } else {
                         model.drawCardFacePip(gc, images[4], images[5], 0);
                     }
