@@ -127,7 +127,7 @@
               <content>
                   <VBox alignment="CENTER" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0" prefWidth="150.0">
                      <children>
-                        <Button fx:id="generateButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#generateButtonActionPerformed" styleClass="imageButton" />
+                        <Button fx:id="generateButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#generateButtonActionPerformed" styleClass="imageButton" />
                      </children>
                   </VBox>
               </content>
@@ -146,10 +146,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="previousCardButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#previousCardButtonActionPerformed" styleClass="imageButton" GridPane.rowIndex="1" />
-                        <Button fx:id="previousSuitButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#previousSuitButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="1" />
-                        <Button fx:id="nextCardButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#nextCardButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Button fx:id="nextSuitButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#nextSuitButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="previousCardButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#previousCardButtonActionPerformed" styleClass="imageButton" GridPane.rowIndex="1" />
+                        <Button fx:id="previousSuitButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#previousSuitButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="1" />
+                        <Button fx:id="nextCardButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#nextCardButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Button fx:id="nextSuitButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#nextSuitButtonActionPerformed" styleClass="imageButton" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </content>

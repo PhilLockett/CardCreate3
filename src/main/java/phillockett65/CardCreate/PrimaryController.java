@@ -108,17 +108,23 @@ public class PrimaryController {
 
         loadButton.setDisable(!model.isAnySettingsFileExist());
 
+        useStandardFacesCheckBox.setSelected(model.isStandardFaces());
         faceChoiceBox.setValue(model.getFaceStyle());
         faceChoiceBox.setDisable(model.isStandardFaces());
         faceLabel.setDisable(model.isStandardFaces());
 
+        useStandardIndicesCheckBox.setSelected(model.isStandardIndices());
         indexChoiceBox.setValue(model.getIndexStyle());
         indexChoiceBox.setDisable(model.isStandardIndices());
         indexLabel.setDisable(model.isStandardIndices());
 
+        useStandardPipsCheckBox.setSelected(model.isStandardPips());
         pipChoiceBox.setValue(model.getPipStyle());
         pipChoiceBox.setDisable(model.isStandardPips());
         pipLabel.setDisable(model.isStandardPips());
+
+        fileOverrideCheckBox.setSelected(model.isFileOverride());
+        fileOverrideCheckBox.setDisable(!model.isStandardPips());
 
         outputToggleButton.setSelected(model.isManual());
         syncOutputTextField();
@@ -190,12 +196,15 @@ public class PrimaryController {
 
     @FXML
     private CheckBox useStandardPipsCheckBox;
-    
+
     @FXML
     private Label pipLabel;
 
     @FXML
     private ChoiceBox<String> pipChoiceBox;
+
+    @FXML
+    private CheckBox fileOverrideCheckBox;
 
 
     /**
@@ -294,6 +303,12 @@ public class PrimaryController {
         model.syncAllUIs();
     }
 
+    @FXML
+    void fileOverrideCheckBoxActionPerformed(ActionEvent event) {
+        model.setFileOverride(fileOverrideCheckBox.isSelected());
+        model.syncAllUIs();
+    }
+
     /**
      * Initialize "Input Directories" panel.
      */
@@ -302,14 +317,17 @@ public class PrimaryController {
         useStandardFacesCheckBox.setSelected(model.isStandardFaces());
         useStandardIndicesCheckBox.setSelected(model.isStandardIndices());
         useStandardPipsCheckBox.setSelected(model.isStandardPips());
+        fileOverrideCheckBox.setSelected(model.isFileOverride());
 
         faceChoiceBox.setDisable(model.isStandardFaces());
         indexChoiceBox.setDisable(model.isStandardIndices());
         pipChoiceBox.setDisable(model.isStandardPips());
+        fileOverrideCheckBox.setDisable(!model.isStandardPips());
 
         useStandardFacesCheckBox.setTooltip(new Tooltip("Use standard face images"));
         useStandardIndicesCheckBox.setTooltip(new Tooltip("Use standard indices images"));
         useStandardPipsCheckBox.setTooltip(new Tooltip("Use standard pip images"));
+        fileOverrideCheckBox.setTooltip(new Tooltip("Use face images if available instead of standard pips"));
 
         baseDirectoryLabel.setTooltip(new Tooltip("Working directory that contains faces, indices and pips directories"));
         baseDirectoryComboBox.setTooltip(new Tooltip("Select the Base Directory"));

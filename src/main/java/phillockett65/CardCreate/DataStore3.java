@@ -44,6 +44,7 @@ public class DataStore3 implements Serializable {
     private Boolean useStandardFaces;
     private Boolean useStandardIndices;
     private Boolean useStandardPips;
+    private Boolean fileOverride;
 
     private String faceStyle;
     private String indexStyle;
@@ -68,7 +69,7 @@ public class DataStore3 implements Serializable {
     private Boolean displayFacePip;
 
     ArrayList<CardItemData> cardItemDataList; 
-    private Integer current;
+    private Integer currentItemId;
 
     private Boolean independentlySetCornerRadii;
     private Double arcWidth;
@@ -96,6 +97,7 @@ public class DataStore3 implements Serializable {
         useStandardFaces = model.isStandardFaces();
         useStandardIndices = model.isStandardIndices();
         useStandardPips = model.isStandardPips();
+        fileOverride = model.isFileOverride();
 
         faceStyle   = model.getFaceStyle();
         indexStyle  = model.getIndexStyle();
@@ -120,7 +122,7 @@ public class DataStore3 implements Serializable {
         displayFacePip = model.isDisplayFacePip();
 
         cardItemDataList = model.buildCardItemDataList();
-        current = model.getCurrentItemId();
+        currentItemId = model.getCurrentItemId();
 
         independentlySetCornerRadii = model.isSetCornerRadiiIndependently();
         arcWidth = model.getArcWidth();
@@ -147,6 +149,7 @@ public class DataStore3 implements Serializable {
         model.setUseStandardFaces(useStandardFaces);
         model.setUseStandardIndices(useStandardIndices);
         model.setUseStandardPips(useStandardPips);
+        model.setFileOverride(fileOverride);
 
         model.setFaceStyle(faceStyle);
         model.setIndexStyle(indexStyle);
@@ -171,7 +174,7 @@ public class DataStore3 implements Serializable {
         model.setDisplayFacePip(displayFacePip);
 
         model.injectCardItemDataList(cardItemDataList);
-        model.setCurrentItemFromId(current);
+        model.setCurrentItemFromId(currentItemId);
 
         model.setCornerRadiiIndependently(independentlySetCornerRadii);
         model.setArcWidth(arcWidth);

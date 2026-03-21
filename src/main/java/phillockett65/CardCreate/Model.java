@@ -526,6 +526,7 @@ public class Model {
     private Boolean useStandardFaces = true;
     private Boolean useStandardPips = true;
     private Boolean useStandardIndices = true;
+    private Boolean fileOverride = false;
 
     ObservableList<String> baseList = FXCollections.observableArrayList();
     ObservableList<String> faceList = FXCollections.observableArrayList();
@@ -564,6 +565,7 @@ public class Model {
     public Boolean isStandardFaces() { return useStandardFaces; }
     public Boolean isStandardIndices() { return useStandardIndices; }
     public Boolean isStandardPips() { return useStandardPips; }
+    public Boolean isFileOverride() { return fileOverride; }
 
 
     /**
@@ -593,10 +595,11 @@ public class Model {
     public void setUseStandardPips(boolean state) {
         useStandardPips = state;
         standardPip.setVisible(useStandardPips);
-        // facePip.setVisible(!useStandardPips);
-        // updateCardItemDisplayStatus();
-        // updateHandleState();
     }
+    public void setFileOverride(boolean state) {
+        fileOverride = state;
+    }
+
     /**
      * Set the selected face style and update the necessary card item Payloads.
      * 
@@ -1777,27 +1780,40 @@ public class Model {
     /**
      * Determine the type to display for a specified card based on the current 
      * display settings and the availability of image files.
+     * Note: this is only pertinent to Standard Pips and Faces.
      * @param s suit of card to display.
      * @param c card number of card to display.
      * @return the type to display for the specified card.
      */
     public DisplayType getDisplayType(int s, int c) {
-        if (isFaceCard(c)) {
+        if (isImageCard(s, c)) {
             if (displayFaceImage == false)
                 return DisplayType.NONE;
 
+            if (fileOverride)
+                return DisplayType.FILE_FACE;
+
+            if (isFaceCard(c)) {
+                if (useStandardFaces)
+                    return DisplayType.SVG_FACE;
+            } else {
+                if (useStandardPips)
+                    return DisplayType.SVG_PIPS;
+            }
+
+            return DisplayType.FILE_FACE;
+        }
+
+        if (displayStandardPip == false)
+            return DisplayType.NONE;
+
+        if (isFaceCard(c)) {
             if (useStandardFaces)
                 return DisplayType.SVG_FACE;
         } else {
-            if (displayStandardPip == false)
-                return DisplayType.NONE;
-
             if (useStandardPips)
                 return DisplayType.SVG_PIPS;
         }
-
-        if (isImageCard(s, c))
-            return DisplayType.FILE_FACE;
 
         return DisplayType.FILE_PIPS;
     }

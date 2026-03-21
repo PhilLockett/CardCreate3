@@ -610,10 +610,11 @@ public class MainController {
      * Initialize "Sample Navigation" panel.
      */
     private void initializeSampleNavigation() {
-        setUpImageButton(previousSuitButton, "icon-up.png", 48.0);
-        setUpImageButton(previousCardButton, "icon-left.png", 48.0);
-        setUpImageButton(nextCardButton, "icon-right.png", 48.0);
-        setUpImageButton(nextSuitButton, "icon-down.png", 48.0);
+        final double size = 42.0;
+        setUpImageButton(previousSuitButton, "icon-up.png", size);
+        setUpImageButton(previousCardButton, "icon-left.png", size);
+        setUpImageButton(nextCardButton, "icon-right.png", size);
+        setUpImageButton(nextSuitButton, "icon-down.png", size);
 
         previousCardButton.setTooltip(new Tooltip("Display previous card as Sample"));
         previousSuitButton.setTooltip(new Tooltip("Display previous suit as Sample"));

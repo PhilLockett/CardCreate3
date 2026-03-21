@@ -122,7 +122,7 @@
                      <content>
                         <VBox spacing="8.0">
                            <children>
-                              <CheckBox fx:id="courtWatermarkCheckBox" mnemonicParsing="false" onAction="#courtWatermarkCheckBoxActionPerformed" selected="true" text="Display on Court Cards">
+                              <CheckBox fx:id="courtWatermarkCheckBox" mnemonicParsing="false" onAction="#courtWatermarkCheckBoxActionPerformed" selected="true" text="Display Watermark on Court Cards">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -130,7 +130,7 @@
                                     <Insets right="16.0" />
                                  </padding>
                               </CheckBox>
-                              <CheckBox fx:id="imageWatermarkCheckBox" mnemonicParsing="false" onAction="#imageWatermarkCheckBoxActionPerformed" selected="true" text="Display on Image Cards">
+                              <CheckBox fx:id="imageWatermarkCheckBox" mnemonicParsing="false" onAction="#imageWatermarkCheckBoxActionPerformed" selected="true" text="Display Watermark on Image Cards">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -138,7 +138,7 @@
                                     <Insets right="16.0" />
                                  </padding>
                               </CheckBox>
-                              <CheckBox fx:id="numberWatermarkCheckBox" mnemonicParsing="false" onAction="#numberWatermarkCheckBoxActionPerformed" selected="true" text="Display on Number Cards">
+                              <CheckBox fx:id="numberWatermarkCheckBox" mnemonicParsing="false" onAction="#numberWatermarkCheckBoxActionPerformed" selected="true" text="Display Watermark on Number Cards">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
