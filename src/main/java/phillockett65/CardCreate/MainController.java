@@ -266,7 +266,7 @@ public class MainController {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("CardCreate Help");
         alert.setHeaderText("CardCreate User Guide Documentation");
-        alert.setContentText("A complete guide to CardCreate is given in:\n 'Card Generator User Guide.pdf'.");
+        alert.setContentText("A complete guide to CardCreate is given in:\n\t'Card Create User Guide.pdf'.");
 
         alert.showAndWait();
     }
