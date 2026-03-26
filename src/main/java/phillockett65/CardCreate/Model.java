@@ -376,7 +376,7 @@ public class Model {
         final double pX = current.getCentreX();
         final double pY = current.getCentreY();
         final double winX = getWidth() - (2*pX);
-        final double winY = cardHeightPX - (2*pY);
+        final double winY = getHeight() - (2*pY);
 
         box.setX(pX);
         box.setY(pY);
