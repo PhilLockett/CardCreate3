@@ -64,12 +64,6 @@ public class Model {
 
     private final static String DATAFILE = "x_Settings";
 
-    public static final int INDEX_ID = 0;
-    public static final int CORNER_PIP_ID = 1;
-    public static final int STANDARD_PIP_ID = 2;
-    public static final int FACE_PIP_ID = 3;
-    public static final int FACE_ID = 4;
-
 
     /************************************************************************
      ************************************************************************
@@ -203,19 +197,19 @@ public class Model {
         group.getChildren().remove(box);
         group.getChildren().remove(handle);
 
-        int[] priorities = getPriorityList();
+        Item[] priorities = getPriorityList();
         for (int i = priorities.length-1; i >= 0; --i) {
 
-            final int priority = priorities[i];
+            final Item priority = priorities[i];
 
             switch (priority) {
-            case INDEX_ID:          index.addToGroup(); break;
-            case CORNER_PIP_ID:     cornerPip.addToGroup(); break;
+            case INDEX:          index.addToGroup(); break;
+            case CORNER_PIP:     cornerPip.addToGroup(); break;
 
-            case STANDARD_PIP_ID:   standardPip.addToGroup(); break;
+            case STANDARD_PIP:   standardPip.addToGroup(); break;
 
-            case FACE_PIP_ID:       facePip.addToGroup(); break;
-            case FACE_ID:           face.addToGroup(); break;
+            case FACE_PIP:       facePip.addToGroup(); break;
+            case FACE:           face.addToGroup(); break;
             }
         }
 
@@ -227,19 +221,19 @@ public class Model {
 
         ArrayList<CardItemData> dataList = new ArrayList<CardItemData>(cardItems.length);
 
-        int[] priorities = getPriorityList();
+        Item[] priorities = getPriorityList();
         for (int i = priorities.length-1; i >= 0; --i) {
 
-            final int priority = priorities[i];
+            final Item priority = priorities[i];
 
             switch (priority) {
-            case INDEX_ID:          dataList.add(index.getData()); break;
-            case CORNER_PIP_ID:     dataList.add(cornerPip.getData()); break;
+            case INDEX:          dataList.add(index.getData()); break;
+            case CORNER_PIP:     dataList.add(cornerPip.getData()); break;
 
-            case STANDARD_PIP_ID:   dataList.add(standardPip.getData()); break;
+            case STANDARD_PIP:   dataList.add(standardPip.getData()); break;
 
-            case FACE_PIP_ID:       dataList.add(facePip.getData()); break;
-            case FACE_ID:           dataList.add(face.getData()); break;
+            case FACE_PIP:       dataList.add(facePip.getData()); break;
+            case FACE:           dataList.add(face.getData()); break;
             }
         }
 
@@ -258,14 +252,15 @@ public class Model {
 
             cardItemList.add(cardItems[id]);
 
-            switch (id) {
-            case INDEX_ID:          index.setData(data); break;
-            case CORNER_PIP_ID:     cornerPip.setData(data); break;
+            final Item priority = Item.getItem(id);
+            switch (priority) {
+            case INDEX:          index.setData(data); break;
+            case CORNER_PIP:     cornerPip.setData(data); break;
 
-            case STANDARD_PIP_ID:   standardPip.setData(data); break;
+            case STANDARD_PIP:   standardPip.setData(data); break;
 
-            case FACE_PIP_ID:       facePip.setData(data); break;
-            case FACE_ID:           face.setData(data); break;
+            case FACE_PIP:       facePip.setData(data); break;
+            case FACE:           face.setData(data); break;
             }
         }
 
@@ -280,31 +275,15 @@ public class Model {
      * Support code for "Main" Settings panel.
      */
 
-    private int tab = 0;
+    private int currentTab = 0;
 
-    public void primaryTabSelected() {
-        tab = 0;
-    }
+    public void primaryTabSelected() { currentTab = 0; }
+    public void additionalTabSelected() { currentTab = 1; }   
+    public void coloursTabSelected() { currentTab = 2; }
 
-    public void additionalTabSelected() {
-        tab = 1;
-    }   
-
-    public void coloursTabSelected() {
-        tab = 2;
-    }
-
-    public boolean isPrimaryTabSelected() {
-        return tab == 0;
-    }
-
-    public boolean isAdditionalTabSelected() {
-        return tab == 1;
-    }   
-
-    public boolean isColoursTabSelected() {
-        return tab == 2;
-    }
+    public boolean isPrimaryTabSelected() { return currentTab == 0; }
+    public boolean isAdditionalTabSelected() { return currentTab == 1; }   
+    public boolean isColoursTabSelected() { return currentTab == 2; }
 
     /**
      * Short cut to update the status line message.
@@ -1588,14 +1567,16 @@ public class Model {
      * Set the current Card Item using an id.
      */
     public void setCurrentItemFromId(int id) {
-        switch (id) {
-        case INDEX_ID:          current = index; break;
-        case CORNER_PIP_ID:     current = cornerPip; break;
+        final Item priority = Item.getItem(id);
 
-        case STANDARD_PIP_ID:   current = standardPip; break;
+        switch (priority) {
+        case INDEX:          current = index; break;
+        case CORNER_PIP:     current = cornerPip; break;
 
-        case FACE_PIP_ID:       current = facePip; break;
-        case FACE_ID:           current = face; break;
+        case STANDARD_PIP:   current = standardPip; break;
+
+        case FACE_PIP:       current = facePip; break;
+        case FACE:           current = face; break;
         }
     }
 
@@ -2414,6 +2395,22 @@ public class Model {
 
     public ObservableList<String> getCardItemList() { return cardItemList; }
 
+    public ArrayList<String> extractCardItemList() {
+        ArrayList<String> dataList = new ArrayList<String>(cardItemList.size());
+        for (String item : cardItemList) {
+            dataList.add(item);
+        }
+        
+        return dataList;
+    }
+
+    public void injectCardItemList(ArrayList<String> list) {
+        cardItemList.clear();
+        cardItemList.addAll(list);
+        selectedCardItemListIndex = -1;
+        rebuildGroup();
+    }
+
     public void setSelectedCardItem(String item) {
         selectedCardItemListIndex = cardItemList.indexOf(item);
     }
@@ -2455,11 +2452,12 @@ public class Model {
         rebuildGroup();
     }
 
-    public int[] getPriorityList() {
-        int[] priorities = new int[cardItems.length];
+    public Item[] getPriorityList() {
+        Item[] priorities = new Item[cardItems.length];
 
-        for (int i = 0; i < priorities.length; i++)
-            priorities[cardItemList.indexOf(cardItems[i])] = i;
+        for (int i = 0; i < priorities.length; i++) {
+            priorities[cardItemList.indexOf(cardItems[i])] = Item.getItem(i);
+        }
 
         return priorities;
     }

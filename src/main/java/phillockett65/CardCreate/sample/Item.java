@@ -27,7 +27,6 @@ package phillockett65.CardCreate.sample;
 
 import java.text.DecimalFormat;
 
-import phillockett65.CardCreate.Model;
 
 /**
  *
@@ -55,16 +54,23 @@ public enum Item {
     }
 
     public int index() {
-        if (this == INDEX)
-            return Model.INDEX_ID;
-        if (this == CORNER_PIP)
-            return Model.CORNER_PIP_ID;
-        if (this == STANDARD_PIP)
-            return Model.STANDARD_PIP_ID;
-        if (this == FACE_PIP)
-            return Model.FACE_PIP_ID;
+        if (this == INDEX)          return 0;
+        if (this == CORNER_PIP)     return 1;
+        if (this == STANDARD_PIP)   return 2;
+        if (this == FACE_PIP)       return 3;
 
-        return Model.FACE_ID;
+        return 4;
+    }
+
+    public static Item getItem(int index) {
+        switch (index) {
+        case 0: return INDEX;
+        case 1: return CORNER_PIP;
+        case 2: return STANDARD_PIP;
+        case 3: return FACE_PIP;
+        }
+
+        return FACE;
     }
 
     private final DecimalFormat df = new DecimalFormat("#.#");

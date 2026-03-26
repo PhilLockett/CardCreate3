@@ -29,6 +29,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import phillockett65.CardCreate.Model.DisplayType;
 import phillockett65.CardCreate.sample.Default;
+import phillockett65.CardCreate.sample.Item;
 import phillockett65.Debug.Debug;
 
 
@@ -128,14 +129,14 @@ public class Generate extends Task<Long> {
         if (model.showWatermark(suit, card))
             gc.drawImage(model.getWatermark(), cc.getXOffset(), cc.getYOffset(), cc.getWidth(), cc.getHeight());
 
-        int[] priorities = model.getPriorityList();
+        Item[] priorities = model.getPriorityList();
         DisplayType type = DisplayType.NONE;
         for (int i = priorities.length-1; i >= 0; --i) {
 
-            final int priority = priorities[i];
+            final Item priority = priorities[i];
 
             switch (priority) {
-            case Model.INDEX_ID:
+            case INDEX:
                 if (model.shouldIndexBeDisplayed()) {
                     if (model.isStandardIndices()) {
                         model.drawCardIndex(gc, pattern, card);
@@ -148,7 +149,7 @@ public class Generate extends Task<Long> {
                 }
             break;
 
-            case Model.CORNER_PIP_ID:
+            case CORNER_PIP:
                 if (model.shouldCornerPipBeDisplayed()) {
                     if (model.isStandardPips()) {
                         model.drawCardCornerPip(gc, pattern, suit);
@@ -158,7 +159,7 @@ public class Generate extends Task<Long> {
                 }
             break;
 
-            case Model.STANDARD_PIP_ID:
+            case STANDARD_PIP:
                 type = model.getDisplayType(suit, card);
                 if (type == DisplayType.NONE)
                     break;
@@ -170,7 +171,7 @@ public class Generate extends Task<Long> {
                 }
             break;
 
-            case Model.FACE_PIP_ID:
+            case FACE_PIP:
                 if (model.shouldFacePipBeDisplayed(card)) {
                     if (model.isStandardPips()) {
                         model.drawCardFacePip(gc, facePip, suit);
@@ -180,7 +181,7 @@ public class Generate extends Task<Long> {
                 }
             break;
 
-            case Model.FACE_ID:
+            case FACE:
                 type = model.getDisplayType(suit, card);
                 if (type == DisplayType.NONE)
                     break;

@@ -88,6 +88,8 @@ public class DataStore3 implements Serializable {
 
     private Boolean borderlessJokers;
 
+    private ArrayList<String> cardItemList;
+
     public DataStore3() {
 
     }
@@ -141,6 +143,8 @@ public class DataStore3 implements Serializable {
         altPipLayout = model.isAltPipLayout();
 
         borderlessJokers = model.isBorderlessJokers();
+
+        cardItemList = model.extractCardItemList();
  
         return success;
     }
@@ -194,6 +198,8 @@ public class DataStore3 implements Serializable {
         model.setAltPipLayout(altPipLayout);
 
         model.setBorderlessJokers(borderlessJokers);
+
+        model.injectCardItemList(cardItemList);
 
         return success;
     }
