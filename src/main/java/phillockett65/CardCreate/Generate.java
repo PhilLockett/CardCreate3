@@ -115,7 +115,8 @@ public class Generate extends Task<Long> {
     private void generateCard() {
         final int suit = model.currentSuit();
         final int card = model.currentCard();
-        final int pattern = model.currentPattern();
+        final int pattern = model.currentCornerPattern();
+        final int facePip = model.currentFacePattern();
         final Image[] images = model.currentImages();
         Debug.trace(0, "generateCard(" + pattern +  ")");
 
@@ -172,9 +173,9 @@ public class Generate extends Task<Long> {
             case Model.FACE_PIP_ID:
                 if (model.shouldFacePipBeDisplayed(card)) {
                     if (model.isStandardPips()) {
-                        model.drawCardFacePip(gc, 0, suit);
+                        model.drawCardFacePip(gc, facePip, suit);
                     } else {
-                        model.drawCardFacePip(gc, images[4], images[5], 0);
+                        model.drawCardFacePip(gc, images[4], images[5], facePip);
                     }
                 }
             break;

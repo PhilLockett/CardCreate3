@@ -45,7 +45,15 @@ public enum Loc {
     L13 (0, 4, false),
     L14 (1, 4, false),
     L15 (2, 5,  true),
-    L16 (2, 5, false);
+    L16 (2, 5, false),
+
+    L17 (2, 2, true),
+    L18 (0, 3, false),
+    L19 (0, 3,  true),
+    L20 (1, 3, false),
+    L21 (1, 3,  true),
+    L22 (2, 4,  true),
+    L23 (2, 4, false);
 
     private final int       xIndex;
     private final int       yIndex;
@@ -57,11 +65,27 @@ public enum Loc {
         rotate = rot;
     }
 
+    private final static Loc[] locationList = {
+        L_0, L_1, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9,
+        L10, L11, L12, L13, L14, L15, L16, L17, L18, L19,
+        L20, L21, L22, L23
+    };
+
     public boolean getRotate() { return rotate; }
 
-    private final double[] offsets = { 0D, 1D, 0.5D, 0.25D, 1D / 3, 1D / 6 };
+    private static final double[] offsets = { 0D, 1D, 0.5D, 0.25D, 1D / 3, 1D / 6 };
 
     public double getXOffset() { return rotate ? 1-offsets[xIndex] : offsets[xIndex]; }
     public double getYOffset() { return rotate ? 1-offsets[yIndex] : offsets[yIndex]; }
+
+    public static int getLocCount() { return locationList.length; }
+
+    public static Loc getLoc(int index) {
+        if (index < getLocCount()) {
+            return locationList[index];
+        }
+
+        return L_0;
+    }
 
 };

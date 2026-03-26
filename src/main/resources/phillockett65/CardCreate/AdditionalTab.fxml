@@ -78,7 +78,7 @@
          <children>
             <VBox spacing="8.0">
                <children>
-                  <TitledPane collapsible="false" text="Modify Selected Card Item">
+                  <TitledPane collapsible="false" text="Miscellaneous Settings">
                      <content>
                         <VBox spacing="8.0">
                            <children>
@@ -94,16 +94,13 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
-                                 <padding>
-                                    <Insets right="16.0" />
-                                 </padding>
                               </CheckBox>
                               <CheckBox fx:id="leftHandedCheckBox" mnemonicParsing="false" onAction="#leftHandedCheckBoxActionPerformed" text="Left-Handed Index and Corner Pips">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
                                  <padding>
-                                    <Insets right="16.0" />
+                                    <Insets top="10.0" />
                                  </padding>
                               </CheckBox>
                               <CheckBox fx:id="showGuideBoxCheckBox" mnemonicParsing="false" onAction="#showGuideBoxCheckBoxActionPerformed" text="Show Guide Box">
@@ -111,7 +108,12 @@
                                     <Insets />
                                  </VBox.margin>
                                  <padding>
-                                    <Insets right="16.0" top="10.0" />
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="altPipLayoutCheckBox" mnemonicParsing="false" onAction="#altPipLayoutCheckBoxActionPerformed" text="Use Alternative Pip Layout">
+                                 <padding>
+                                    <Insets top="10.0" />
                                  </padding>
                               </CheckBox>
                            </children>

@@ -88,6 +88,7 @@ public class AdditionalController {
         lockYCheckBox.setSelected(model.isLockY());
         leftHandedCheckBox.setSelected(model.isLeftHanded());
         showGuideBoxCheckBox.setSelected(model.isShowGuideBox());
+        altPipLayoutCheckBox.setSelected(model.isAltPipLayout());
 
         borderlessCheckBox.setSelected(model.isBorderlessJokers());
     }
@@ -264,6 +265,9 @@ public class AdditionalController {
     private CheckBox showGuideBoxCheckBox;
 
     @FXML
+    private CheckBox altPipLayoutCheckBox;
+
+    @FXML
     void lockXCheckBoxActionPerformed(ActionEvent event) {
         model.setLockX(lockXCheckBox.isSelected());
     }
@@ -283,6 +287,11 @@ public class AdditionalController {
         model.setShowGuideBox(showGuideBoxCheckBox.isSelected());
     }
 
+    @FXML
+    void altPipLayoutCheckBoxActionPerformed(ActionEvent event) {
+        model.setAltPipLayout(altPipLayoutCheckBox.isSelected());
+    }
+
     /**
      * Initialize "Modify Selected Card Item" panel.
      */
@@ -291,11 +300,13 @@ public class AdditionalController {
         lockYCheckBox.setSelected(model.isLockY());
         leftHandedCheckBox.setSelected(model.isLeftHanded());
         showGuideBoxCheckBox.setSelected(model.isShowGuideBox());
+        altPipLayoutCheckBox.setSelected(model.isAltPipLayout());
 
         lockXCheckBox.setTooltip(new Tooltip("Lock X coordinate of Index and Corner pip together"));
         lockYCheckBox.setTooltip(new Tooltip("Lock Y separation of Index and Corner pip"));
         leftHandedCheckBox.setTooltip(new Tooltip("Show Indices and Corner pips in all four corners"));
         showGuideBoxCheckBox.setTooltip(new Tooltip("Display guide box to aid Card Item positioning"));
+        altPipLayoutCheckBox.setTooltip(new Tooltip("Use an alternative pip layout"));
     }
 
 

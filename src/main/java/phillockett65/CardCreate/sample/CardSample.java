@@ -77,10 +77,11 @@ public class CardSample extends Stage {
 
         model = mainModel;
 
+        initializeCardSample();
+
         this.setTitle(title);
         this.show();
         
-        initializeCardSample();
     }
 
 
@@ -102,14 +103,6 @@ public class CardSample extends Stage {
         this.setScene(scene);
         this.setX(20);
         this.setY(20);
-
-        dx = this.getWidth() - WIDTH;
-        dy = this.getHeight() - HEIGHT;
-
-        this.setMinWidth(Default.MIN_WIDTH.getFloat() + dx);
-        this.setMinHeight(Default.MIN_HEIGHT.getFloat() + dy);
-        this.setMaxWidth(Default.MAX_WIDTH.getFloat() + dx);
-        this.setMaxHeight(Default.MAX_HEIGHT.getFloat() + dy);
 
         initializeCardSampleHandlers();
     }

@@ -594,7 +594,6 @@ public class Model {
     }
     public void setUseStandardPips(boolean state) {
         useStandardPips = state;
-        standardPip.setVisible(useStandardPips);
     }
     public void setFileOverride(boolean state) {
         fileOverride = state;
@@ -911,7 +910,19 @@ public class Model {
     public Image[] currentImages() { return images; }
     public int currentSuit() { return currentId() / Default.CARD_COUNT.getInt(); }
     public int currentCard() { return currentId() % Default.CARD_COUNT.getInt(); }
-    public int currentPattern() { return isLeftHanded() ? 4 : 0; }
+
+    public int currentCornerPattern() {
+        if (isAltPipLayout() == false) {
+            return isLeftHanded() ? 4 : 0;
+        }
+
+        return isLeftHanded() ? 0 : 2;
+    }
+
+    public int currentFacePattern() {
+        return isAltPipLayout() ? 2 : 0;
+    }
+
     public boolean isCurrentJoker() { return currentCard() == 0; }
     private boolean isCurrentAce() { return currentCard() == 1; }
 
@@ -1083,13 +1094,11 @@ public class Model {
     public int getCurrentPattern(Item item) {
         if (item == Item.FACE)          return 1;
 
-        if (item == Item.FACE_PIP)      return 0;
+        if (item == Item.FACE_PIP)      return currentFacePattern();
 
         if (item == Item.STANDARD_PIP)  return getCardIndex();
 
-        if (isLeftHanded()) return 4;
-
-        return 0;
+        return currentCornerPattern();
     }
 
 
@@ -1810,6 +1819,8 @@ public class Model {
         if (isFaceCard(c)) {
             if (useStandardFaces)
                 return DisplayType.SVG_FACE;
+            else
+                return DisplayType.SVG_PIPS;
         } else {
             if (useStandardPips)
                 return DisplayType.SVG_PIPS;
@@ -2341,6 +2352,7 @@ public class Model {
 
     private boolean leftHanded = false;
     private boolean showGuideBox = false;
+    private boolean altPipLayout = false;
 
     public boolean isLockX() { return lockX; }
     public boolean isLockY() { return lockY; }
@@ -2367,6 +2379,7 @@ public class Model {
 
     public boolean isLeftHanded() { return leftHanded; }
     public boolean isShowGuideBox() { return showGuideBox; }
+    public boolean isAltPipLayout() { return altPipLayout; }
 
     public void setLeftHanded(boolean state) {
         leftHanded = state;
@@ -2377,6 +2390,11 @@ public class Model {
     public void setShowGuideBox(boolean state) {
         showGuideBox = state;
         showImageBox();
+    }
+
+    public void setAltPipLayout(boolean state) {
+        altPipLayout = state;
+        standardPip.syncImageFile();
     }
 
     /**

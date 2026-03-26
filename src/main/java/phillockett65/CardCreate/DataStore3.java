@@ -76,14 +76,15 @@ public class DataStore3 implements Serializable {
     private Double arcHeight;
     private Boolean cropCorners;
 
-    private Boolean displayCourtWatermark = true;
-    private Boolean displayImageWatermark = true;
-    private Boolean displayNumberWatermark = true;
+    private Boolean displayCourtWatermark;
+    private Boolean displayImageWatermark;
+    private Boolean displayNumberWatermark;
 
     private Boolean lockX;
     private Boolean lockY;
     private Boolean leftHanded;
     private Boolean showGuideBox;
+    private Boolean altPipLayout;
 
     private Boolean borderlessJokers;
 
@@ -137,6 +138,7 @@ public class DataStore3 implements Serializable {
         lockY = model.isLockY();
         leftHanded = model.isLeftHanded();
         showGuideBox = model.isShowGuideBox();
+        altPipLayout = model.isAltPipLayout();
 
         borderlessJokers = model.isBorderlessJokers();
  
@@ -189,6 +191,7 @@ public class DataStore3 implements Serializable {
         model.setLockY(lockY);
         model.setLeftHanded(leftHanded);
         model.setShowGuideBox(showGuideBox);
+        model.setAltPipLayout(altPipLayout);
 
         model.setBorderlessJokers(borderlessJokers);
 
