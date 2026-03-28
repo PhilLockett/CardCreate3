@@ -1031,6 +1031,15 @@ public class Model {
     private final String[] alts  = { "S", "H", "D", "C" };
     private final String[] cards = { "Joker", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
+    public void setClubs() { suit = 0; syncAllUIs(); }
+    public void setDiamonds() { suit = 1; syncAllUIs(); }
+    public void setHearts() { suit = 2; syncAllUIs(); }
+    public void setSpades() { suit = 3; syncAllUIs(); }
+
+    public boolean isClubs() { return suit == 0; }
+    public boolean isDiamonds() { return suit == 1; }
+    public boolean isHearts() { return suit == 2; }
+    public boolean isSpades() { return suit == 3; }
     
     public int lastSuit() { return suits.length; }
     public int lastCard() { return cards.length; }
@@ -1093,15 +1102,6 @@ public class Model {
         updateHandleState();
     }
 
-    public int nextSuit() {
-        if (++suit >= suits.length)
-            suit = 0;
-
-        syncAllUIs();
-
-        return suit;
-    }
-
     public int nextCard() {
         if (++card >= cards.length)
             card = 1;
@@ -1109,15 +1109,6 @@ public class Model {
         syncAllUIs();
 
         return card;
-    }
-
-    public int prevSuit() {
-        if (--suit < 0)
-            suit = suits.length - 1;
-
-        syncAllUIs();
-
-        return suit;
     }
 
     public int prevCard() {

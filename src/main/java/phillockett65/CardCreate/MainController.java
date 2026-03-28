@@ -40,6 +40,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,6 +66,9 @@ public class MainController {
     private Stage stage;
     private static final String TOPBARICON = "top-bar-icon";
 
+    private  final double generateButtonSize = 74.0;
+    private  final double buttonSize = 50.0;
+
 
     /************************************************************************
      * General support code. 
@@ -76,6 +80,16 @@ public class MainController {
         ImageView view = new ImageView(image);
         view.setFitWidth(size);
         view.setFitHeight(size);
+
+        button.setGraphic(view);
+        button.setText(null);
+    }
+
+    private void setUpImageButton(ToggleButton button, Image image)
+    {
+        ImageView view = new ImageView(image);
+        view.setFitWidth(buttonSize);
+        view.setFitHeight(buttonSize);
 
         button.setGraphic(view);
         button.setText(null);
@@ -551,7 +565,7 @@ public class MainController {
      * Initialize"Generate" panel.
     */
     private void initializeGenerate() {
-        setUpImageButton(generateButton, "icon-play.png", 82.0);
+        setUpImageButton(generateButton, "icon-play.png", generateButtonSize);
         generateButton.setTooltip(new Tooltip("Generate the card images to the selected output directory"));
 
         parameters = new SnapshotParameters();
@@ -574,17 +588,53 @@ public class MainController {
      * Support code for "Sample Navigation" panel. 
      */
 
-    @FXML
-    private Button previousCardButton;
+    private Image spadesButton;
+    private Image spadesActive;
+    private Image clubsButton;
+    private Image clubsActive;
+    private Image diamondsButton;
+    private Image diamondsActive;
+    private Image heartsButton;
+    private Image heartsActive;
 
     @FXML
-    private Button previousSuitButton;
+    private ToggleButton spadesToggleButton;
+
+    @FXML
+    private ToggleButton clubsToggleButton;
+
+    @FXML
+    private ToggleButton diamondsToggleButton;
+
+    @FXML
+    private ToggleButton heartsToggleButton;
+
+    @FXML
+    private Button previousCardButton;
 
     @FXML
     private Button nextCardButton;
 
     @FXML
-    private Button nextSuitButton;
+    void suitToggleButtonActionPerformed(ActionEvent event) {
+        if (spadesToggleButton.isSelected()) {
+            model.setSpades();
+        }
+        else
+        if (clubsToggleButton.isSelected()) {
+            model.setClubs();
+        }
+        else
+        if (diamondsToggleButton.isSelected()) {
+            model.setDiamonds();
+        }
+        else
+        if (heartsToggleButton.isSelected()) {
+            model.setHearts();
+        }
+
+        setSuitToggleState();
+    }
 
     @FXML
     void previousCardButtonActionPerformed(ActionEvent event) {
@@ -592,34 +642,47 @@ public class MainController {
     }
 
     @FXML
-    void previousSuitButtonActionPerformed(ActionEvent event) {
-        model.prevSuit();
-    }
-
-    @FXML
     void nextCardButtonActionPerformed(ActionEvent event) {
         model.nextCard();
     }
 
-    @FXML
-    void nextSuitButtonActionPerformed(ActionEvent event) {
-        model.nextSuit();
+    private void setSuitToggleState() {
+        setUpImageButton(spadesToggleButton, model.isSpades() ? spadesActive : spadesButton);
+        setUpImageButton(clubsToggleButton, model.isClubs() ? clubsActive : clubsButton);
+        setUpImageButton(diamondsToggleButton, model.isDiamonds() ? diamondsActive : diamondsButton);
+        setUpImageButton(heartsToggleButton, model.isHearts() ? heartsActive : heartsButton);
     }
 
     /**
      * Initialize "Sample Navigation" panel.
      */
     private void initializeSampleNavigation() {
-        final double size = 42.0;
-        setUpImageButton(previousSuitButton, "icon-up.png", size);
-        setUpImageButton(previousCardButton, "icon-left.png", size);
-        setUpImageButton(nextCardButton, "icon-right.png", size);
-        setUpImageButton(nextSuitButton, "icon-down.png", size);
+        spadesButton = new Image(getClass().getResourceAsStream("spade-icon.png"));
+        spadesActive = new Image(getClass().getResourceAsStream("spade-active-icon.png"));
+        clubsButton = new Image(getClass().getResourceAsStream("club-icon.png"));
+        clubsActive = new Image(getClass().getResourceAsStream("club-active-icon.png"));
+        diamondsButton = new Image(getClass().getResourceAsStream("diamond-icon.png"));
+        diamondsActive = new Image(getClass().getResourceAsStream("diamond-active-icon.png"));
+        heartsButton = new Image(getClass().getResourceAsStream("heart-icon.png"));
+        heartsActive = new Image(getClass().getResourceAsStream("heart-active-icon.png"));
 
-        previousCardButton.setTooltip(new Tooltip("Display previous card as Sample"));
-        previousSuitButton.setTooltip(new Tooltip("Display previous suit as Sample"));
+        setSuitToggleState();
+
+        spadesToggleButton.setTooltip(new Tooltip("Display Spades"));
+        clubsToggleButton.setTooltip(new Tooltip("Display Clubs"));
+        diamondsToggleButton.setTooltip(new Tooltip("Display Diamonds"));
+        heartsToggleButton.setTooltip(new Tooltip("Display Hearts"));
+
+        spadesToggleButton.setSelected(model.isSpades());
+        clubsToggleButton.setSelected(model.isClubs());
+        diamondsToggleButton.setSelected(model.isDiamonds());
+        heartsToggleButton.setSelected(model.isHearts());
+
+        setUpImageButton(nextCardButton, "icon-up.png", buttonSize);
+        setUpImageButton(previousCardButton, "icon-down.png", buttonSize);
+
         nextCardButton.setTooltip(new Tooltip("Display next card as Sample"));
-        nextSuitButton.setTooltip(new Tooltip("Display next suit as Sample"));
+        previousCardButton.setTooltip(new Tooltip("Display previous card as Sample"));
     }
 
 
