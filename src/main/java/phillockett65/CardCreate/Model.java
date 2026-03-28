@@ -1047,8 +1047,13 @@ public class Model {
     public int getSuitIndex() { return suit; }
     public int getCardIndex() { return card; }
 
-    public void setSuitIndex(int value) { suit = value; }
-    public void setCardIndex(int value) { card = value; }
+    public void setSuitIndex(int index) { suit = index; }
+    public void setCardIndex(int index) { card = index; }
+
+    public void setCard(int index) {
+        setCardIndex(index);
+        syncAllUIs();
+    }
 
     public String getSuit() { return suits[suit]; }
     public String getSuit(int s) { return suits[s]; }
