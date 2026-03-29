@@ -169,12 +169,12 @@ public class Model {
     public void syncAllUIs() {
         Debug.trace(DD, "syncAllUIs()");
 
+        updateDisplayForCurrentCard();
         mainController.syncUI();
         primaryController.syncUI();
         additionalController.syncUI();
         colourController.syncUI();
         sample.syncUI();
-        updateDisplayForCurrentCard();
     }
 
     public Stage getStage() { return stage; }
