@@ -29,8 +29,6 @@ import javafx.scene.transform.Affine;
 public class Desc {
 
     private final CourtColourKey key;
-    private final double width;
-    private final double height;
     private final String path;
     private final Affine affine;
 
@@ -38,17 +36,11 @@ public class Desc {
         key = k;
         path = p;
     
-        // width = 1046.93;
-        width = 163.28437;
-        height = 263.19374;
-
         affine = new Affine(a,c,e,b,d,f);
     }
 
     public boolean isKey(CourtColourKey target) { return key == target; }
     public CourtColourKey getKey() { return key; }
-    public double getWidth() { return width; }
-    public double getHeight() { return height; }
     public String getPath() { return path; }
     public Affine getAffine() { return affine; }
 

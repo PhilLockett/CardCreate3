@@ -230,13 +230,13 @@ public class ImagePayload extends Payload {
 
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
+        final double imageWidth = face.getWidth();
+        final double imageHeight = face.getHeight();
 
         Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double imageWidth = pathDesc.getWidth();
-            final double imageHeight = pathDesc.getHeight();
             final Color colour = model.getStandardColour(pathDesc.getKey());
 
             double winX = cardWidthPX - (2*pX);
@@ -467,13 +467,13 @@ public class ImagePayload extends Payload {
     
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
+        final double imageWidth = face.getWidth();
+        final double imageHeight = face.getHeight();
 
         Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
-            final double imageWidth = pathDesc.getWidth();
-            final double imageHeight = pathDesc.getHeight();
             final Color colour = model.getStandardColour(pathDesc.getKey());
 
             double winX = cardWidthPX - (2*pX);

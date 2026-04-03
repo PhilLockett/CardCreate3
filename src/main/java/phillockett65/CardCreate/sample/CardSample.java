@@ -211,45 +211,18 @@ public class CardSample extends Stage {
 
             final String command = event.getCharacter().toLowerCase();
             switch (command) {
-            case "+":
-                model.incCurrent();
-                break;
+            case "+": model.incCurrent();   break;
+            case "-": model.decCurrent();   break;
 
-            case "-":
-                model.decCurrent();
-                break;
+            case "c": model.setClubs();     break;
+            case "d": model.setDiamonds();  break;
+            case "h": model.setHearts();    break;
+            case "s": model.setSpades();    break;
 
-            case "c":
-                model.setClubs();
-                break;
-
-            case "d":
-                model.setDiamonds();
-                break;
-
-            case "h":
-                model.setHearts();
-                break;
-
-            case "s":
-                model.setSpades();
-                break;
-
-            case "a":
-                model.setCard(1);
-                break;
-
-            case "j":
-                model.setCard(11);
-                break;
-
-            case "q":
-                model.setCard(12);
-                break;
-
-            case "k":
-                model.setCard(13);
-                break;
+            case "a": model.setCard(1);     break;
+            case "j": model.setCard(11);    break;
+            case "q": model.setCard(12);    break;
+            case "k": model.setCard(13);    break;
 
             default:
                 break;
