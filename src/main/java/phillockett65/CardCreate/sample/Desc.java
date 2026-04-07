@@ -24,24 +24,19 @@
 
 package phillockett65.CardCreate.sample;
 
-import javafx.scene.transform.Affine;
 
 public class Desc {
 
     private final CourtColourKey key;
     private final String path;
-    private final Affine affine;
 
-    public Desc(CourtColourKey k, double a, double b, double c, double d, double e, double f, String p) {
+    public Desc(CourtColourKey k, String p) {
         key = k;
         path = p;
-    
-        affine = new Affine(a,c,e,b,d,f);
     }
 
     public boolean isKey(CourtColourKey target) { return key == target; }
     public CourtColourKey getKey() { return key; }
     public String getPath() { return path; }
-    public Affine getAffine() { return affine; }
 
 };

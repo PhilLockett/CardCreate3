@@ -261,7 +261,6 @@ public class ImagePayload extends Payload {
             SVGPath svgPath = getSVGPath(i);
             svgPath.setContent(pathDesc.getPath());
             Affine affine = new Affine(scaleX, 0, pX + dX, 0, scaleY, pY + dY);
-            affine.append(pathDesc.getAffine());
             svgPath.getTransforms().clear();
             svgPath.getTransforms().add(affine);
             svgPath.setFill(colour);
@@ -500,7 +499,6 @@ public class ImagePayload extends Payload {
             gc.setFill(colour);
             gc.translate(pX + dX, pY + dY);
             gc.scale(scaleX, scaleY);
-            gc.transform(pathDesc.getAffine());
             gc.beginPath();
             gc.appendSVGPath(pathDesc.getPath());
             gc.closePath();
