@@ -233,29 +233,30 @@ public class ImagePayload extends Payload {
         final double imageWidth = face.getWidth();
         final double imageHeight = face.getHeight();
 
+        final double winX = cardWidthPX - (2*pX);
+        final double winY = cardHeightPX - (2*pY);
+
+        double dX = 0;
+        double dY = 0;
+
+        double scaleX = winX / imageWidth;
+        double scaleY = winY / imageHeight;
+
+        if (keepAspectRatio) {
+            if (scaleX < scaleY) {
+                dY = (winY - (imageHeight * scaleX)) / 2;
+                scaleY = scaleX;
+            } else {
+                dX = (winX - (imageWidth * scaleY)) / 2;
+                scaleX = scaleY;
+            }
+        }
+
         Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
             Desc pathDesc = facePathDescs[i];
 
             final Color colour = model.getStandardColour(pathDesc.getKey());
-
-            double winX = cardWidthPX - (2*pX);
-            double winY = cardHeightPX - (2*pY);
-            
-            double dX = 0;
-            double dY = 0;
-
-            double scaleX = winX / imageWidth;
-            double scaleY = winY / imageHeight;
-            if (keepAspectRatio) {
-                if (scaleX < scaleY) {
-                    dY = (winY - (imageHeight * scaleX)) / 2;
-                    scaleY = scaleX;
-                } else {
-                    dX = (winX - (imageWidth * scaleY)) / 2;
-                    scaleX = scaleY;
-                }
-            }
 
             SVGPath svgPath = getSVGPath(i);
             svgPath.setContent(pathDesc.getPath());
@@ -462,13 +463,31 @@ public class ImagePayload extends Payload {
 
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
-        final double xOffset = model.getMpcBorderWidth();
-        final double yOffset = model.getMpcBorderHeight();
     
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
         final double imageWidth = face.getWidth();
         final double imageHeight = face.getHeight();
+
+        final double winX = cardWidthPX - (2*pX);
+        final double winY = cardHeightPX - (2*pY);
+
+        double dX = 0;
+        double dY = 0;
+
+        double scaleX = winX / imageWidth;
+        double scaleY = winY / imageHeight;
+        if (keepAspectRatio) {
+            if (scaleX < scaleY) {
+                dY = (winY - (imageHeight * scaleX)) / 2;
+                scaleY = scaleX;
+            } else {
+                dX = (winX - (imageWidth * scaleY)) / 2;
+                scaleX = scaleY;
+            }
+        }
+        dX += model.getMpcBorderWidth();
+        dY += model.getMpcBorderHeight();
 
         Desc[] facePathDescs = face.getDescs();
         for (int i = 0; i < facePathDescs.length; ++i) {
@@ -476,28 +495,10 @@ public class ImagePayload extends Payload {
 
             final Color colour = model.getStandardColour(pathDesc.getKey());
 
-            double winX = cardWidthPX - (2*pX);
-            double winY = cardHeightPX - (2*pY);
-
-            double dX = 0;
-            double dY = 0;
-
-            double scaleX = winX / imageWidth;
-            double scaleY = winY / imageHeight;
-            if (keepAspectRatio) {
-                if (scaleX < scaleY) {
-                    dY = (winY - (imageHeight * scaleX)) / 2;
-                    scaleY = scaleX;
-                } else {
-                    dX = (winX - (imageWidth * scaleY)) / 2;
-                    scaleX = scaleY;
-                }
-            }
-
             gc.save();
 
             gc.setFill(colour);
-            gc.translate(pX + dX + xOffset, pY + dY + yOffset);
+            gc.translate(pX + dX, pY + dY);
             gc.scale(scaleX, scaleY);
             gc.transform(pathDesc.getAffine());
             gc.beginPath();
