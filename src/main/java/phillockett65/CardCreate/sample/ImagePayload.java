@@ -67,7 +67,7 @@ public class ImagePayload extends Payload {
         views[1] = new ImageView();
         views[1].setPreserveRatio(true);
         views[1].setRotate(180);
-        
+
         paths = new SVGPath[getPathCount()];
         for (int i = 0; i < getPathCount(); ++i) {
             paths[i] = new SVGPath();
@@ -230,8 +230,8 @@ public class ImagePayload extends Payload {
 
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
-        final double imageWidth = face.getWidth();
-        final double imageHeight = face.getHeight();
+        final double imageWidth = Default.SVG_WIDTH.getFloat();
+        final double imageHeight = Default.SVG_HEIGHT.getFloat();
 
         final double winX = cardWidthPX - (2*pX);
         final double winY = cardHeightPX - (2*pY);
@@ -379,26 +379,28 @@ public class ImagePayload extends Payload {
      * @return true if the icons are drawn, false otherwise.
      */
     public boolean drawCard(GraphicsContext gc, Image iconImage, Image rotatedImage, int pattern) {
-        if (iconImage == null)
-            return false;
-
         Debug.trace(DD, "drawCard(" + pattern + ") " + item);
+
+        if (iconImage == null) {
+            return false;
+        }
+
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
-        final double xOffset = model.getMpcBorderWidth();
-        final double yOffset = model.getMpcBorderHeight();
-
         final double imageWidth = iconImage.getWidth();
         final double imageHeight = iconImage.getHeight();
-        final boolean landscape = imageHeight < imageWidth;
-
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
+
         double winX = cardWidthPX - (2*pX);
         double winY;
 
         double dX = 0;
         double dY = 0;
+
+        final double xOffset = model.getMpcBorderWidth();
+        final double yOffset = model.getMpcBorderHeight();
+        final boolean landscape = imageHeight < imageWidth;
 
         if (landscape) {
             Debug.info(DD, "landscape");
@@ -462,11 +464,10 @@ public class ImagePayload extends Payload {
 
         final double cardWidthPX = model.getWidth();
         final double cardHeightPX = model.getHeight();
-    
+        final double imageWidth = Default.SVG_WIDTH.getFloat();
+        final double imageHeight = Default.SVG_HEIGHT.getFloat();
         final double pX = centreX.getPixels();
         final double pY = centreY.getPixels();
-        final double imageWidth = face.getWidth();
-        final double imageHeight = face.getHeight();
 
         final double winX = cardWidthPX - (2*pX);
         final double winY = cardHeightPX - (2*pY);

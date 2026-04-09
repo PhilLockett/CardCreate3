@@ -28,20 +28,14 @@ package phillockett65.CardCreate.sample;
 public class Face {
 
     private final String name;
-    private final double width;
-    private final double height;
     private final Desc[] descs;
 
-    Face(String name, double width, double height, Desc[] descs) {
+    Face(String name, Desc[] descs) {
         this.name = name;
-        this.width = width;
-        this.height = height;
         this.descs = descs;
     }
 
     public String getName() { return name; }
-    public double getWidth() { return width; }
-    public double getHeight() { return height; }
     public Desc[] getDescs() { return descs; }
     public int getDescCount() { return descs.length; }
 };
