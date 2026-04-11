@@ -29,41 +29,38 @@ package phillockett65.CardCreate.sample;
  * @author Phil
  */
 public enum ColourKey {
-    CARD_ID (0, false, false, false),
-    CLUB_INDEX_ID (1, true, false, false),
-    DIAMOND_INDEX_ID (2, true, false, false),
-    HEART_INDEX_ID (3, true, false, false),
-    SPADE_INDEX_ID (4, true, false, false),
-    CLUB_PIP_ID (5, false, true, false),
-    DIAMOND_PIP_ID (6, false, true, false),
-    HEART_PIP_ID (7, false, true, false),
-    SPADE_PIP_ID (8, false, true, false),
-    COURT_WHITE_ID (9, false, false, true),
-    COURT_STEEL_ID (10, false, false, true),
-    COURT_HAIR_ID (11, false, false, true),
-    COURT_FLESH_ID (12, false, false, true),
-    COURT_YELLOW_ID (13, false, false, true),
-    COURT_RED_ID (14, false, false, true),
-    COURT_BLUE_ID (15, false, false, true),
-    COURT_BLACK_ID (16, false, false, true),
-    MAX_KEY (17, false, false, false);
+    CARD_ID (0, ColourKeyType.NONE),
+    CLUB_INDEX_ID (1, ColourKeyType.INDEX),
+    DIAMOND_INDEX_ID (2, ColourKeyType.INDEX),
+    HEART_INDEX_ID (3, ColourKeyType.INDEX),
+    SPADE_INDEX_ID (4, ColourKeyType.INDEX),
+    CLUB_PIP_ID (5, ColourKeyType.PIP),
+    DIAMOND_PIP_ID (6, ColourKeyType.PIP),
+    HEART_PIP_ID (7, ColourKeyType.PIP),
+    SPADE_PIP_ID (8, ColourKeyType.PIP),
+    COURT_WHITE_ID (9, ColourKeyType.COURT),
+    COURT_STEEL_ID (10, ColourKeyType.COURT),
+    COURT_HAIR_ID (11, ColourKeyType.COURT),
+    COURT_FLESH_ID (12, ColourKeyType.COURT),
+    COURT_YELLOW_ID (13, ColourKeyType.COURT),
+    COURT_RED_ID (14, ColourKeyType.COURT),
+    COURT_BLUE_ID (15, ColourKeyType.COURT),
+    COURT_BLACK_ID (16, ColourKeyType.COURT),
+    MAX_KEY (17, ColourKeyType.MAX);
 
+    private enum ColourKeyType { NONE, INDEX, PIP, COURT, MAX; };
     public final int key;
-    public final boolean index;
-    public final boolean pip;
-    public final boolean face;
+    public final ColourKeyType type;
 
-    ColourKey(int k, boolean i, boolean p, boolean f) {
+    ColourKey(int k, ColourKeyType t) {
         key = k;
-        index = i;
-        pip = p;
-        face = f;
+        type = t;
     }
 
     public int getKey() { return key; }
-    public boolean isIndex() { return index; }
-    public boolean isPip() { return pip; }
-    public boolean isFace() { return face; }
+    public boolean isIndex() { return type == ColourKeyType.INDEX; }
+    public boolean isPip() { return type == ColourKeyType.PIP; }
+    public boolean isFace() { return type == ColourKeyType.COURT; }
 
     public static ColourKey getKey(int key) { 
         switch (key) {

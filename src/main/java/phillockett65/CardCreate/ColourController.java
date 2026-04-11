@@ -121,9 +121,9 @@ public class ColourController {
     }
 
     private void syncDisabled() {
-        boolean indexState = !model.isStandardIndices();
-        boolean pipState = !model.isStandardPips();
-        boolean courtState = !model.isStandardFaces();
+        final boolean indexState = !model.isStandardIndices();
+        final boolean pipState = !model.isStandardPips();
+        final boolean courtState = !model.isStandardFaces();
         for (Swatch swatch : swatches) {
             swatch.setIndexDisabled(indexState);
             swatch.setPipDisabled(pipState);

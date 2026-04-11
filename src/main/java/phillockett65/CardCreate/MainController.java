@@ -567,6 +567,7 @@ public class MainController {
     private void initializeGenerate() {
         setUpImageButton(generateButton, "icon-play.png", generateButtonSize);
         generateButton.setTooltip(new Tooltip("Generate the card images to the selected output directory"));
+        generateButton.setDefaultButton(true);
 
         parameters = new SnapshotParameters();
         parameters.setFill(Color.TRANSPARENT);
