@@ -65,7 +65,6 @@ public class SvgPathData {
         if (getAspectRatio() < aspectRation)
         {
             return w / getWidth();
-
         }
 
         return h / getHeight();

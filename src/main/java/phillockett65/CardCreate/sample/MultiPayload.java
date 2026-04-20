@@ -284,20 +284,22 @@ public class MultiPayload extends Payload {
         final double pY = data.svgY;
 
         for (int i = 0; i < getImageCount(); ++i) {
-            if (isImageViewVisible(i)) {
-                Loc location = getLocation(i);
-                final double offX = location.getXOffset() * data.winX;
-                final double offY = location.getYOffset() * data.winY;
-
-                SVGPath svgPath = getSVGPath(i);
-                svgPath.setContent(svgPathData.getPath());
-                svgPath.setScaleX(scale);
-                svgPath.setScaleY(scale);
-                svgPath.setTranslateX(dX);
-                svgPath.setTranslateY(dY);
-                svgPath.relocate(pX + offX, pY + offY);
-                svgPath.setFill(colour);
+            if (isImageViewVisible(i) == false) {
+                continue;
             }
+
+            Loc location = getLocation(i);
+            final double offX = location.getXOffset() * data.winX;
+            final double offY = location.getYOffset() * data.winY;
+
+            SVGPath svgPath = getSVGPath(i);
+            svgPath.setContent(svgPathData.getPath());
+            svgPath.setScaleX(scale);
+            svgPath.setScaleY(scale);
+            svgPath.setTranslateX(dX);
+            svgPath.setTranslateY(dY);
+            svgPath.relocate(pX + offX, pY + offY);
+            svgPath.setFill(colour);
         }
     }
 
@@ -315,17 +317,19 @@ public class MultiPayload extends Payload {
         final double pY = data.originY;
 
         for (int i = 0; i < getImageCount(); ++i) {
-            if (isImageViewVisible(i)) {
-                Loc location = getLocation(i);
-                final double offX = location.getXOffset() * data.winX;
-                final double offY = location.getYOffset() * data.winY;
-                Debug.trace(DD, "offset = " + offX + ", " + offY);
-
-                ImageView view = getImageView(i);
-                view.relocate(pX + offX, pY + offY);
-                view.setFitWidth(data.widthPX);
-                view.setFitHeight(data.heightPX);
+            if (isImageViewVisible(i) == false) {
+                continue;
             }
+
+            Loc location = getLocation(i);
+            final double offX = location.getXOffset() * data.winX;
+            final double offY = location.getYOffset() * data.winY;
+            Debug.trace(DD, "offset = " + offX + ", " + offY);
+
+            ImageView view = getImageView(i);
+            view.relocate(pX + offX, pY + offY);
+            view.setFitWidth(data.widthPX);
+            view.setFitHeight(data.heightPX);
         }
     }
 
@@ -369,17 +373,19 @@ public class MultiPayload extends Payload {
         final Data data = new Data(iconImage.getWidth(), iconImage.getHeight());
 
         for (int i = 0; i < getImageCount(); ++i) {
-            if (isIconVisible(pattern, i)) {
-                final Loc loc = getLocation(i);
+            if (isIconVisible(pattern, i) == false) {
+                continue;
+            }
 
-                final double posX = data.originX + (loc.getXOffset() * data.winX);
-                final double posY = data.originY + (loc.getYOffset() * data.winY);
-                
-                if (loc.getRotate()) {
-                    gc.drawImage(rotatedImage, posX, posY, data.widthPX, data.heightPX);
-                } else {
-                    gc.drawImage(iconImage, posX, posY, data.widthPX, data.heightPX);
-                }
+            final Loc loc = getLocation(i);
+
+            final double posX = data.originX + (loc.getXOffset() * data.winX);
+            final double posY = data.originY + (loc.getYOffset() * data.winY);
+            
+            if (loc.getRotate()) {
+                gc.drawImage(rotatedImage, posX, posY, data.widthPX, data.heightPX);
+            } else {
+                gc.drawImage(iconImage, posX, posY, data.widthPX, data.heightPX);
             }
         }
 
@@ -408,28 +414,30 @@ public class MultiPayload extends Payload {
         gc.setFill(colour);
         gc.setLineWidth(0.0);
         for (int i = 0; i < getImageCount(); ++i) {
-            if (isIconVisible(pattern, i)) {
-                gc.save();
-
-                final Loc loc = getLocation(i);
-
-                final double posX = data.originX + (loc.getXOffset() * data.winX);
-                final double posY = data.originY + (loc.getYOffset() * data.winY);
-
-                gc.translate(posX, posY);
-                gc.scale(scale, scale);
-                
-                gc.beginPath();
-                if (loc.getRotate()) {
-                    gc.appendSVGPath(svgRotatedPath.getPath());
-                } else {
-                    gc.appendSVGPath(svgPathData.getPath());
-                }
-                gc.closePath();
-                gc.fill();
-
-                gc.restore();
+            if (isIconVisible(pattern, i) == false) {
+                continue;
             }
+
+            gc.save();
+
+            final Loc loc = getLocation(i);
+
+            final double posX = data.originX + (loc.getXOffset() * data.winX);
+            final double posY = data.originY + (loc.getYOffset() * data.winY);
+
+            gc.translate(posX, posY);
+            gc.scale(scale, scale);
+            
+            gc.beginPath();
+            if (loc.getRotate()) {
+                gc.appendSVGPath(svgRotatedPath.getPath());
+            } else {
+                gc.appendSVGPath(svgPathData.getPath());
+            }
+            gc.closePath();
+            gc.fill();
+
+            gc.restore();
         }
 
         return true;
