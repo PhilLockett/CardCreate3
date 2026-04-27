@@ -1126,14 +1126,19 @@ public class Model {
     }
 
     /**
-     * @return true if the specified card is a face card (court card), false 
-     * otherwise.
+     * Check if the specified card is a face card (court card).
+     * @param c card number of card to display.
+     * @return true if the specified card is a face card, false otherwise.
      */
     public boolean isFaceCard(int c) {
         return c > 10;
     }
 
     /**
+     * Check if the specified card has a face image file.
+     * 
+     * @param s suit of card to generate.
+     * @param c card number of card to generate.
      * @return true if the specified card has an image file, false otherwise.
      */
     public boolean isImageCard(int s, int c) {
@@ -1772,18 +1777,16 @@ public class Model {
      * @return the type to display for the specified card.
      */
     public DisplayType getDisplayType(int s, int c) {
+        Debug.trace(DD, "getDisplayType(" + s + ", " + c + ")");
         if (isImageCard(s, c)) {
             if (displayFaceImage == false)
                 return DisplayType.NONE;
-
-            if (fileOverride)
-                return DisplayType.FILE_FACE;
 
             if (isFaceCard(c)) {
                 if (useStandardFaces)
                     return DisplayType.SVG_FACE;
             } else {
-                if (useStandardPips)
+                if ((useStandardPips) && (fileOverride == false))
                     return DisplayType.SVG_PIPS;
             }
 

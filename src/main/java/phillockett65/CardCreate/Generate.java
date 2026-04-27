@@ -35,6 +35,9 @@ import phillockett65.Debug.Debug;
 
 public class Generate extends Task<Long> {
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private final Model model;
     private Long progress;
     private Canvas canvas;
@@ -119,7 +122,7 @@ public class Generate extends Task<Long> {
         final int pattern = model.currentCornerPattern();
         final int facePip = model.currentFacePattern();
         final Image[] images = model.currentImages();
-        Debug.trace(0, "generateCard(" + pattern +  ")");
+        Debug.trace(DD, "generateCard(" + pattern +  ")");
 
         // Create blank card.
         CardContext cc = new CardContext();
